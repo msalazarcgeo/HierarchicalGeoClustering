@@ -2,7 +2,8 @@
 
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
-index = {"cluster": "00_Node_cluster.ipynb"}
+index = {"cluster": "00_Node_cluster.ipynb",
+         "cluster_node": "00_Node_cluster.ipynb"}
 
 modules = ["core.py"]
 
