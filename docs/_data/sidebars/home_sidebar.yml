@@ -13,7 +13,7 @@ entries:
       title: Node_cluster
       url: Node_cluster.html
     - output: web,pdf
-      title: Title
+      title: 'Tree Cluster class '
       url: tree_clusters.html
     output: web
     title: HierarchicalGeoClustering
