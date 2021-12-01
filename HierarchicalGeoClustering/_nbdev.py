@@ -3,7 +3,10 @@
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
 index = {"cluster": "00_Node_cluster.ipynb",
-         "cluster_node": "00_Node_cluster.ipynb"}
+         "cluster_node": "00_Node_cluster.ipynb",
+         "inside_polygon": "00_Node_cluster.ipynb",
+         "poligon_non_convex_from_Points": "00_Node_cluster.ipynb",
+         "poligon_non_convex_random_gen": "00_Node_cluster.ipynb"}
 
 modules = ["core.py"]
 
