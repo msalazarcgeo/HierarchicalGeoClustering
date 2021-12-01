@@ -91,6 +91,733 @@ algorithms.</p>
 </div>
     {% endraw %}
 
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="cluster_node">cluster_node<a class="anchor-link" href="#cluster_node"> </a></h2><blockquote><p>The class has all the methods for the cluster_node class</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">class</span> <span class="nc">cluster_node</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="n">NodeMixin</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> 
+                <span class="n">name</span><span class="p">,</span>
+                <span class="n">density</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                <span class="n">children</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">cluster</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="o">=</span> <span class="n">parent</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">children</span><span class="p">:</span>
+             <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="o">=</span> <span class="n">children</span>
+
+    
+    <span class="k">def</span> <span class="nf">populate_cluster</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                    <span class="n">from_points_num</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+                    <span class="n">density</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">num_points</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                    <span class="n">min_scale_x</span><span class="o">=</span> <span class="mf">.1</span><span class="p">,</span>
+                    <span class="n">max_scale_x</span><span class="o">=</span><span class="mf">.5</span><span class="p">,</span>
+                    <span class="n">min_scale_y</span><span class="o">=</span> <span class="mf">.1</span><span class="p">,</span>
+                    <span class="n">max_scale_y</span><span class="o">=</span><span class="mf">.5</span><span class="p">,</span>
+                    <span class="n">random_state</span><span class="o">=</span> <span class="mi">170</span><span class="p">,</span> 
+                    <span class="o">**</span><span class="n">kwargs</span>
+                    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="o">=</span> <span class="n">density</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span> <span class="c1">## initialize random state </span>
+        <span class="n">avoid_intersec</span><span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;avoid_intersec&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_polygon</span><span class="p">(</span><span class="n">from_points_num</span><span class="p">)</span>
+            <span class="n">new_pol_x_min</span><span class="p">,</span> <span class="n">new_pol_y_min</span><span class="p">,</span> <span class="n">new_pol_x_max</span><span class="p">,</span> <span class="n">new_pol_y_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">bounds</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">((</span><span class="n">new_pol_x_max</span> <span class="o">-</span><span class="n">new_pol_x_min</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">new_pol_x_min</span><span class="p">,</span>
+                             <span class="p">(</span><span class="n">new_pol_y_max</span><span class="o">-</span> <span class="n">new_pol_y_min</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="n">new_pol_y_min</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#### create the polygon inside the parent </span>
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">polygon_cluster</span> <span class="o">==</span><span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;The parent has no polygon&#39;</span><span class="p">)</span>
+            
+            <span class="c1"># print(&#39;parent name:&#39;,self.parent.name)</span>
+            <span class="c1">########</span>
+            <span class="c1">#### Vamos a pedirle que no este en el polygono de los hijos </span>
+            <span class="n">random_point_center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">get_random_points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+            <span class="c1">#### create polygon and scale </span>
+            
+            <span class="n">polygon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_polygon</span><span class="p">(</span><span class="n">from_points_num</span><span class="p">)</span>
+            <span class="n">new_pol_x_min</span><span class="p">,</span> <span class="n">new_pol_y_min</span><span class="p">,</span> <span class="n">new_pol_x_max</span><span class="p">,</span> <span class="n">new_pol_y_max</span> <span class="o">=</span> <span class="n">polygon</span><span class="o">.</span><span class="n">bounds</span>
+            <span class="n">center_polygon</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">((</span><span class="n">new_pol_x_max</span> <span class="o">-</span><span class="n">new_pol_x_min</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">new_pol_x_min</span><span class="p">,</span>
+                             <span class="p">(</span><span class="n">new_pol_y_max</span><span class="o">-</span> <span class="n">new_pol_y_min</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="n">new_pol_y_min</span><span class="p">)</span>
+            <span class="n">translate</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span>
+                            <span class="n">random_point_center</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span><span class="n">center_polygon</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                            <span class="n">random_point_center</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span><span class="n">center_polygon</span><span class="o">.</span><span class="n">y</span>
+                            <span class="p">)</span> 
+            <span class="n">polygon</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">affinity</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span> 
+                        <span class="n">polygon</span><span class="p">,</span> 
+                        <span class="n">xoff</span> <span class="o">=</span> <span class="n">translate</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                        <span class="n">yoff</span> <span class="o">=</span> <span class="n">translate</span><span class="o">.</span><span class="n">y</span>
+                        <span class="p">)</span>
+            <span class="n">new_pol_x_min</span><span class="p">,</span> <span class="n">new_pol_y_min</span><span class="p">,</span> <span class="n">new_pol_x_max</span><span class="p">,</span> <span class="n">new_pol_y_max</span> <span class="o">=</span> <span class="n">polygon</span><span class="o">.</span><span class="n">bounds</span>
+            <span class="n">esq</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">new_pol_x_min</span><span class="p">,</span><span class="n">new_pol_y_min</span> <span class="p">),</span>
+                <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">new_pol_x_min</span><span class="p">,</span><span class="n">new_pol_y_max</span> <span class="p">),</span>
+                <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">new_pol_x_max</span><span class="p">,</span><span class="n">new_pol_y_min</span> <span class="p">),</span>
+                <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">new_pol_x_max</span><span class="p">,</span><span class="n">new_pol_y_max</span> <span class="p">)</span>
+              <span class="p">]</span>
+            <span class="n">max_dis_esq</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">random_point_center</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">esq</span><span class="p">])</span>
+            
+            <span class="c1">###### Scale the polygon </span>
+            <span class="c1">#dis_poly_parent= self.parent.polygon_cluster.exterior.distance(random_point_center)</span>
+            
+            <span class="n">max_dis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span> <span class="n">random_point_center</span><span class="p">)</span>
+
+            <span class="n">fact_pol</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_dis</span><span class="o">/</span><span class="p">(</span><span class="mf">1.3</span><span class="o">*</span><span class="n">max_dis_esq</span><span class="p">))</span>
+            
+            <span class="n">scale_factor_max_x</span>  <span class="o">=</span> <span class="nb">min</span> <span class="p">(</span><span class="n">fact_pol</span><span class="p">,</span> <span class="n">max_scale_x</span><span class="p">)</span>
+            <span class="n">scale_factor_max_y</span>  <span class="o">=</span> <span class="nb">min</span> <span class="p">(</span><span class="n">fact_pol</span><span class="p">,</span> <span class="n">max_scale_y</span><span class="p">)</span>
+            
+          
+            <span class="c1"># print(&#39;scale x:&#39;, scale_factor_max_x)</span>
+            <span class="c1"># print(&#39;scale y:&#39;, scale_factor_max_y)</span>
+            <span class="c1">##########</span>
+            <span class="n">polygon</span><span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">affinity</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span> 
+                <span class="n">polygon</span><span class="p">,</span>
+                <span class="n">xfact</span><span class="o">=</span><span class="n">scale_factor_max_x</span><span class="p">,</span>
+                <span class="n">yfact</span><span class="o">=</span><span class="n">scale_factor_max_y</span><span class="p">,</span>
+                <span class="n">origin</span><span class="o">=</span> <span class="n">random_point_center</span>
+            <span class="p">)</span>
+            
+            <span class="c1">###### A qui se tiene que verificar si ha caido en alguno. </span>
+            <span class="k">if</span> <span class="n">avoid_intersec</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span>  <span class="o">=</span> <span class="n">polygon</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">random_point_center</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1">### Se tiene que modificar</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">polygon_not_in_children</span><span class="p">(</span><span class="n">random_state</span><span class="o">=</span> <span class="n">random_state</span><span class="p">)</span>
+                
+
+        <span class="c1">############### The points</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No polygon in the cluster&#39;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">npoints_polygon</span>  <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">area</span><span class="o">*</span><span class="n">density</span><span class="p">)</span>
+            <span class="c1">#print(npoints_polygon)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point_cluster_noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_random_points</span><span class="p">(</span><span class="n">npoints_polygon</span><span class="p">)</span> 
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">num_points</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="o">=</span> <span class="n">num_points</span> <span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">area</span>
+            <span class="c1">#print(num_points)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point_cluster_noise</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_random_points</span><span class="p">(</span><span class="n">num_points</span><span class="p">)</span>
+        
+
+    <span class="c1">##### Generate random polygon</span>
+    <span class="k">def</span> <span class="nf">create_polygon</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>  <span class="n">from_points_num</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span>
+        <span class="n">polygon</span> <span class="o">=</span> <span class="n">poligon_non_convex_random_gen</span><span class="p">(</span><span class="n">from_points_num</span><span class="p">)</span>
+        <span class="k">while</span> <span class="nb">type</span><span class="p">(</span><span class="n">polygon</span><span class="p">)</span> <span class="o">==</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">MultiPolygon</span><span class="p">:</span>
+            <span class="n">polygon</span> <span class="o">=</span> <span class="n">poligon_non_convex_random_gen</span><span class="p">(</span>
+                <span class="n">from_points_num</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">polygon</span>
+
+
+    <span class="k">def</span> <span class="nf">get_random_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_points</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span> <span class="mi">150</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns random points inside the cluster polygon</span>
+<span class="sd">        :param n_points Number of point to be generated</span>
+<span class="sd">        :param random_state Random state</span>
+<span class="sd">        :returns: A list with points</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="n">x_min</span><span class="p">,</span> <span class="n">y_min</span> <span class="p">,</span><span class="n">x_max</span><span class="p">,</span> <span class="n">y_max</span> <span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">bounds</span>
+        <span class="n">ret_points</span><span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">ret_points</span><span class="p">)</span><span class="o">&lt;</span> <span class="n">n_points</span><span class="p">:</span>
+            <span class="n">x_rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">)</span>
+            <span class="n">y_rand</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">y_min</span><span class="p">,</span> <span class="n">y_max</span><span class="p">)</span>
+            <span class="n">point_s</span> <span class="o">=</span><span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">x_rand</span><span class="p">,</span> <span class="n">y_rand</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">point_s</span><span class="p">):</span>
+                <span class="n">ret_points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">point_s</span><span class="p">)</span>
+        
+
+        <span class="k">return</span> <span class="n">ret_points</span>    
+    <span class="c1">#### create random_points</span>
+    <span class="k">def</span> <span class="nf">create_random_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">npoints_polygon</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">120</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Create random points </span>
+<span class="sd">        :param npoints_polygon Number of point to get</span>
+<span class="sd">        :random_state Random state integer to ste random</span>
+<span class="sd">        :returns: A shapely multyPoint clas witn npoints_polygon points</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">random_state</span><span class="p">)</span>
+        <span class="n">minx_b</span><span class="p">,</span> <span class="n">miny_b</span><span class="p">,</span> <span class="n">maxx_b</span><span class="p">,</span> <span class="n">maxy_b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">bounds</span>
+        <span class="n">point_cluster_noise</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">point_cluster_noise</span><span class="p">)</span> <span class="o">&lt;</span> <span class="n">npoints_polygon</span><span class="p">:</span>
+            <span class="n">points_cluster</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">random_sample</span><span class="p">(</span>
+                <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">npoints_polygon</span><span class="o">*</span><span class="mf">1.2</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span>
+            <span class="n">points_cluster</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">maxx_b</span> <span class="o">-</span> <span class="n">minx_b</span><span class="p">)</span> <span class="o">*</span> \
+                <span class="n">points_cluster</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">minx_b</span>
+            <span class="n">points_cluster</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">maxy_b</span> <span class="o">-</span> <span class="n">miny_b</span><span class="p">)</span> <span class="o">*</span> \
+                <span class="n">points_cluster</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">miny_b</span>
+            <span class="n">points_cluster</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">MultiPoint</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">points_cluster</span><span class="p">))</span>
+            <span class="n">points_cluster_o</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">points_cluster</span> <span class="k">if</span>
+                                <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">p</span><span class="p">)</span>
+                                <span class="p">]</span>
+            <span class="n">point_cluster_noise</span> <span class="o">=</span> <span class="n">point_cluster_noise</span> <span class="o">+</span> <span class="n">points_cluster_o</span>
+
+        <span class="n">point_cluster_noise</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">MultiPoint</span><span class="p">(</span><span class="n">point_cluster_noise</span><span class="p">[:</span><span class="n">npoints_polygon</span><span class="p">])</span>
+        
+        <span class="k">return</span> <span class="n">point_cluster_noise</span>
+
+
+
+
+    <span class="k">def</span> <span class="nf">scale</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">x_scale</span><span class="p">,</span> <span class="n">y_scale</span><span class="p">,</span> <span class="n">center_scale</span><span class="o">=</span> <span class="s1">&#39;center&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Scale the points in the cluster </span>
+<span class="sd">        :param x_scale Scale factor to scale in x axis</span>
+<span class="sd">        :param y_scale Scale factor to scale in y axis</span>
+<span class="sd">        :param center_scale Scale center point  (Default = &#39;center&#39;)</span>
+<span class="sd">        :returns: No returns</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_cluster_noise</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">point_cluster_noise</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">affinity</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">point_cluster_noise</span><span class="p">,</span>
+                                    <span class="n">xfact</span><span class="o">=</span>  <span class="n">x_scale</span><span class="p">,</span>
+                                    <span class="n">yfact</span><span class="o">=</span>  <span class="n">y_scale</span><span class="p">,</span>
+                                    <span class="n">origin</span> <span class="o">=</span> <span class="n">center_scale</span>
+                                    <span class="p">)</span>
+        <span class="k">if</span>  <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">affinity</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span>
+                                    <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="p">,</span>
+                                    <span class="n">xfact</span><span class="o">=</span>  <span class="n">x_scale</span><span class="p">,</span>
+                                    <span class="n">yfact</span><span class="o">=</span>  <span class="n">y_scale</span><span class="p">,</span>
+                                    <span class="n">origin</span> <span class="o">=</span> <span class="n">center_scale</span>
+                                    <span class="p">)</span> 
+        <span class="c1">########Se deberian escalar todos #2 sus nodos hijos</span>
+        <span class="c1"># </span>
+    
+    <span class="k">def</span> <span class="nf">get_density</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Get the density if the cluster </span>
+<span class="sd">        Number of point in the cluster/Area of the polygon cluster</span>
+<span class="sd">        :returns the density of the node</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cluster has no polygon&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_cluster_noise</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;the node has no points&#39;</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="mi">0</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">density</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">point_cluster_noise</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">area</span>
+                        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">density</span>
+
+            
+            
+
+
+    <span class="c1">###### Get center</span>
+    
+    <span class="k">def</span> <span class="nf">get_center</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        returns the center of the bounding box poligon</span>
+<span class="sd">        :returns: Shapely Point center </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Cluster has no polygon&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="kc">None</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bou</span> <span class="o">=</span> <span class="n">new</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">bounds</span>
+                <span class="n">x</span><span class="o">=</span><span class="p">(</span><span class="n">bou</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">-</span><span class="n">bou</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span>
+                <span class="n">y</span><span class="o">=</span><span class="p">(</span><span class="n">bou</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">-</span><span class="n">bou</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">center</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">)</span>
+                <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">center</span>
+             
+    
+
+
+    <span class="c1">##### Get Points get the noise points of the cluster</span>
+    <span class="k">def</span> <span class="nf">get_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">all_tag</span> <span class="o">=</span> <span class="kc">False</span> <span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Returns the noise point of the cluster, if all_tag is set true returns  </span>
+<span class="sd">        all the points of the its decendents</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">all_tag</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">point_cluster_noise</span>
+        <span class="k">else</span> <span class="p">:</span>
+            <span class="n">all_points</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">all_points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">point_cluster_noise</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>  <span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">all_points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">point_cluster_noise</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_&#39;</span> <span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">))</span>
+            
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+                <span class="n">all_points</span><span class="o">=</span> <span class="n">all_points</span> <span class="o">+</span> <span class="n">child</span><span class="o">.</span><span class="n">get_points</span><span class="p">(</span><span class="n">all_tag</span> <span class="o">=</span> <span class="n">all_tag</span><span class="p">)</span>
+
+        <span class="k">return</span>  <span class="n">all_points</span>
+    
+    <span class="k">def</span> <span class="nf">get_point_decendent</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;returns all the point of the node and its decendents</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">all_p</span>  <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">all_p</span><span class="o">=</span> <span class="n">all_p</span><span class="o">+</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_points</span><span class="p">()]</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="n">all_p</span><span class="o">=</span> <span class="n">all_p</span> <span class="o">+</span><span class="n">child</span><span class="o">.</span><span class="n">get_point_decendent</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">all_p</span>
+
+
+    <span class="c1">######Tag the points </span>
+    <span class="k">def</span> <span class="nf">tag_low_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_check</span><span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The tag the element of the node using the labels noise or the child name</span>
+<span class="sd">        as a tag, if a set of point is pass (point_check != None)  </span>
+<span class="sd">        the elements are treated as part of the cluster and label it accordingly. </span>
+<span class="sd">        :params self </span>
+<span class="sd">        :params point_check A list MultiPoint or list with Points to tag </span>
+<span class="sd">        &quot;&quot;&quot;</span>        
+        
+        <span class="k">if</span> <span class="n">point_check</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">all_points_cluster</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_points</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#all_points_cluster = self.get_points()</span>
+            <span class="n">all_points_cluster</span> <span class="o">=</span> <span class="n">point_check</span>
+        <span class="c1"># print(&#39;Leng to check:&#39;, len(all_points_cluster))</span>
+        <span class="n">all_point_tag</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">all_points_cluster</span><span class="p">:</span>
+            <span class="n">point_tag</span><span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">for</span> <span class="n">id_child</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">point</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">point_tag</span> <span class="o">=</span> <span class="n">point_tag</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">id_child</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">point_tag</span><span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                            <span class="n">point_tag</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">name</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">point_tag</span> <span class="o">=</span> <span class="n">point_tag</span> <span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span> <span class="n">child</span><span class="o">.</span><span class="n">name</span> 
+                
+            <span class="k">if</span> <span class="n">point_tag</span><span class="o">==</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+                    <span class="n">point_tag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span><span class="s1">&#39;noise&#39;</span>
+            <span class="n">all_point_tag</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">point</span><span class="p">,</span><span class="n">point_tag</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">all_point_tag</span>
+<span class="c1">#######</span>
+<span class="c1">##############tag level</span>
+
+    <span class="k">def</span> <span class="nf">tag_low_level_noise_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">point_check</span><span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The tag the element of the node using the labels noise or signal</span>
+<span class="sd">        as a tag, if a set of point is pass (point_check != None)  </span>
+<span class="sd">        the elements are treated as part of the cluster and label it</span>
+<span class="sd">        accordingly. </span>
+<span class="sd">        :params self </span>
+<span class="sd">        :params point_check A list MultiPoint or list with Points to tag </span>
+<span class="sd">        &quot;&quot;&quot;</span>         
+        <span class="k">if</span> <span class="n">point_check</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">all_points_cluster</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_points</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#all_points_cluster = self.get_points()</span>
+            <span class="n">all_points_cluster</span> <span class="o">=</span> <span class="n">point_check</span>
+        <span class="c1"># print(&#39;Leng to check:&#39;, len(all_points_cluster))</span>
+        <span class="n">all_point_tag</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">all_points_cluster</span><span class="p">:</span>
+            <span class="n">point_tag</span><span class="o">=</span> <span class="s1">&#39;&#39;</span>
+            <span class="k">for</span> <span class="n">id_child</span><span class="p">,</span> <span class="n">child</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">point</span><span class="p">):</span>
+                    <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="n">point_tag</span> <span class="o">=</span> <span class="n">point_tag</span><span class="o">+</span><span class="s1">&#39;1&#39;</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">point_tag</span><span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                            <span class="n">point_tag</span> <span class="o">=</span> <span class="s1">&#39;1&#39;</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">point_tag</span> <span class="o">=</span> <span class="n">point_tag</span> <span class="o">+</span><span class="s1">&#39;_&#39;</span><span class="o">+</span> <span class="s1">&#39;1&#39;</span> 
+                
+            <span class="k">if</span> <span class="n">point_tag</span><span class="o">==</span><span class="s1">&#39;&#39;</span><span class="p">:</span>
+                <span class="n">point_tag</span> <span class="o">=</span> <span class="s1">&#39;noise&#39;</span>
+            <span class="n">all_point_tag</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">point</span><span class="p">,</span><span class="n">point_tag</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">all_point_tag</span>
+
+    <span class="c1">#### iterative tag </span>
+    <span class="k">def</span> <span class="nf">tag_all_point</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_tag</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns all the points and the points of it decendents tag, </span>
+<span class="sd">        the tags are the name of the nodes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">level_tags_self</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag_low_level</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">to_tag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1">#### to tag has to be in the same form as the return of tag_low</span>
+            <span class="n">to_tag_point</span>  <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">to_tag</span> <span class="p">]</span>
+            <span class="n">to_tag_labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">to_tag</span> <span class="p">]</span>
+            <span class="n">to_tag_point</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag_low_level</span><span class="p">(</span><span class="n">to_tag_point</span><span class="p">)</span>
+            <span class="n">merge_labes_re_labels</span> <span class="o">=</span><span class="nb">zip</span><span class="p">(</span><span class="n">to_tag_point</span><span class="p">,</span> <span class="n">to_tag_labels</span><span class="p">)</span>
+            <span class="n">to_tag_result</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;+&#39;</span><span class="o">+</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">merge_labes_re_labels</span><span class="p">]</span>
+            <span class="n">level_tags_self</span> <span class="o">=</span> <span class="n">level_tags_self</span> <span class="o">+</span> <span class="n">to_tag_result</span>
+        
+        <span class="c1">### Pass to children </span>
+        <span class="n">level_tags_children</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">level_tags_self</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_noise&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">]</span>
+        <span class="n">not_children</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">level_tags_self</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;_noise&#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">]</span>
+        <span class="n">tag_from_children</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="c1"># print(child.name)</span>
+            <span class="n">level_tags_pass_children</span> <span class="o">=</span>  <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">level_tags_children</span> <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">child</span><span class="o">.</span><span class="n">name</span>   <span class="p">]</span> 
+            <span class="n">tag_from_children</span> <span class="o">=</span> <span class="n">tag_from_children</span> <span class="o">+</span> <span class="n">child</span><span class="o">.</span><span class="n">tag_all_point</span><span class="p">(</span> <span class="n">level_tags_pass_children</span><span class="p">)</span> 
+        
+        
+        <span class="k">return</span> <span class="n">not_children</span> <span class="o">+</span><span class="n">tag_from_children</span>
+    
+    <span class="c1">##################iterative tag noise signal </span>
+    
+    <span class="k">def</span> <span class="nf">tag_all_point_noise_signal</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">to_tag</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns all the points and the points of it decendents tag or</span>
+<span class="sd">        noise</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">level_tags_self</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag_low_level_noise_signal</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">to_tag</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1">#### to tag has to be in the same form as the return of tag_low</span>
+            <span class="n">to_tag_point</span>  <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">to_tag</span> <span class="p">]</span>
+            <span class="n">to_tag_labels</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">to_tag</span> <span class="p">]</span>
+            <span class="n">to_tag_point</span><span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tag_low_level_noise_signal</span><span class="p">(</span><span class="n">to_tag_point</span><span class="p">)</span>
+            <span class="n">merge_labes_re_labels</span> <span class="o">=</span><span class="nb">zip</span><span class="p">(</span><span class="n">to_tag_point</span><span class="p">,</span> <span class="n">to_tag_labels</span><span class="p">)</span>
+            <span class="n">to_tag_result</span> <span class="o">=</span> <span class="p">[(</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;+&#39;</span><span class="o">+</span><span class="n">i</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">merge_labes_re_labels</span><span class="p">]</span>
+            <span class="n">level_tags_self</span> <span class="o">=</span> <span class="n">level_tags_self</span> <span class="o">+</span> <span class="n">to_tag_result</span>
+        
+        <span class="c1">### Pass to children </span>
+        <span class="n">level_tags_children</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">level_tags_self</span> <span class="k">if</span> <span class="s1">&#39;1&#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">]</span>
+        <span class="n">not_children</span> <span class="o">=</span> <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">level_tags_self</span> <span class="k">if</span>  <span class="s1">&#39;noise&#39;</span> <span class="ow">in</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="p">]</span>
+        <span class="n">tag_from_children</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="c1"># print(child.name)</span>
+            <span class="n">level_tags_pass_children</span> <span class="o">=</span>  <span class="p">[</span><span class="n">i</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">level_tags_children</span> <span class="k">if</span> <span class="n">i</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;1&#39;</span>   <span class="p">]</span> 
+            <span class="n">tag_from_children</span> <span class="o">=</span> <span class="n">tag_from_children</span> <span class="o">+</span> <span class="n">child</span><span class="o">.</span><span class="n">tag_all_point_noise_signal</span><span class="p">(</span> <span class="n">level_tags_pass_children</span><span class="p">)</span> 
+        
+        
+        <span class="k">return</span> <span class="n">not_children</span> <span class="o">+</span><span class="n">tag_from_children</span>
+
+
+    <span class="c1">######Check point for children</span>
+    <span class="k">def</span> <span class="nf">check_point_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Points_tocheck</span><span class="p">):</span>
+        <span class="n">point_chek_bool</span><span class="o">=</span><span class="p">[]</span>
+        <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">polygon_cluster</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">point_chek_bool</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">child</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">Points_tocheck</span><span class="p">])</span>
+            <span class="k">else</span><span class="p">:</span> 
+                <span class="n">point_chek_bool</span><span class="o">.</span><span class="n">append</span><span class="p">([])</span>
+        <span class="k">return</span> <span class="n">point_chek_bool</span>
+
+    <span class="c1">########## viewer</span>
+    <span class="k">def</span> <span class="nf">viewer_cluster</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span>  <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">level_view</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;level&#39;</span><span class="p">,</span> <span class="mi">0</span> <span class="p">)</span>
+        <span class="n">polygon_con</span><span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;polygon&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="n">poligon_children</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;polygon_children&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">level_view</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">cluster_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_points</span><span class="p">()</span>
+            <span class="n">x_points_cluster</span> <span class="o">=</span><span class="p">[</span><span class="n">j</span><span class="o">.</span><span class="n">x</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">cluster_points</span>  <span class="p">]</span>
+            <span class="n">y_points_cluster</span> <span class="o">=</span><span class="p">[</span><span class="n">j</span><span class="o">.</span><span class="n">y</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">cluster_points</span>  <span class="p">]</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_points_cluster</span><span class="p">,</span><span class="n">y_points_cluster</span><span class="p">,</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;size_cluster&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                    <span class="n">color</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;color_cluster&#39;</span><span class="p">,</span> <span class="s1">&#39;orange&#39;</span><span class="p">),</span> 
+                    <span class="n">alpha</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;alpha_cluster&#39;</span><span class="p">,</span> <span class="mf">.5</span><span class="p">)</span>
+                    <span class="p">)</span>
+        <span class="k">elif</span>  <span class="n">level_view</span> <span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">cluster_points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_points</span><span class="p">()</span>
+            <span class="n">x_points_cluster</span> <span class="o">=</span><span class="p">[</span><span class="n">j</span><span class="o">.</span><span class="n">x</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">cluster_points</span>  <span class="p">]</span>
+            <span class="n">y_points_cluster</span> <span class="o">=</span><span class="p">[</span><span class="n">j</span><span class="o">.</span><span class="n">y</span> <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">cluster_points</span>  <span class="p">]</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x_points_cluster</span><span class="p">,</span><span class="n">y_points_cluster</span><span class="p">,</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;size_cluster&#39;</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+                    <span class="n">color</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;color_cluster&#39;</span><span class="p">,</span> <span class="s1">&#39;green&#39;</span><span class="p">),</span> 
+                    <span class="n">alpha</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;alpha_cluster&#39;</span><span class="p">,</span> <span class="mf">.5</span><span class="p">)</span>
+                    <span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+                <span class="n">child_points</span> <span class="o">=</span> <span class="n">child</span><span class="o">.</span><span class="n">get_points</span><span class="p">()</span>
+                <span class="n">x_points_children</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span><span class="o">.</span><span class="n">x</span>  <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">child_points</span>   <span class="p">]</span>
+                <span class="n">y_points_children</span> <span class="o">=</span> <span class="p">[</span><span class="n">j</span><span class="o">.</span><span class="n">y</span>  <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">child_points</span>   <span class="p">]</span>
+                <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span>
+                    <span class="n">x_points_children</span><span class="p">,</span>
+                    <span class="n">y_points_children</span><span class="p">,</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;size_children&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                    <span class="n">color</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;color_children&#39;</span><span class="p">,</span> <span class="s1">&#39;blue&#39;</span><span class="p">),</span> 
+                    <span class="n">alpha</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;alpha_children&#39;</span><span class="p">,</span> <span class="mf">.25</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">if</span> <span class="n">poligon_children</span><span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="n">x_polygon</span><span class="p">,</span> <span class="n">y_polygon</span>  <span class="o">=</span><span class="n">child</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">xy</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_polygon</span><span class="p">,</span> <span class="n">y_polygon</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                        <span class="s1">&#39;polygon_color_children&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;blue&#39;</span><span class="p">)</span>
+                    <span class="p">)</span>
+        <span class="k">elif</span>  <span class="n">level_view</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">jet</span> <span class="o">=</span>  <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;jet&#39;</span><span class="p">)</span> 
+            <span class="n">cNorm</span>  <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">colors</span><span class="o">.</span><span class="n">Normalize</span><span class="p">(</span><span class="n">vmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
+            <span class="n">scalarMap</span> <span class="o">=</span> <span class="n">matplotlib</span><span class="o">.</span><span class="n">cm</span><span class="o">.</span><span class="n">ScalarMappable</span><span class="p">(</span><span class="n">norm</span><span class="o">=</span><span class="n">cNorm</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">jet</span><span class="p">)</span>
+            <span class="n">color_random</span><span class="o">=</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">250</span><span class="p">)</span>
+            <span class="n">ax</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">viewer_cluster</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span>
+                    <span class="n">level</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+                    <span class="n">size_cluster</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;size_cluster&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+                    <span class="n">color_cluster</span><span class="o">=</span> <span class="n">scalarMap</span><span class="o">.</span><span class="n">to_rgba</span><span class="p">(</span><span class="n">color_random</span><span class="p">),</span>
+                    <span class="n">alpha_cluster</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;alpha_cluster&#39;</span><span class="p">,</span> <span class="mf">.5</span><span class="p">),</span>
+                    <span class="n">polygon</span> <span class="o">=</span> <span class="n">polygon_con</span>
+
+            <span class="p">)</span>
+            <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;polygon_color&#39;</span><span class="p">]</span><span class="o">=</span> <span class="n">scalarMap</span><span class="o">.</span><span class="n">to_rgba</span><span class="p">(</span><span class="n">color_random</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+                 <span class="n">child</span><span class="o">.</span><span class="n">viewer_cluster</span><span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                
+        <span class="k">if</span> <span class="n">polygon_con</span><span class="p">:</span>
+            <span class="n">x_polygon</span><span class="p">,</span> <span class="n">y_polygon</span>  <span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">xy</span>
+            <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x_polygon</span><span class="p">,</span> 
+                    <span class="n">y_polygon</span><span class="p">,</span>
+                    <span class="n">color</span><span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                            <span class="s1">&#39;polygon_color&#39;</span><span class="p">,</span>
+                            <span class="s1">&#39;magenta&#39;</span>
+                        <span class="p">)</span>
+                    <span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">ax</span>
+
+
+    <span class="c1">################## Dynamic generation </span>
+    <span class="c1">###</span>
+
+
+
+    <span class="k">def</span> <span class="nf">reproduce_node_polygon</span><span class="p">(</span>
+                <span class="bp">self</span><span class="p">,</span>
+                <span class="o">**</span><span class="n">kwargs</span>
+                <span class="p">):</span>
+        <span class="n">percent_construc_poligon</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s1">&#39;percent_construc_poligon&#39;</span><span class="p">,</span><span class="mf">.85</span><span class="p">)</span>
+        <span class="n">u</span><span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span> <span class="s1">&#39;u&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+        <span class="c1">###### The factors has to be symilar respect to the bounding box</span>
+
+        <span class="n">x_fac</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;x_fac&#39;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+        <span class="n">y_fac</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;y_fac&#39;</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">)</span>
+        <span class="n">b_val</span><span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;b_val&#39;</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">)</span>
+        <span class="n">list_child</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;list_children&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">random_seed</span><span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;random_seed&#39;</span><span class="p">,</span> <span class="mi">142</span><span class="p">)</span>
+        <span class="n">verbose</span><span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;verbose&#39;</span><span class="p">,</span> <span class="kc">False</span> <span class="p">)</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No polygon in the cluster no able to reproduce&#39;</span><span class="p">)</span>
+
+
+        <span class="c1">### Duplicate the node using a similar poligon </span>
+        <span class="n">min_x_pol</span><span class="p">,</span> <span class="n">min_y_pol</span> <span class="p">,</span> <span class="n">max_x_pol</span> <span class="p">,</span> <span class="n">max_y_pol</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">bounds</span> 
+
+        <span class="c1">####Get bounding boxes of the nodes child poligons </span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">list_child</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">bounds_children</span> <span class="o">=</span> <span class="p">[</span><span class="n">d</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">bounds</span> <span class="k">for</span> <span class="n">d</span><span class="p">,</span> <span class="n">s</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">,</span> <span class="n">list_child</span><span class="p">)</span> <span class="k">if</span> <span class="n">s</span><span class="p">]</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">bounds_children</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bounds_children</span> <span class="o">=</span><span class="p">[</span><span class="n">child</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">bounds</span> <span class="k">for</span> <span class="n">child</span> <span class="ow">in</span>  <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">]</span>
+            
+            <span class="n">points_bound_children</span>  <span class="o">=</span> <span class="p">[</span><span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">bound</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bound</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">bound</span> <span class="ow">in</span> <span class="n">bounds_children</span>  <span class="p">]</span> 
+            <span class="n">points_bound_children</span>  <span class="o">=</span> <span class="n">points_bound_children</span>  <span class="o">+</span> <span class="p">[</span><span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">bound</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bound</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="k">for</span> <span class="n">bound</span> <span class="ow">in</span> <span class="n">bounds_children</span> <span class="p">]</span> 
+            <span class="n">points_bound_children</span>  <span class="o">=</span> <span class="n">points_bound_children</span>  <span class="o">+</span> <span class="p">[</span><span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">bound</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bound</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">bound</span> <span class="ow">in</span> <span class="n">bounds_children</span> <span class="p">]</span> 
+            <span class="n">points_bound_children</span>  <span class="o">=</span> <span class="n">points_bound_children</span>  <span class="o">+</span> <span class="p">[</span><span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">bound</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">bound</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="k">for</span> <span class="n">bound</span> <span class="ow">in</span> <span class="n">bounds_children</span> <span class="p">]</span>
+            <span class="n">x_side_val</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">max_x_pol</span><span class="o">-</span> <span class="n">min_x_pol</span><span class="p">)</span>
+            <span class="n">y_side_val</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">max_y_pol</span><span class="o">-</span> <span class="n">min_y_pol</span><span class="p">)</span>
+            <span class="n">x_min_val</span> <span class="o">=</span>  <span class="n">min_x_pol</span> <span class="o">-</span> <span class="n">x_side_val</span><span class="o">*</span><span class="n">x_fac</span>
+            <span class="n">x_max_val</span> <span class="o">=</span>  <span class="n">max_x_pol</span> <span class="o">+</span> <span class="n">x_side_val</span><span class="o">*</span><span class="n">x_fac</span>
+            <span class="n">y_min_val</span> <span class="o">=</span>  <span class="n">min_y_pol</span> <span class="o">-</span> <span class="n">y_side_val</span><span class="o">*</span><span class="n">y_fac</span>
+            <span class="n">y_max_val</span> <span class="o">=</span>  <span class="n">max_y_pol</span> <span class="o">+</span> <span class="n">y_side_val</span><span class="o">*</span><span class="n">y_fac</span>
+            <span class="n">random_points_pol_new</span><span class="o">=</span><span class="p">[]</span>
+            <span class="n">res_bool</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="o">==</span><span class="kc">True</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;X Minimun value:&#39;</span><span class="p">,</span> <span class="n">x_min_val</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;X Maximun value:&#39;</span><span class="p">,</span> <span class="n">x_max_val</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Y Minimun value:&#39;</span><span class="p">,</span> <span class="n">x_min_val</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Y Maximun value:&#39;</span><span class="p">,</span> <span class="n">x_max_val</span><span class="p">)</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">random_seed</span><span class="p">)</span> 
+            <span class="k">while</span>  <span class="n">res_bool</span> <span class="o">==</span><span class="kc">False</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">u</span><span class="p">):</span>
+                    <span class="n">random_points_pol_new</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                                    <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span>
+                                                <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">x_min_val</span><span class="p">,</span> <span class="n">x_max_val</span>  <span class="p">),</span>
+                                                <span class="n">random</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="n">y_min_val</span><span class="p">,</span> <span class="n">y_max_val</span>  <span class="p">)</span>
+                                    <span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="n">res_bool</span> <span class="p">,</span> <span class="n">random_points_pol_new</span> <span class="o">=</span> <span class="n">inside_polygon</span><span class="p">(</span><span class="n">random_points_pol_new</span><span class="p">,</span> 
+                                                                <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="p">,</span>
+                                                                <span class="n">percent_construc_poligon</span>
+                                                                <span class="p">)</span>
+            <span class="n">random_points_pol_new</span> <span class="o">=</span> <span class="n">random_points_pol_new</span> <span class="o">+</span> <span class="n">points_bound_children</span>
+        
+        <span class="k">return</span> <span class="n">poligon_non_convex_from_Points</span><span class="p">(</span><span class="n">random_points_pol_new</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">duplicate_node</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                       <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The function &quot;duplicate&quot; the cluster node</span>
+<span class="sd">        returns : a cluster_node class</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">pref</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;copy_pref&#39;</span><span class="p">,</span> <span class="s1">&#39;copy_&#39;</span><span class="p">)</span>
+        <span class="n">new_cluster</span> <span class="o">=</span> <span class="n">cluster_node</span><span class="p">(</span> <span class="n">pref</span><span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="p">)</span>
+        <span class="n">density_in</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parent&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">parent_in</span><span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;parent&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span>
+        <span class="n">children_in</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;children&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">npoints_in</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;npoints&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> 
+
+        
+        <span class="n">new_cluster</span><span class="o">.</span><span class="n">polygon_cluster</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">reproduce_node_polygon</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span> <span class="p">)</span>
+        
+        
+        <span class="k">if</span> <span class="n">density_in</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">new_cluster</span><span class="o">.</span><span class="n">density</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_density</span><span class="p">()</span> 
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">new_cluster</span><span class="o">.</span><span class="n">density</span> <span class="o">=</span> <span class="n">density</span>
+        
+        <span class="k">if</span> <span class="n">npoints_in</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">npoints</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">new_cluster</span><span class="o">.</span><span class="n">density</span> <span class="o">*</span> <span class="n">new_cluster</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">area</span> <span class="p">)</span> 
+            <span class="n">new_cluster</span><span class="o">.</span><span class="n">point_cluster_noise</span> <span class="o">=</span>  <span class="n">new_cluster</span><span class="o">.</span><span class="n">get_random_points</span><span class="p">(</span><span class="n">npoints</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">### overided the density </span>
+            <span class="n">new_cluster</span><span class="o">.</span><span class="n">density</span> <span class="o">=</span> <span class="n">npoint_in</span><span class="o">/</span><span class="n">new_cluster</span><span class="o">.</span><span class="n">cluster_polygon</span><span class="o">.</span><span class="n">area</span>
+            <span class="n">new_cluster</span><span class="o">.</span><span class="n">point_cluster_noise</span> <span class="o">=</span>  <span class="n">new_cluster</span><span class="o">.</span><span class="n">get_random_points</span><span class="p">(</span><span class="n">npoints</span><span class="p">)</span>
+             
+            
+            
+        <span class="k">return</span> <span class="n">new_cluster</span>
+    <span class="c1">##########Get polygon no toching with others</span>
+    <span class="k">def</span> <span class="nf">polygon_not_in_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        El nodo que se pasa como parametro debe ser el padre del poligono que se pide</span>
+<span class="sd">        y el poligon estara contenido dentro del pologon del nodo que esta como parametro</span>
+<span class="sd">        </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;random_state&#39;</span><span class="p">,</span> <span class="mi">123456</span><span class="p">)</span>
+        <span class="n">from_points_num</span><span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;from_points_num&#39;</span><span class="p">,</span> <span class="mi">20</span><span class="p">)</span>
+        <span class="n">max_scale_x</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_scale_x&#39;</span><span class="p">,</span><span class="mf">.5</span><span class="p">)</span>
+        <span class="n">max_scale_y</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;max_scale_y&#39;</span><span class="p">,</span><span class="mf">.5</span><span class="p">)</span>
+        <span class="n">chec_in</span><span class="o">=</span> <span class="kc">True</span>
+        <span class="k">while</span> <span class="n">chec_in</span> <span class="o">==</span><span class="kc">True</span><span class="p">:</span>
+            <span class="n">random_point_center</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_random_points</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">random_state</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">chec_in</span><span class="o">=</span><span class="nb">all</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">check_point_children</span><span class="p">([</span><span class="n">random_point_center</span><span class="p">]))</span>
+        <span class="c1">### create polygon and scale </span>
+
+        <span class="n">polygon</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_polygon</span><span class="p">(</span><span class="n">from_points_num</span><span class="p">)</span>
+        <span class="n">new_pol_x_min</span><span class="p">,</span> <span class="n">new_pol_y_min</span><span class="p">,</span> <span class="n">new_pol_x_max</span><span class="p">,</span> <span class="n">new_pol_y_max</span> <span class="o">=</span> <span class="n">polygon</span><span class="o">.</span><span class="n">bounds</span>
+        <span class="n">center_polygon</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">((</span><span class="n">new_pol_x_max</span> <span class="o">-</span><span class="n">new_pol_x_min</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span> <span class="o">+</span> <span class="n">new_pol_x_min</span><span class="p">,</span>
+                    <span class="p">(</span><span class="n">new_pol_y_max</span><span class="o">-</span> <span class="n">new_pol_y_min</span><span class="p">)</span><span class="o">/</span><span class="mi">2</span><span class="o">+</span><span class="n">new_pol_y_min</span><span class="p">)</span>
+        <span class="n">translate</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span>
+                    <span class="n">random_point_center</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span><span class="n">center_polygon</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                    <span class="n">random_point_center</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span><span class="n">center_polygon</span><span class="o">.</span><span class="n">y</span>
+                    <span class="p">)</span>
+        <span class="n">polygon</span> <span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">affinity</span><span class="o">.</span><span class="n">translate</span><span class="p">(</span> 
+                <span class="n">polygon</span><span class="p">,</span> 
+                <span class="n">xoff</span> <span class="o">=</span> <span class="n">translate</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+                <span class="n">yoff</span> <span class="o">=</span> <span class="n">translate</span><span class="o">.</span><span class="n">y</span>
+                <span class="p">)</span>
+        <span class="n">new_pol_x_min</span><span class="p">,</span> <span class="n">new_pol_y_min</span><span class="p">,</span> <span class="n">new_pol_x_max</span><span class="p">,</span> <span class="n">new_pol_y_max</span> <span class="o">=</span> <span class="n">polygon</span><span class="o">.</span><span class="n">bounds</span>
+        <span class="n">esq</span> <span class="o">=</span> <span class="p">[</span> <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">new_pol_x_min</span><span class="p">,</span><span class="n">new_pol_y_min</span> <span class="p">),</span>
+                <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">new_pol_x_min</span><span class="p">,</span><span class="n">new_pol_y_max</span> <span class="p">),</span>
+                <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">new_pol_x_max</span><span class="p">,</span><span class="n">new_pol_y_min</span> <span class="p">),</span>
+                <span class="n">shapely</span><span class="o">.</span><span class="n">geometry</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">new_pol_x_max</span><span class="p">,</span><span class="n">new_pol_y_max</span> <span class="p">)</span>
+            <span class="p">]</span>
+        <span class="n">max_dis_esq</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="n">random_point_center</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">esq</span><span class="p">])</span>
+
+    <span class="c1">###### Scale the polygon </span>
+    <span class="c1">#dis_poly_parent= self.parent.polygon_cluster.exterior.distance(random_point_center)</span>
+        <span class="c1">###### Para que no toque con los hijos lo que debemos pedir es que esta distancia </span>
+        <span class="c1"># sea con respecto a la distancia minima de los poligonos de los hijos</span>
+
+        <span class="n">max_dis_parent</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span> <span class="n">random_point_center</span><span class="p">)</span>
+        <span class="n">min_dis_children</span><span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">child</span>  <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">children</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">child</span><span class="o">.</span><span class="n">polygon_cluster</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">min_dis_children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">child</span><span class="o">.</span><span class="n">polygon_cluster</span><span class="o">.</span><span class="n">exterior</span><span class="o">.</span><span class="n">distance</span><span class="p">(</span><span class="n">random_point_center</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">min_dis_children</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">300000000000000</span><span class="p">)</span> <span class="c1">#### Es un numero cualquiera </span>
+        <span class="n">max_dis_children_all</span><span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">min_dis_children</span><span class="p">)</span><span class="c1">##### Es tomar la minima distancia </span>
+        <span class="n">max_dis</span> <span class="o">=</span> <span class="nb">min</span> <span class="p">(</span><span class="n">max_dis_children_all</span><span class="p">,</span> <span class="n">max_dis_parent</span><span class="p">)</span>
+
+        <span class="n">fact_pol</span> <span class="o">=</span> <span class="p">(</span><span class="n">max_dis</span><span class="o">/</span><span class="p">(</span><span class="mf">1.3</span><span class="o">*</span><span class="n">max_dis_esq</span><span class="p">))</span>
+
+        <span class="n">scale_factor_max_x</span>  <span class="o">=</span> <span class="nb">min</span> <span class="p">(</span><span class="n">fact_pol</span><span class="p">,</span> <span class="n">max_scale_x</span><span class="p">)</span>
+        <span class="n">scale_factor_max_y</span>  <span class="o">=</span> <span class="nb">min</span> <span class="p">(</span><span class="n">fact_pol</span><span class="p">,</span> <span class="n">max_scale_y</span><span class="p">)</span>
+
+
+    <span class="c1"># print(&#39;scale x:&#39;, scale_factor_max_x)</span>
+    <span class="c1"># print(&#39;scale y:&#39;, scale_factor_max_y)</span>
+    <span class="c1">##########</span>
+        <span class="n">polygon</span><span class="o">=</span> <span class="n">shapely</span><span class="o">.</span><span class="n">affinity</span><span class="o">.</span><span class="n">scale</span><span class="p">(</span> 
+            <span class="n">polygon</span><span class="p">,</span>
+            <span class="n">xfact</span><span class="o">=</span><span class="n">scale_factor_max_x</span><span class="p">,</span>
+            <span class="n">yfact</span><span class="o">=</span><span class="n">scale_factor_max_y</span><span class="p">,</span>
+            <span class="n">origin</span><span class="o">=</span> <span class="n">random_point_center</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">polygon</span><span class="p">,</span> <span class="n">random_point_center</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">cluster_node</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&lt;__main__.cluster_node at 0x7fc11262f4d0&gt;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Helper-functions">Helper functions<a class="anchor-link" href="#Helper-functions"> </a></h2><blockquote><p>Functions to help build the nodes</p>
+</blockquote>
+
+</div>
+</div>
+</div>
 </div>
  
 
