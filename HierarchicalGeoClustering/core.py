@@ -3,18 +3,6 @@
 __all__ = ['cluster']
 
 # Cell
-import sklearn
-from sklearn import cluster, datasets
-import anytree
-from shapely.geometry import LineString
-from shapely.ops import polygonize, cascaded_union
-from shapely.geometry import box
-from shapely.geometry import Point, Polygon, MultiPolygon
-from shapely.ops import polygonize_full, linemerge, unary_union
-from matplotlib import cm
-from anytree import NodeMixin, RenderTree
-
-# Cell
 class cluster(object):
     polygon_cluster = None
     point_cluster_noise = None
