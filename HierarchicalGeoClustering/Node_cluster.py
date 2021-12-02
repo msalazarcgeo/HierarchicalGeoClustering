@@ -37,6 +37,19 @@ class cluster_node(cluster, NodeMixin):
                 density=None,
                 parent=None,
                 children=None):
+        """
+        Constructor of the class
+
+        :param str name: Name of the cluster
+
+        :param double density: Density of the cluster (Default =None)
+
+        :param cluster_node parent: Cluster parent (Default = None)
+
+        :param list children: List of its children (Default =None)
+
+        """
+
         super(cluster, self).__init__()
         self.name = name
         self.parent = parent
@@ -56,6 +69,22 @@ class cluster_node(cluster, NodeMixin):
                     random_state= 170,
                     **kwargs
                     ):
+        """
+        Populate the cluster on random bases
+
+        :param int random_state: Rando state
+
+        :param double min_scale_x: min x value range ( Default=.1 )
+
+        :param double max_scale_x: max x value range ( Default=.5 )
+
+        :param double min_scale_y: min y value range ( Default=.1 )
+
+        :param double max_scale_y: max y value range ( Default=.5 )
+
+        """
+
+
         self.density = density
         random.seed(random_state) ## initialize random state
         avoid_intersec= kwargs.get('avoid_intersec', False)
