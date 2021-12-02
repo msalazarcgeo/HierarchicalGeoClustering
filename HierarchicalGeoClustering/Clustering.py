@@ -19,6 +19,7 @@ def clustering(
             **kwargs
     ):
     """Function to get the clusters for single group by
+
     :param t_next_level_2 Dictionary with the points to compute the
             cluster
     :param level:  None Level to compute (Default None)
@@ -384,7 +385,9 @@ def auto_knee_average(points2_clusters ,
 # Cell
 def compute_hdbscan(points2_clusters,  **kwargs):
 
-    """ HDBSCAN wrapper.
+    """
+    HDBSCAN wrapper.
+
     :param np.array cluster: a (N,2) numpy array containing the obsevations
 
     :returns:  list with numpy arrays for all the clusters obtained
