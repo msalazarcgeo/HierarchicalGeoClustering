@@ -17,6 +17,9 @@ from anytree import NodeMixin, RenderTree
 
 # Cell
 class cluster(object):
+    """
+    A Basic class of a cluster
+    """
     polygon_cluster = None
     point_cluster_noise = None
 
