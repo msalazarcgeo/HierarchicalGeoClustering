@@ -698,9 +698,13 @@ class cluster_node(cluster, NodeMixin):
 def inside_polygon(list_points, poligon_check, min_percent):
     """
     Help function to validate the number of points that are inside the polygon
+
     :param list list_points: List of points to concider
+
     :param shapely.geometry.Polygon poligon_check:
+
     :param min_percent: Minimun percent of point to be consider inside
+
     :returns bool: True If the amount of points are inside.
     """
     if len(list_points)< 2:
@@ -721,6 +725,7 @@ def poligon_non_convex_from_Points( points_li ):
     non convex part it is not always guaranteed.
 
     :param list points_li: list of shapely.geometry.Point
+
     :returns shapely.grometry.Polygon: The polygon created
     """
 
@@ -743,6 +748,7 @@ def poligon_non_convex_random_gen(npoints):
     non convex part it is not always guaranteed.
 
     :param int npoints: Number of point to generate the polygon
+
     :returns shapely.grometry.Polygon: The poligon created
     """
     points_r = np.random.random((npoints, 2))
