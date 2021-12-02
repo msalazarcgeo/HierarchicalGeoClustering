@@ -145,6 +145,12 @@ class cluster_node(cluster, NodeMixin):
 
     ##### Generate random polygon
     def create_polygon(self,  from_points_num=20):
+        """
+        Generate a random polygon for the cluster
+
+        :param from_points_num: The number of points to
+        generate the cluster from
+        """
         polygon = poligon_non_convex_random_gen(from_points_num)
         while type(polygon) == shapely.geometry.MultiPolygon:
             polygon = poligon_non_convex_random_gen(
@@ -155,8 +161,11 @@ class cluster_node(cluster, NodeMixin):
     def get_random_points(self, n_points, random_state= 150):
         """
         Returns random points inside the cluster polygon
+
         :param n_points Number of point to be generated
+
         :param random_state Random state
+
         :returns: A list with points
         """
         random.seed(random_state)
@@ -176,8 +185,11 @@ class cluster_node(cluster, NodeMixin):
     def create_random_points(self, npoints_polygon=1000, random_state = 120):
         """
         Create random points
+
         :param npoints_polygon Number of point to get
+
         :random_state Random state integer to ste random
+
         :returns: A shapely multyPoint clas witn npoints_polygon points
 
         """
@@ -207,9 +219,13 @@ class cluster_node(cluster, NodeMixin):
     def scale(self,x_scale, y_scale, center_scale= 'center'):
         """
         Scale the points in the cluster
+
         :param x_scale Scale factor to scale in x axis
+
         :param y_scale Scale factor to scale in y axis
+
         :param center_scale Scale center point  (Default = 'center')
+
         :returns: No returns
         """
         if self.point_cluster_noise is not None:
@@ -231,9 +247,9 @@ class cluster_node(cluster, NodeMixin):
 
     def get_density(self):
         """
-        Get the density if the cluster
-        Number of point in the cluster/Area of the polygon cluster
-        :returns the density of the node
+        Get the density of the cluster
+
+        :returns double: The density of the node
         """
         if self.density is not None:
             return self.density
@@ -259,7 +275,8 @@ class cluster_node(cluster, NodeMixin):
 
     def get_center(self):
         """
-        returns the center of the bounding box poligon
+        Get the center of the bounding box poligon
+
         :returns: Shapely Point center
         """
         if self.center is not None:
@@ -299,7 +316,9 @@ class cluster_node(cluster, NodeMixin):
         return  all_points
 
     def get_point_decendent(self):
-        """returns all the point of the node and its decendents
+        """
+        Returns all the point of the node and its decendents
+
         """
         all_p  = []
         all_p= all_p+ [i for i in self.get_points()]
@@ -632,6 +651,9 @@ class cluster_node(cluster, NodeMixin):
         El nodo que se pasa como parametro debe ser el padre del poligono que se pide
         y el poligon estara contenido dentro del pologon del nodo que esta como parametro
 
+        random_state
+
+        from_points_num
         """
         random_state=kwargs.get('random_state', 123456)
         from_points_num= kwargs.get('from_points_num', 20)

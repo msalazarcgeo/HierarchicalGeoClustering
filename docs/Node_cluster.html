@@ -122,6 +122,13 @@ algorithms.</p>
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="create-polygon">create polygon<a class="anchor-link" href="#create-polygon"> </a></h2><p>Create a random polygon of the cluster node</p>
+
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -133,7 +140,138 @@ algorithms.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="cluster_node.tag_low_level_noise_signal" class="doc_header"><code>cluster_node.tag_low_level_noise_signal</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L347" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>cluster_node.tag_low_level_noise_signal</code>(<strong><code>point_check</code></strong>=<em><code>None</code></em>)</p>
+<h4 id="cluster_node.create_polygon" class="doc_header"><code>cluster_node.create_polygon</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L147" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>cluster_node.create_polygon</code>(<strong><code>from_points_num</code></strong>=<em><code>20</code></em>)</p>
+</blockquote>
+<p>Generate a random polygon for the cluster</p>
+<p>:param from_points_num: The number of points to
+generate the cluster from</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Random-points">Random points<a class="anchor-link" href="#Random-points"> </a></h4><p>Generate random points inside cluster</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="cluster_node.create_random_points" class="doc_header"><code>cluster_node.create_random_points</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L185" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>cluster_node.create_random_points</code>(<strong><code>npoints_polygon</code></strong>=<em><code>1000</code></em>, <strong><code>random_state</code></strong>=<em><code>120</code></em>)</p>
+</blockquote>
+<p>Create random points</p>
+<p>:param npoints_polygon Number of point to get</p>
+<p>:random_state Random state integer to ste random</p>
+<p>:returns: A shapely multyPoint clas witn npoints_polygon points</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="scale">scale<a class="anchor-link" href="#scale"> </a></h4><p>Scale the points inside the cluster</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="cluster_node.scale" class="doc_header"><code>cluster_node.scale</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L219" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>cluster_node.scale</code>(<strong><code>x_scale</code></strong>, <strong><code>y_scale</code></strong>, <strong><code>center_scale</code></strong>=<em><code>'center'</code></em>)</p>
+</blockquote>
+<p>Scale the points in the cluster</p>
+<p>:param x_scale Scale factor to scale in x axis</p>
+<p>:param y_scale Scale factor to scale in y axis</p>
+<p>:param center_scale Scale center point  (Default = 'center')</p>
+<p>:returns: No returns</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Get-density">Get density<a class="anchor-link" href="#Get-density"> </a></h4><p>Number of point in the cluster/Area of the polygon cluster</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="cluster_node.get_density" class="doc_header"><code>cluster_node.get_density</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L248" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>cluster_node.get_density</code>()</p>
+</blockquote>
+<p>Get the density of the cluster</p>
+<p>:returns double: The density of the node</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="cluster_node.tag_low_level_noise_signal" class="doc_header"><code>cluster_node.tag_low_level_noise_signal</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L366" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>cluster_node.tag_low_level_noise_signal</code>(<strong><code>point_check</code></strong>=<em><code>None</code></em>)</p>
 </blockquote>
 <p>The tag the element of the node using the labels noise or signal
 as a tag, if a set of point is pass (point_check != None)
@@ -161,6 +299,13 @@ accordingly.</p>
 </div>
 </div>
 </div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="inside_polygon">inside_polygon<a class="anchor-link" href="#inside_polygon"> </a></h2><p>Check if a min percentage of point are inside a polygon</p>
+
+</div>
+</div>
+</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -172,7 +317,7 @@ accordingly.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="inside_polygon" class="doc_header"><code>inside_polygon</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L701" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>inside_polygon</code>(<strong><code>list_points</code></strong>, <strong><code>poligon_check</code></strong>, <strong><code>min_percent</code></strong>)</p>
+<h4 id="inside_polygon" class="doc_header"><code>inside_polygon</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L723" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>inside_polygon</code>(<strong><code>list_points</code></strong>, <strong><code>poligon_check</code></strong>, <strong><code>min_percent</code></strong>)</p>
 </blockquote>
 <p>Help function to validate the number of points that are inside the polygon</p>
 <p>:param list list_points: List of points to concider</p>
@@ -199,8 +344,7 @@ accordingly.</p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="poligon_non_convex_from_Points">poligon_non_convex_from_Points<a class="anchor-link" href="#poligon_non_convex_from_Points"> </a></h2><blockquote><p>Function create a polygon from a list of points</p>
-</blockquote>
+<h2 id="poligon_non_convex_from_Points">poligon_non_convex_from_Points<a class="anchor-link" href="#poligon_non_convex_from_Points"> </a></h2><p>Function create a polygon from a list of points</p>
 
 </div>
 </div>
@@ -216,7 +360,7 @@ accordingly.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="poligon_non_convex_from_Points" class="doc_header"><code>poligon_non_convex_from_Points</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L725" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>poligon_non_convex_from_Points</code>(<strong><code>points_li</code></strong>)</p>
+<h4 id="poligon_non_convex_from_Points" class="doc_header"><code>poligon_non_convex_from_Points</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L747" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>poligon_non_convex_from_Points</code>(<strong><code>points_li</code></strong>)</p>
 </blockquote>
 <p>Create a random (no convex) poligon from the points
 The algorithm returns a polygon creatated from the points, the
@@ -243,8 +387,7 @@ non convex part it is not always guaranteed.</p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="poligon_non_convex_random_gen">poligon_non_convex_random_gen<a class="anchor-link" href="#poligon_non_convex_random_gen"> </a></h2><blockquote><p>Creates a poligon from a random number of points</p>
-</blockquote>
+<h2 id="poligon_non_convex_random_gen">poligon_non_convex_random_gen<a class="anchor-link" href="#poligon_non_convex_random_gen"> </a></h2><p>Creates a poligon from a random number of points</p>
 
 </div>
 </div>
@@ -260,7 +403,7 @@ non convex part it is not always guaranteed.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="poligon_non_convex_random_gen" class="doc_header"><code>poligon_non_convex_random_gen</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L748" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>poligon_non_convex_random_gen</code>(<strong><code>npoints</code></strong>)</p>
+<h4 id="poligon_non_convex_random_gen" class="doc_header"><code>poligon_non_convex_random_gen</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L770" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>poligon_non_convex_random_gen</code>(<strong><code>npoints</code></strong>)</p>
 </blockquote>
 <p>Create a random (no convex) poligon from n points
 The algorithm returns a polygon creatated from n random 2d points the
