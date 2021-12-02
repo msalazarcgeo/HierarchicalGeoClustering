@@ -15,6 +15,9 @@ entries:
     - output: web,pdf
       title: 'Tree Cluster class '
       url: tree_clusters.html
+    - output: web,pdf
+      title: 'Clustering '
+      url: Clustering.html
     output: web
     title: HierarchicalGeoClustering
   output: web

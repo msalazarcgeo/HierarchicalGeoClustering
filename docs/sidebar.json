@@ -2,6 +2,7 @@
   "HierarchicalGeoClustering": {
     "Overview": "/",
     "Node_cluster": "Node_cluster.html",
-    "Tree Cluster class ": "tree_clusters.html"
+    "Tree Cluster class ": "tree_clusters.html",
+    "Clustering ": "Clustering.html"
   }
 }
