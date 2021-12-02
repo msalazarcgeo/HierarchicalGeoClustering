@@ -10,11 +10,8 @@ entries:
       title: Overview
       url: /
     - output: web,pdf
-      title: Node_cluster
-      url: Node_cluster.html
-    - output: web,pdf
-      title: 'Tree Cluster class '
-      url: tree_clusters.html
+      title: Basic classes to generate the NodeCluster class
+      url: TreeClusters.html
     - output: web,pdf
       title: 'Clustering '
       url: Clustering.html

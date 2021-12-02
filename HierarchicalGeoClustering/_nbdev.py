@@ -2,23 +2,22 @@
 
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
-index = {"cluster": "00_Node_cluster.ipynb",
-         "cluster_node": "00_Node_cluster.ipynb",
-         "tree_clusters": "01_tree_clusters.ipynb",
-         "inside_polygon": "00_Node_cluster.ipynb",
-         "poligon_non_convex_from_Points": "00_Node_cluster.ipynb",
-         "poligon_non_convex_random_gen": "00_Node_cluster.ipynb",
-         "module_path": "02_Clustering.ipynb",
-         "clustering": "02_Clustering.ipynb",
-         "recursive_clustering": "02_Clustering.ipynb",
-         "compute_dbscan": "02_Clustering.ipynb",
-         "auto_knee_average": "02_Clustering.ipynb",
-         "compute_hdbscan": "02_Clustering.ipynb",
-         "compute_OPTICS": "02_Clustering.ipynb",
-         "compute_Natural_cities": "02_Clustering.ipynb"}
+index = {"cluster": "00_TreeClusters.ipynb",
+         "NodeCluster": "00_TreeClusters.ipynb",
+         "tree_clusters": "00_TreeClusters.ipynb",
+         "inside_polygon": "00_TreeClusters.ipynb",
+         "poligon_non_convex_from_Points": "00_TreeClusters.ipynb",
+         "poligon_non_convex_random_gen": "00_TreeClusters.ipynb",
+         "module_path": "01_Clustering.ipynb",
+         "clustering": "01_Clustering.ipynb",
+         "recursive_clustering": "01_Clustering.ipynb",
+         "compute_dbscan": "01_Clustering.ipynb",
+         "auto_knee_average": "01_Clustering.ipynb",
+         "compute_hdbscan": "01_Clustering.ipynb",
+         "compute_OPTICS": "01_Clustering.ipynb",
+         "compute_Natural_cities": "01_Clustering.ipynb"}
 
-modules = ["Node_cluster.py",
-           "Tree_clusters.py",
+modules = ["TreeClusters.py",
            "Clustering.py"]
 
 doc_url = "https://CentroGeo.github.io/HierarchicalGeoClustering/"

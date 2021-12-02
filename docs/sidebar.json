@@ -1,8 +1,7 @@
 {
   "HierarchicalGeoClustering": {
     "Overview": "/",
-    "Node_cluster": "Node_cluster.html",
-    "Tree Cluster class ": "tree_clusters.html",
+    "Basic classes to generate the NodeCluster class": "TreeClusters.html",
     "Clustering ": "Clustering.html"
   }
 }
