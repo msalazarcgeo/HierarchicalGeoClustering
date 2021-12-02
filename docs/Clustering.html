@@ -47,6 +47,13 @@ nb_path: "src/02_Clustering.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -54,7 +61,98 @@ nb_path: "src/02_Clustering.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="compute_dbscan" class="doc_header"><code>compute_dbscan</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L14" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compute_dbscan</code>(<strong><code>cluster</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="clustering" class="doc_header"><code>clustering</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L15" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>clustering</code>(<strong><code>t_next_level_2</code></strong>, <strong><code>level</code></strong>=<em><code>None</code></em>, <strong><code>algorithm</code></strong>=<em><code>'dbscan'</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>Function to get the clusters for single group by
+:param t_next_level_2 Dictionary with the points to compute the
+        cluster
+:param level:  None Level to compute (Default None)</p>
+<p>:param str algorithm : Algorithm type is supported (Default= 'dbscan')</p>
+<p>:param int min_points_cluster:  minimun number of point to consider a cluster(Default 50)</p>
+<p>:param double eps: Epsilon parameter In case is needed</p>
+<p>:param bool return_noise: To return the noise (Default False)</p>
+<p>:param bool verbose: Printing (Dafault False)</p>
+<p>:returns list t_next_level_n: A list with dictionaries with the points, the parent, and nois</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Recursive-Clustering">Recursive Clustering<a class="anchor-link" href="#Recursive-Clustering"> </a></h2><p>The function obtains the clustering iterative</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="recursive_clustering" class="doc_header"><code>recursive_clustering</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L134" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>recursive_clustering</code>(<strong><code>this_level</code></strong>, <strong><code>to_process</code></strong>, <strong><code>cluster_tree</code></strong>, <strong><code>level</code></strong>=<em><code>0</code></em>, <strong><code>algorithm</code></strong>=<em><code>'dbscan'</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>Performs the recursive clustering.
+Calls compute_dbscan for each
+list of clusters keepen the structure and then calls itself
+until no more clusters satisfy the condition</p>
+<p>:param dict this_level: level is the current level</p>
+<p>:param int to_process: the max level to process</p>
+<p>:param double eps: The epsilon parameter distance to pass to the needed algorithm</p>
+<p>:param list cluster_tree : list of list to insert the levels</p>
+<p>:param bool verbose : To print</p>
+<p>:param double decay: In the use of dbscan the deacy parameter to reduce eps</p>
+<p>:param int min_points_cluster: The min point for each cluster to pass to algorithm</p>
+<p>:param str algorithm:  The string of the algorithm name to use</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="compute_dbscan" class="doc_header"><code>compute_dbscan</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L213" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compute_dbscan</code>(<strong><code>cluster</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Sklearn DBSCAN wrapper.</p>
 <p>:param cluster: a (N,2) numpy array containing the obsevations</p>
@@ -74,16 +172,44 @@ nb_path: "src/02_Clustering.ipynb"
     
 <div class="cell border-box-sizing code_cell rendered">
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="auto_knee_average" class="doc_header"><code>auto_knee_average</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L261" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>auto_knee_average</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>The function use the knee and average to obtain a good value for epsilon and use
+DBSCAN to obtain the clusters</p>
+<p>:param list Points points2_clusters: Point to clusterize</p>
+<p>:param int max_k: = (Default = len(points2_clusters)*.1)</p>
+<p>:param int  min_k: (Default =50)</p>
+<p>:param int step_k: (Default = 50)</p>
+<p>:param int leaf_size: (Default = 50)</p>
+<p>:param bool scale_points: (Default = True)</p>
+<p>:param bool debugg: (Default = False)</p>
+<p>:param bool ret_noise:  (Default = True)</p>
+<p>:returns list : list of cluster. If ret_noise = True return tuple list of cluter and noise</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
 </div>
     {% endraw %}
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Recursive-Clustering">Recursive Clustering<a class="anchor-link" href="#Recursive-Clustering"> </a></h2><p>The function obtains the clustering iterative</p>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
 
 </div>
-</div>
-</div>
+    {% endraw %}
+
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -95,20 +221,79 @@ nb_path: "src/02_Clustering.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="recursive_clustering" class="doc_header"><code>recursive_clustering</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L62" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>recursive_clustering</code>(<strong><code>this_level</code></strong>, <strong><code>to_process</code></strong>, <strong><code>cluster_tree</code></strong>, <strong><code>level</code></strong>=<em><code>0</code></em>, <strong><code>algorithm</code></strong>=<em><code>'dbscan'</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="compute_hdbscan" class="doc_header"><code>compute_hdbscan</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L385" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compute_hdbscan</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<p>Performs the recursive clustering.
-Calls compute_dbscan for each
-list of clusters keepen the structure and then calls itself
-until no more clusters satisfy the condition</p>
-<p>:param dict this_level: level is the current level</p>
-<p>:param int to_process: the max level to process</p>
-<p>:param double eps: The epsilon parameter distance to pass to the needed algorithm</p>
-<p>:param list cluster_tree : list of list to insert the levels</p>
-<p>:param bool verbose : To print</p>
-<p>:param double decay: In the use of dbscan the deacy parameter to reduce eps</p>
-<p>:param int min_points_cluster: The min point for each cluster to pass to algorithm</p>
-<p>:param str algorithm:  The string of the algorithm name to use</p>
+<p>HDBSCAN wrapper.
+:param np.array cluster: a (N,2) numpy array containing the obsevations</p>
+<p>:returns:  list with numpy arrays for all the clusters obtained</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="compute_OPTICS" class="doc_header"><code>compute_OPTICS</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L431" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compute_OPTICS</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>OPTICS wrapper.
+:param np.array cluster: a (N,2) numpy array containing the obsevations
+:returns:  list with numpy arrays for all the clusters obtained</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="compute_Natural_cities" class="doc_header"><code>compute_Natural_cities</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L482" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compute_Natural_cities</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>Natural_cities.
+:param np.array points2_clusters: a (N,2) numpy array containing the obsevations
+:returns: list with numpy arrays for all the clusters obtained</p>
 
 </div>
 

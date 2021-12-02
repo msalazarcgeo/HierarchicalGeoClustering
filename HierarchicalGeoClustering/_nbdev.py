@@ -9,8 +9,13 @@ index = {"cluster": "00_Node_cluster.ipynb",
          "poligon_non_convex_random_gen": "00_Node_cluster.ipynb",
          "module_path": "02_Clustering.ipynb",
          "tree_clusters": "01_tree_clusters.ipynb",
+         "clustering": "02_Clustering.ipynb",
+         "recursive_clustering": "02_Clustering.ipynb",
          "compute_dbscan": "02_Clustering.ipynb",
-         "recursive_clustering": "02_Clustering.ipynb"}
+         "auto_knee_average": "02_Clustering.ipynb",
+         "compute_hdbscan": "02_Clustering.ipynb",
+         "compute_OPTICS": "02_Clustering.ipynb",
+         "compute_Natural_cities": "02_Clustering.ipynb"}
 
 modules = ["Node_cluster.py",
            "Tree_clusters.py",

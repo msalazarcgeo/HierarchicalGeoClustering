@@ -177,8 +177,8 @@ class tree_clusters(object):
         Visualize the tree
 
         :param axs: The ax to plot the figure
-        :param str color_map_val: use a matplotlib colormap
 
+        :param str color_map_val: use a matplotlib colormap
         """
         if colors_levels is None:
             color_map_val= kwargs.get('color_map_val', 'jet')
