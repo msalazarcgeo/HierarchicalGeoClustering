@@ -6,8 +6,8 @@ title: Tree Cluster class
 keywords: fastai
 sidebar: home_sidebar
 
-summary: "The class contains all the methods to construct and use the clusters tree structure and visualize it "
-description: "The class contains all the methods to construct and use the clusters tree structure and visualize it "
+
+
 nb_path: "src/01_tree_clusters.ipynb"
 ---
 <!--
@@ -63,6 +63,276 @@ nb_path: "src/01_tree_clusters.ipynb"
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Methods">Methods<a class="anchor-link" href="#Methods"> </a></h2><p>The following are the mos important methos inside the <a href="/HierarchicalGeoClustering/tree_clusters.html#tree_clusters"><code>tree_clusters</code></a> class</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Counstruct-tree">Counstruct tree<a class="anchor-link" href="#Counstruct-tree"> </a></h3>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="tree_clusters.__init__" class="doc_header"><code>tree_clusters.__init__</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Tree_clusters.py#L18" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tree_clusters.__init__</code>(<strong><code>levels</code></strong>=<em><code>None</code></em>, <strong><code>r_name</code></strong>=<em><code>'Root'</code></em>, <strong><code>level_str</code></strong>=<em><code>'l_'</code></em>, <strong><code>node_str</code></strong>=<em><code>'n_'</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>Build the tree</p>
+<p>:param int levels: Number of leevels in the tree (Default =None)</p>
+<p>:param str r_name : String to root label (Default= 'Root')</p>
+<p>:param str level<em>str: String to name the levels (Default= 'l</em>')</p>
+<p>:param str node<em>str: String to name the nodes (Default ='n</em>')</p>
+<p>:param double random_seed:</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="tree_clusters.populate_tree" class="doc_header"><code>tree_clusters.populate_tree</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Tree_clusters.py#L87" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tree_clusters.populate_tree</code>(<strong><code>number_per_cluster</code></strong>=<em><code>None</code></em>, <strong><code>density_init</code></strong>=<em><code>None</code></em>, <strong><code>factor_density</code></strong>=<em><code>3</code></em>, <strong><code>density_init_list</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>Populate the tree_cluster structure, populate each node
+inside the tree_clusters using random ranges.</p>
+<p>:param int number_per_cluster: Number of point per cluster (Default= None)</p>
+<p>:param double density_init: Initial density of the tree (Default= None)</p>
+<p>:param double factor_density: Factor to increase density (Default = 3)</p>
+<p>:returns None:</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Tree-Values">Tree Values<a class="anchor-link" href="#Tree-Values"> </a></h3>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="tree_clusters.get_deepth" class="doc_header"><code>tree_clusters.get_deepth</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Tree_clusters.py#L255" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tree_clusters.get_deepth</code>()</p>
+</blockquote>
+<p>Returns the deepth of the tree</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="tree_clusters.size" class="doc_header"><code>tree_clusters.size</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Tree_clusters.py#L263" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tree_clusters.size</code>()</p>
+</blockquote>
+<p>Returns the number of node in the tree</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="tree_clusters.size_points" class="doc_header"><code>tree_clusters.size_points</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Tree_clusters.py#L272" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tree_clusters.size_points</code>()</p>
+</blockquote>
+<p>Returns the number of points in the tree</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Points">Points<a class="anchor-link" href="#Points"> </a></h3>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="tree_clusters.get_points_tree" class="doc_header"><code>tree_clusters.get_points_tree</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Tree_clusters.py#L133" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tree_clusters.get_points_tree</code>(<strong><code>level</code></strong>=<em><code>None</code></em>, <strong><code>iterative</code></strong>=<em><code>False</code></em>)</p>
+</blockquote>
+<p>Return all the points in the tree</p>
+<p>:param int level: The level to exctract the points (default = None)</p>
+<p>:param bool iterative: To exctract iterative (Default =False)</p>
+<p>:return Points :</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Visualize">Visualize<a class="anchor-link" href="#Visualize"> </a></h3>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="tree_clusters.print_structure" class="doc_header"><code>tree_clusters.print_structure</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Tree_clusters.py#L159" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tree_clusters.print_structure</code>()</p>
+</blockquote>
+<p>Print the tree structure in console</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="tree_clusters.visualize" class="doc_header"><code>tree_clusters.visualize</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Tree_clusters.py#L171" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tree_clusters.visualize</code>(<strong><code>axs</code></strong>, <strong><code>colors_levels</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>Visualize the tree</p>
+<p>:param axs: The ax to plot the figure
+:param str color_map_val: use a matplotlib colormap</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="tree_clusters.visualize_levels" class="doc_header"><code>tree_clusters.visualize_levels</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Tree_clusters.py#L200" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tree_clusters.visualize_levels</code>(<strong><code>axs</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+
+</div>
+
+</div>
+
+</div>
+</div>
 
 </div>
     {% endraw %}

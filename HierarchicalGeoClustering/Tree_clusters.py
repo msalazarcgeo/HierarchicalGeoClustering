@@ -22,6 +22,19 @@ class tree_clusters(object):
                 node_str ='n_',
                 **kwargs
                 ):
+        """
+        Build the tree
+
+        :param int levels: Number of leevels in the tree (Default =None)
+
+        :param str r_name : String to root label (Default= 'Root')
+
+        :param str level_str: String to name the levels (Default= 'l_')
+
+        :param str node_str: String to name the nodes (Default ='n_')
+
+        :param double random_seed:
+        """
         random_seed = kwargs.get('random_seed', 123)
         random.seed(random_seed)
         if levels is None:
@@ -54,13 +67,20 @@ class tree_clusters(object):
 
     def get_level(self, level):
         """
-        returns all the nodes in the level
+        :param int level: Level to get nodes
+        :returns List: All the nodes in the level
         """
         return self.levels_nodes[level]
 
     def get_node(self, level_int, node_int):
         """
-        returns all the nodes in the level
+        Get the node in level_in at position node_int
+
+        :param  int level_int: Level of node
+
+        :param int node_int: Position in level
+
+        :returns cluster_node: Node
         """
         return self.levels_nodes[level_int][node_int]
     ######Populate the structure
@@ -71,6 +91,18 @@ class tree_clusters(object):
                     density_init_list = None, # list of densities by level
                     **kwargs
                     ):
+        """
+        Populate the tree_cluster structure, populate each node
+        inside the tree_clusters using random ranges.
+
+        :param int number_per_cluster: Number of point per cluster (Default= None)
+
+        :param double density_init: Initial density of the tree (Default= None)
+
+        :param double factor_density: Factor to increase density (Default = 3)
+
+        :returns None:
+        """
 
         for level_id, level in  enumerate(self.levels_nodes):
             rand_cluster_state= np.random.randint(0, 1500, len(level)) ## Random ints for random_seed
@@ -100,7 +132,13 @@ class tree_clusters(object):
     ########Get all point in the tree
     def get_points_tree(self, level= None, iterative =False):
         """
-        Return  all the point in the tree
+        Return all the points in the tree
+
+        :param int level: The level to exctract the points (default = None)
+
+        :param bool iterative: To exctract iterative (Default =False)
+
+        :return Points :
         """
 
         if level != None:
@@ -119,7 +157,9 @@ class tree_clusters(object):
             #return self.root.get_points( all_tag = iterative )
     ####### visualize the structure
     def print_structure(self):
-        """print the tree structure
+        """
+        Print the tree structure in console
+
         """
         print(self.root.name)
         for pre, _, node in RenderTree( self.root ):
@@ -133,6 +173,13 @@ class tree_clusters(object):
                     colors_levels= None,
                     **kwargs
                     ):
+        """
+        Visualize the tree
+
+        :param axs: The ax to plot the figure
+        :param str color_map_val: use a matplotlib colormap
+
+        """
         if colors_levels is None:
             color_map_val= kwargs.get('color_map_val', 'jet')
             colors=  cm.get_cmap(color_map_val, len(self.levels_nodes))
@@ -142,7 +189,7 @@ class tree_clusters(object):
 
         for level, level_clusters in enumerate(self.levels_nodes):
             for cluster in level_clusters:
-                cluster_alpha= kwargs.get('cluster_size', .2)
+                cluster_alpha= kwargs.get('cluster_alpha', .2)
                 cluster.viewer_cluster(
                     axs,
                     color_cluster= color_map(level),
@@ -206,14 +253,16 @@ class tree_clusters(object):
         return new_tree
 
     def get_deepth(self):
+        """
+        Returns the deepth of the tree
+        """
         return len(self.levels_nodes)
 
 
 
-
-
     def size(self):
-        """ returns the number of node in the tree
+        """
+        Returns the number of node in the tree
         """
         sum_s=0
         for i in self.levels_nodes:
