@@ -117,6 +117,50 @@ algorithms.</p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Methods-(cluster_node)">Methods (cluster_node)<a class="anchor-link" href="#Methods-(cluster_node)"> </a></h3><p>In the following section the mos important methos of the cluster_node class are review</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="tag_low_level_noise_signal">tag_low_level_noise_signal<a class="anchor-link" href="#tag_low_level_noise_signal"> </a></h4>
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="cluster_node.tag_low_level_noise_signal" class="doc_header"><code>cluster_node.tag_low_level_noise_signal</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L347" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>cluster_node.tag_low_level_noise_signal</code>(<strong><code>point_check</code></strong>=<em><code>None</code></em>)</p>
+</blockquote>
+<p>The tag the element of the node using the labels noise or signal
+as a tag, if a set of point is pass (point_check != None)
+the elements are treated as part of the cluster and label it
+accordingly.</p>
+<p>:params list point_check: A list of shapely Points to tag (if None
+                    tags the points inside the cluster)</p>
+<p>:returns: A list of tuples (points , tag)</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
 <h1 id="Helper-functions">Helper functions<a class="anchor-link" href="#Helper-functions"> </a></h1><blockquote><p>Functions to help build the nodes</p>
 </blockquote>
 
@@ -140,7 +184,7 @@ algorithms.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="inside_polygon" class="doc_header"><code>inside_polygon</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L698" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>inside_polygon</code>(<strong><code>list_points</code></strong>, <strong><code>poligon_check</code></strong>, <strong><code>min_percent</code></strong>)</p>
+<h4 id="inside_polygon" class="doc_header"><code>inside_polygon</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L701" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>inside_polygon</code>(<strong><code>list_points</code></strong>, <strong><code>poligon_check</code></strong>, <strong><code>min_percent</code></strong>)</p>
 </blockquote>
 <p>Help function to validate the number of points that are inside the polygon</p>
 <p>:param list list_points: List of points to concider</p>
@@ -184,7 +228,7 @@ algorithms.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="poligon_non_convex_from_Points" class="doc_header"><code>poligon_non_convex_from_Points</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L722" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>poligon_non_convex_from_Points</code>(<strong><code>points_li</code></strong>)</p>
+<h4 id="poligon_non_convex_from_Points" class="doc_header"><code>poligon_non_convex_from_Points</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L725" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>poligon_non_convex_from_Points</code>(<strong><code>points_li</code></strong>)</p>
 </blockquote>
 <p>Create a random (no convex) poligon from the points
 The algorithm returns a polygon creatated from the points, the
@@ -228,7 +272,7 @@ non convex part it is not always guaranteed.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="poligon_non_convex_random_gen" class="doc_header"><code>poligon_non_convex_random_gen</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L745" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>poligon_non_convex_random_gen</code>(<strong><code>npoints</code></strong>)</p>
+<h4 id="poligon_non_convex_random_gen" class="doc_header"><code>poligon_non_convex_random_gen</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Node_cluster.py#L748" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>poligon_non_convex_random_gen</code>(<strong><code>npoints</code></strong>)</p>
 </blockquote>
 <p>Create a random (no convex) poligon from n points
 The algorithm returns a polygon creatated from n random 2d points the

@@ -350,8 +350,11 @@ class cluster_node(cluster, NodeMixin):
         as a tag, if a set of point is pass (point_check != None)
         the elements are treated as part of the cluster and label it
         accordingly.
-        :params self
-        :params point_check A list MultiPoint or list with Points to tag
+
+        :params list point_check: A list of shapely Points to tag (if None
+                            tags the points inside the cluster)
+
+        :returns: A list of tuples (points , tag)
         """
         if point_check is None:
             all_points_cluster = self.get_points()
