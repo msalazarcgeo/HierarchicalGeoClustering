@@ -38,7 +38,7 @@ nb_path: "src/02_Clustering.ipynb"
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Compute-DBSCAN">Compute DBSCAN<a class="anchor-link" href="#Compute-DBSCAN"> </a></h2><p>A wapper function to obtain the DBSCAN sluters by levels</p>
+<h2 id="Compute-DBSCAN">Compute DBSCAN<a class="anchor-link" href="#Compute-DBSCAN"> </a></h2><p>A wapper function to obtain the DBSCAN cluters by levels</p>
 
 </div>
 </div>
@@ -56,8 +56,8 @@ nb_path: "src/02_Clustering.ipynb"
 <div class="output_markdown rendered_html output_subarea ">
 <h4 id="compute_dbscan" class="doc_header"><code>compute_dbscan</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L14" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compute_dbscan</code>(<strong><code>cluster</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<p>Sklearn DBSCAN wrapper.
-:param cluster: a (N,2) numpy array containing the obsevations</p>
+<p>Sklearn DBSCAN wrapper.</p>
+<p>:param cluster: a (N,2) numpy array containing the obsevations</p>
 <p>:returns list with numpy arrays for all the clusters obtained</p>
 
 </div>
@@ -95,20 +95,20 @@ nb_path: "src/02_Clustering.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="recursive_clustering" class="doc_header"><code>recursive_clustering</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L60" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>recursive_clustering</code>(<strong><code>this_level</code></strong>, <strong><code>to_process</code></strong>, <strong><code>cluster_tree</code></strong>, <strong><code>level</code></strong>=<em><code>0</code></em>, <strong><code>algorithm</code></strong>=<em><code>'dbscan'</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="recursive_clustering" class="doc_header"><code>recursive_clustering</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L62" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>recursive_clustering</code>(<strong><code>this_level</code></strong>, <strong><code>to_process</code></strong>, <strong><code>cluster_tree</code></strong>, <strong><code>level</code></strong>=<em><code>0</code></em>, <strong><code>algorithm</code></strong>=<em><code>'dbscan'</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Performs the recursive clustering.
 Calls compute_dbscan for each
 list of clusters keepen the structure and then calls itself
 until no more clusters satisfy the condition</p>
-<p>:param dict this_level: level is the current level
-:param int to_process: the max level to process
-:param double eps: The epsilon parameter distance to pass to the needed algorithm
-:param cluster_tree :
-:param bool verbose : To print
-:param double decay: In the use of dbscan the deacy parameter to reduce eps
-:param int min_points_cluster: The min point for each cluster to pass to algorithm
-:param str algorithm:  The string of the algorithm name to use</p>
+<p>:param dict this_level: level is the current level</p>
+<p>:param int to_process: the max level to process</p>
+<p>:param double eps: The epsilon parameter distance to pass to the needed algorithm</p>
+<p>:param list cluster_tree : list of list to insert the levels</p>
+<p>:param bool verbose : To print</p>
+<p>:param double decay: In the use of dbscan the deacy parameter to reduce eps</p>
+<p>:param int min_points_cluster: The min point for each cluster to pass to algorithm</p>
+<p>:param str algorithm:  The string of the algorithm name to use</p>
 
 </div>
 

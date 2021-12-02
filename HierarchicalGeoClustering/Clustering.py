@@ -13,7 +13,9 @@ from .Tree_clusters import cluster_node
 # Cell
 def compute_dbscan(cluster,  **kwargs):
 
-    """ Sklearn DBSCAN wrapper.
+    """
+    Sklearn DBSCAN wrapper.
+
     :param cluster: a (N,2) numpy array containing the obsevations
 
     :returns list with numpy arrays for all the clusters obtained
@@ -72,12 +74,19 @@ def recursive_clustering(
     until no more clusters satisfy the condition
 
     :param dict this_level: level is the current level
+
     :param int to_process: the max level to process
+
     :param double eps: The epsilon parameter distance to pass to the needed algorithm
-    :param cluster_tree :
+
+    :param list cluster_tree : list of list to insert the levels
+
     :param bool verbose : To print
+
     :param double decay: In the use of dbscan the deacy parameter to reduce eps
+
     :param int min_points_cluster: The min point for each cluster to pass to algorithm
+
     :param str algorithm:  The string of the algorithm name to use
     """
 
