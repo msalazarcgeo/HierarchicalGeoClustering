@@ -719,6 +719,7 @@ def poligon_non_convex_from_Points( points_li ):
     """Create a random (no convex) poligon from the points
     The algorithm returns a polygon creatated from the points, the
     non convex part it is not always guaranteed.
+
     :param list points_li: list of shapely.geometry.Point
     :returns shapely.grometry.Polygon: The polygon created
     """
@@ -740,6 +741,7 @@ def poligon_non_convex_random_gen(npoints):
     """Create a random (no convex) poligon from n points
     The algorithm returns a polygon creatated from n random 2d points the
     non convex part it is not always guaranteed.
+
     :param int npoints: Number of point to generate the polygon
     :returns shapely.grometry.Polygon: The poligon created
     """
