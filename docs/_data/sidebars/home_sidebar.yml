@@ -10,7 +10,7 @@ entries:
       title: Overview
       url: /
     - output: web,pdf
-      title: Basic classes to generate the NodeCluster class
+      title: 'Tree of clusters '
       url: TreeClusters.html
     - output: web,pdf
       title: 'Clustering '

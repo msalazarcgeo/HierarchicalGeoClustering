@@ -1,6 +1,6 @@
 ---
 
-title: Basic classes to generate the NodeCluster class
+title: Tree of clusters 
 
 
 keywords: fastai
@@ -335,7 +335,7 @@ accordingly.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h2 id="tree_clusters" class="doc_header"><code>class</code> <code>tree_clusters</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L755" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>tree_clusters</code>(<strong><code>levels</code></strong>=<em><code>None</code></em>, <strong><code>r_name</code></strong>=<em><code>'Root'</code></em>, <strong><code>level_str</code></strong>=<em><code>'l_'</code></em>, <strong><code>node_str</code></strong>=<em><code>'n_'</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h2 id="TreeClusters" class="doc_header"><code>class</code> <code>TreeClusters</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L755" class="source_link" style="float:right">[source]</a></h2><blockquote><p><code>TreeClusters</code>(<strong><code>levels</code></strong>=<em><code>None</code></em>, <strong><code>r_name</code></strong>=<em><code>'Root'</code></em>, <strong><code>level_str</code></strong>=<em><code>'l_'</code></em>, <strong><code>node_str</code></strong>=<em><code>'n_'</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 
 </div>
@@ -357,14 +357,15 @@ accordingly.</p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Methods">Methods<a class="anchor-link" href="#Methods"> </a></h2><p>The following are the mos important methos inside the <a href="/HierarchicalGeoClustering/TreeClusters.html#tree_clusters"><code>tree_clusters</code></a> class</p>
+<h2 id="Methods">Methods<a class="anchor-link" href="#Methods"> </a></h2><p>The following are the mos important methos inside the <a href="/HierarchicalGeoClustering/TreeClusters.html#TreeClusters"><code>TreeClusters</code></a> class</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Counstruct-tree">Counstruct tree<a class="anchor-link" href="#Counstruct-tree"> </a></h3>
+<h3 id="Counstruct-tree">Counstruct tree<a class="anchor-link" href="#Counstruct-tree"> </a></h3><p>The tree clustes structure</p>
+
 </div>
 </div>
 </div>
@@ -379,7 +380,7 @@ accordingly.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="tree_clusters.__init__" class="doc_header"><code>tree_clusters.__init__</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L759" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tree_clusters.__init__</code>(<strong><code>levels</code></strong>=<em><code>None</code></em>, <strong><code>r_name</code></strong>=<em><code>'Root'</code></em>, <strong><code>level_str</code></strong>=<em><code>'l_'</code></em>, <strong><code>node_str</code></strong>=<em><code>'n_'</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="TreeClusters.__init__" class="doc_header"><code>TreeClusters.__init__</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L759" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TreeClusters.__init__</code>(<strong><code>levels</code></strong>=<em><code>None</code></em>, <strong><code>r_name</code></strong>=<em><code>'Root'</code></em>, <strong><code>level_str</code></strong>=<em><code>'l_'</code></em>, <strong><code>node_str</code></strong>=<em><code>'n_'</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Build the tree</p>
 <p>:param int levels: Number of leevels in the tree (Default =None)</p>
@@ -409,10 +410,10 @@ accordingly.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="tree_clusters.populate_tree" class="doc_header"><code>tree_clusters.populate_tree</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L828" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tree_clusters.populate_tree</code>(<strong><code>number_per_cluster</code></strong>=<em><code>None</code></em>, <strong><code>density_init</code></strong>=<em><code>None</code></em>, <strong><code>factor_density</code></strong>=<em><code>3</code></em>, <strong><code>density_init_list</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="TreeClusters.populate_tree" class="doc_header"><code>TreeClusters.populate_tree</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L828" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TreeClusters.populate_tree</code>(<strong><code>number_per_cluster</code></strong>=<em><code>None</code></em>, <strong><code>density_init</code></strong>=<em><code>None</code></em>, <strong><code>factor_density</code></strong>=<em><code>3</code></em>, <strong><code>density_init_list</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<p>Populate the tree_cluster structure, populate each node
-inside the tree_clusters using random ranges.</p>
+<p>Populate the TreeCluster structure, populate each node
+inside the TreeClusters using random ranges.</p>
 <p>:param int number_per_cluster: Number of point per cluster (Default= None)</p>
 <p>:param double density_init: Initial density of the tree (Default= None)</p>
 <p>:param double factor_density: Factor to increase density (Default = 3)</p>
@@ -445,7 +446,7 @@ inside the tree_clusters using random ranges.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="tree_clusters.get_deepth" class="doc_header"><code>tree_clusters.get_deepth</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L996" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tree_clusters.get_deepth</code>()</p>
+<h4 id="TreeClusters.get_deepth" class="doc_header"><code>TreeClusters.get_deepth</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L996" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TreeClusters.get_deepth</code>()</p>
 </blockquote>
 <p>Returns the deepth of the tree</p>
 
@@ -470,7 +471,7 @@ inside the tree_clusters using random ranges.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="tree_clusters.size" class="doc_header"><code>tree_clusters.size</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L1004" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tree_clusters.size</code>()</p>
+<h4 id="TreeClusters.size" class="doc_header"><code>TreeClusters.size</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L1004" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TreeClusters.size</code>()</p>
 </blockquote>
 <p>Returns the number of node in the tree</p>
 
@@ -501,7 +502,7 @@ inside the tree_clusters using random ranges.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="tree_clusters.get_points_tree" class="doc_header"><code>tree_clusters.get_points_tree</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L874" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tree_clusters.get_points_tree</code>(<strong><code>level</code></strong>=<em><code>None</code></em>, <strong><code>iterative</code></strong>=<em><code>False</code></em>)</p>
+<h4 id="TreeClusters.get_points_tree" class="doc_header"><code>TreeClusters.get_points_tree</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L874" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TreeClusters.get_points_tree</code>(<strong><code>level</code></strong>=<em><code>None</code></em>, <strong><code>iterative</code></strong>=<em><code>False</code></em>)</p>
 </blockquote>
 <p>Return all the points in the tree</p>
 <p>:param int level: The level to exctract the points (default = None)</p>
@@ -535,7 +536,7 @@ inside the tree_clusters using random ranges.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="tree_clusters.print_structure" class="doc_header"><code>tree_clusters.print_structure</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L900" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tree_clusters.print_structure</code>()</p>
+<h4 id="TreeClusters.print_structure" class="doc_header"><code>TreeClusters.print_structure</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L900" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TreeClusters.print_structure</code>()</p>
 </blockquote>
 <p>Print the tree structure in console</p>
 
@@ -560,7 +561,7 @@ inside the tree_clusters using random ranges.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="tree_clusters.visualize" class="doc_header"><code>tree_clusters.visualize</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L912" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tree_clusters.visualize</code>(<strong><code>axs</code></strong>, <strong><code>colors_levels</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="TreeClusters.visualize" class="doc_header"><code>TreeClusters.visualize</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L912" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TreeClusters.visualize</code>(<strong><code>axs</code></strong>, <strong><code>colors_levels</code></strong>=<em><code>None</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Visualize the tree</p>
 <p>:param axs: The ax to plot the figure</p>
@@ -587,7 +588,7 @@ inside the tree_clusters using random ranges.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="tree_clusters.visualize_levels" class="doc_header"><code>tree_clusters.visualize_levels</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L941" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>tree_clusters.visualize_levels</code>(<strong><code>axs</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="TreeClusters.visualize_levels" class="doc_header"><code>TreeClusters.visualize_levels</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L941" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>TreeClusters.visualize_levels</code>(<strong><code>axs</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 
 </div>

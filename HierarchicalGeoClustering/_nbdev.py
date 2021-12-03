@@ -4,7 +4,7 @@ __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
 index = {"cluster": "00_TreeClusters.ipynb",
          "NodeCluster": "00_TreeClusters.ipynb",
-         "tree_clusters": "00_TreeClusters.ipynb",
+         "TreeClusters": "00_TreeClusters.ipynb",
          "inside_polygon": "00_TreeClusters.ipynb",
          "poligon_non_convex_from_Points": "00_TreeClusters.ipynb",
          "poligon_non_convex_random_gen": "00_TreeClusters.ipynb",
