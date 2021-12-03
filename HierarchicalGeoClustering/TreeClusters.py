@@ -158,7 +158,7 @@ class NodeCluster(cluster, NodeMixin):
                 self.center = random_point_center
             else:
                 ### Se tiene que modificar
-                self.polygon_cluster, self.center = self.parent.polygon_not_in_children(random_state= random_state)
+                self.polygon_cluster, self.center = self.parent.polygon_not_intersec_children(random_state= random_state)
 
 
         ############### The points
@@ -492,6 +492,15 @@ class NodeCluster(cluster, NodeMixin):
 
     ######Check point for children
     def check_point_children(self, Points_tocheck):
+        """
+        Check if the points belong to tis children
+
+        :param list Points_tocheck: A list of points to check
+        if they belong to it children
+
+        :returns list: List of points that are contained in the
+        children polygons
+        """
         point_chek_bool=[]
         for child in self.children:
 
@@ -503,6 +512,37 @@ class NodeCluster(cluster, NodeMixin):
 
     ########## viewer
     def viewer_cluster(self, ax,  **kwargs):
+        """
+        Vizualization of the cluster
+
+        :param ax: ax of a matplotlib figure
+
+        :param int level: Level to view 0 only the points of the cluster,
+        1 the children points, -1 all decendent points  (Default = 0 )
+
+        :param bool polygon: To draw the polygon of the cluster
+        (Default = False).
+
+        :param bool polygon_children: Draw the poligon of its children
+        (Default = False).
+
+        :param double size_cluster: Point size inside the cluster (noise)
+        (Default = 2)
+
+        :param str color_cluster : matplotlib color
+
+        :param double alpha_cluster : alpha channel (Default = 0.5)
+
+        :param double size_children : Point size children (Default = 1)
+
+        :param str color_children: matplotlib color
+
+        :param double alpha_children : alpha channel (Default = 0.5)
+
+        :param bool polygon_color_children: Plot the children polygon
+
+        :returns : Draw into the ax.
+        """
         level_view = kwargs.get('level', 0 )
         polygon_con= kwargs.get('polygon', False)
         poligon_children = kwargs.get('polygon_children', False)
@@ -511,7 +551,7 @@ class NodeCluster(cluster, NodeMixin):
             x_points_cluster =[j.x for j in cluster_points  ]
             y_points_cluster =[j.y for j in cluster_points  ]
             ax.scatter(x_points_cluster,y_points_cluster,
-                    s = kwargs.get('size_cluster', 1),
+                    s = kwargs.get('size_cluster', 2),
                     color = kwargs.get('color_cluster', 'orange'),
                     alpha = kwargs.get('alpha_cluster', .5)
                     )
@@ -677,15 +717,22 @@ class NodeCluster(cluster, NodeMixin):
 
         return new_cluster
     ##########Get polygon no toching with others
-    def polygon_not_in_children(self, **kwargs):
+    def polygon_not_intersec_children(self, **kwargs):
 
         """
-        El nodo que se pasa como parametro debe ser el padre del poligono que se pide
-        y el poligon estara contenido dentro del pologon del nodo que esta como parametro
+        Returns a polygon that doesn't touch the any of children polygon's and
+        it is inside the cluter's polygon
 
-        random_state
 
-        from_points_num
+        :param int random_state: (Default= 123456)
+
+        :param int from_points_num: (Default= 20)
+
+        :param double max_scale_x: (Default= 0.5)
+
+        :param double max_scale_y: (Default= 0.5)
+
+        :returns tuple: Polygon, random points center
         """
         random_state=kwargs.get('random_state', 123456)
         from_points_num= kwargs.get('from_points_num', 20)
