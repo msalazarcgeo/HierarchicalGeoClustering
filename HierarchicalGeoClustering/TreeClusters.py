@@ -1198,7 +1198,7 @@ def inside_polygon(list_points, poligon_check, min_percent):
 
     :param min_percent: Minimun percent of point to be consider inside
 
-    :returns bool: True If the amount of points are inside.
+    :returns tuple: (bool, list of point inside).
     """
     if len(list_points)< 2:
         return False
@@ -1213,7 +1213,8 @@ def inside_polygon(list_points, poligon_check, min_percent):
 
 # Cell
 def poligon_non_convex_from_Points( points_li ):
-    """Create a random (no convex) poligon from the points
+    """
+    Create a random (no convex) poligon from the points
     The algorithm returns a polygon creatated from the points, the
     non convex part it is not always guaranteed.
 
@@ -1236,7 +1237,8 @@ def poligon_non_convex_from_Points( points_li ):
 
 # Cell
 def poligon_non_convex_random_gen(npoints):
-    """Create a random (no convex) poligon from n points
+    """
+    Create a random (no convex) poligon from n points
     The algorithm returns a polygon creatated from n random 2d points the
     non convex part it is not always guaranteed.
 

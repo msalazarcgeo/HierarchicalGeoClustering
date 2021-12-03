@@ -485,7 +485,7 @@ def compute_OPTICS(points2_clusters,  **kwargs):
 def compute_Natural_cities(points2_clusters,  **kwargs):
 
     """
-    Compute Natural_cities clustering
+    Compute Natural cities clustering
 
     :param np.array points2_clusters: a (N,2) numpy array containing the obsevations
 

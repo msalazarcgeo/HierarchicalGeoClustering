@@ -279,7 +279,7 @@ it is inside the cluter's polygon</p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h4 id="Get-values">Get values<a class="anchor-link" href="#Get-values"> </a></h4><p>Exctrac values from the <a href="/HierarchicalGeoClustering/TreeClusters.html#NodeCluster"><code>NodeCluster</code></a> class</p>
+<h4 id="Get-values">Get values<a class="anchor-link" href="#Get-values"> </a></h4><p>Exctract values from the <a href="/HierarchicalGeoClustering/TreeClusters.html#NodeCluster"><code>NodeCluster</code></a> class</p>
 
 </div>
 </div>
@@ -506,14 +506,14 @@ all the points of the its decendents</p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Methods">Methods<a class="anchor-link" href="#Methods"> </a></h2><p>The following are the mos important methos inside the <a href="/HierarchicalGeoClustering/TreeClusters.html#TreeClusters"><code>TreeClusters</code></a> class</p>
+<h3 id="Methods">Methods<a class="anchor-link" href="#Methods"> </a></h3><p>The following are the mos important methos inside the <a href="/HierarchicalGeoClustering/TreeClusters.html#TreeClusters"><code>TreeClusters</code></a> class</p>
 
 </div>
 </div>
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Counstruct-tree">Counstruct tree<a class="anchor-link" href="#Counstruct-tree"> </a></h3><p>The tree clustes structure</p>
+<h4 id="Counstruct-tree">Counstruct tree<a class="anchor-link" href="#Counstruct-tree"> </a></h4><p>The tree clustes structure</p>
 
 </div>
 </div>
@@ -580,7 +580,7 @@ inside the TreeClusters using random ranges.</p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Tree-Values">Tree Values<a class="anchor-link" href="#Tree-Values"> </a></h3>
+<h4 id="Tree-Values">Tree Values<a class="anchor-link" href="#Tree-Values"> </a></h4>
 </div>
 </div>
 </div>
@@ -670,7 +670,7 @@ inside the TreeClusters using random ranges.</p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Visualize">Visualize<a class="anchor-link" href="#Visualize"> </a></h3>
+<h4 id="Visualize">Visualize<a class="anchor-link" href="#Visualize"> </a></h4>
 </div>
 </div>
 </div>
@@ -761,6 +761,13 @@ inside the TreeClusters using random ranges.</p>
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -774,7 +781,7 @@ inside the TreeClusters using random ranges.</p>
 <p>:param list list_points: List of points to concider</p>
 <p>:param shapely.geometry.Polygon poligon_check:</p>
 <p>:param min_percent: Minimun percent of point to be consider inside</p>
-<p>:returns bool: True If the amount of points are inside.</p>
+<p>:returns tuple: (bool, list of point inside).</p>
 
 </div>
 
@@ -840,7 +847,7 @@ non convex part it is not always guaranteed.</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="poligon_non_convex_random_gen" class="doc_header"><code>poligon_non_convex_random_gen</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L1238" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>poligon_non_convex_random_gen</code>(<strong><code>npoints</code></strong>)</p>
+<h4 id="poligon_non_convex_random_gen" class="doc_header"><code>poligon_non_convex_random_gen</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/TreeClusters.py#L1239" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>poligon_non_convex_random_gen</code>(<strong><code>npoints</code></strong>)</p>
 </blockquote>
 <p>Create a random (no convex) poligon from n points
 The algorithm returns a polygon creatated from n random 2d points the
@@ -854,13 +861,6 @@ non convex part it is not always guaranteed.</p>
 
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
