@@ -12,7 +12,7 @@ index = {"cluster": "00_TreeClusters.ipynb",
          "clustering": "01_Clustering.ipynb",
          "recursive_clustering": "01_Clustering.ipynb",
          "compute_dbscan": "01_Clustering.ipynb",
-         "auto_knee_average": "01_Clustering.ipynb",
+         "adap_DBSCAN": "01_Clustering.ipynb",
          "compute_hdbscan": "01_Clustering.ipynb",
          "compute_OPTICS": "01_Clustering.ipynb",
          "compute_Natural_cities": "01_Clustering.ipynb"}

@@ -77,13 +77,6 @@ nb_path: "src/01_Clustering.ipynb"
 </div>
     {% endraw %}
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Recursive-Clustering">Recursive Clustering<a class="anchor-link" href="#Recursive-Clustering"> </a></h2><p>The function obtains the clustering iterative</p>
-
-</div>
-</div>
-</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -129,7 +122,7 @@ until no more clusters satisfy the condition</p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Compute-DBSCAN">Compute DBSCAN<a class="anchor-link" href="#Compute-DBSCAN"> </a></h2><p>A wapper function to obtain the DBSCAN cluters by levels</p>
+<h2 id="Clustering-Algorithms">Clustering Algorithms<a class="anchor-link" href="#Clustering-Algorithms"> </a></h2><p>A wapper functions to obtain the clusterizations</p>
 
 </div>
 </div>
@@ -172,6 +165,13 @@ until no more clusters satisfy the condition</p>
     
 <div class="cell border-box-sizing code_cell rendered">
 
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 <div class="output_wrapper">
 <div class="output">
 
@@ -179,7 +179,7 @@ until no more clusters satisfy the condition</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="auto_knee_average" class="doc_header"><code>auto_knee_average</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L262" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>auto_knee_average</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="adap_DBSCAN" class="doc_header"><code>adap_DBSCAN</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L262" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>adap_DBSCAN</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>The function use the knee and average to obtain a good value for epsilon and use
 DBSCAN to obtain the clusters</p>
@@ -207,6 +207,33 @@ DBSCAN to obtain the clusters</p>
     
 <div class="cell border-box-sizing code_cell rendered">
 
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="compute_hdbscan" class="doc_header"><code>compute_hdbscan</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L386" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compute_hdbscan</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>HDBSCAN wrapper.</p>
+<p>:param np.array cluster: a (N,2) numpy array containing the obsevations</p>
+<p>:returns:  list with numpy arrays for all the clusters obtained</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
 </div>
     {% endraw %}
 
@@ -221,11 +248,19 @@ DBSCAN to obtain the clusters</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="compute_hdbscan" class="doc_header"><code>compute_hdbscan</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L386" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compute_hdbscan</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="adap_DBSCAN" class="doc_header"><code>adap_DBSCAN</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L262" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>adap_DBSCAN</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<p>HDBSCAN wrapper.</p>
-<p>:param np.array cluster: a (N,2) numpy array containing the obsevations</p>
-<p>:returns:  list with numpy arrays for all the clusters obtained</p>
+<p>The function use the knee and average to obtain a good value for epsilon and use
+DBSCAN to obtain the clusters</p>
+<p>:param list Points points2_clusters: Point to clusterize</p>
+<p>:param int max_k: = (Default = len(points2_clusters)*.1)</p>
+<p>:param int  min_k: (Default =50)</p>
+<p>:param int step_k: (Default = 50)</p>
+<p>:param int leaf_size: (Default = 50)</p>
+<p>:param bool scale_points: (Default = True)</p>
+<p>:param bool debugg: (Default = False)</p>
+<p>:param bool ret_noise:  (Default = True)</p>
+<p>:returns list : list of cluster. If ret_noise = True return tuple list of cluter and noise</p>
 
 </div>
 
@@ -291,9 +326,9 @@ DBSCAN to obtain the clusters</p>
 <div class="output_markdown rendered_html output_subarea ">
 <h4 id="compute_Natural_cities" class="doc_header"><code>compute_Natural_cities</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L485" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compute_Natural_cities</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
-<p>Natural_cities.
-:param np.array points2_clusters: a (N,2) numpy array containing the obsevations
-:returns: list with numpy arrays for all the clusters obtained</p>
+<p>Compute Natural_cities clustering</p>
+<p>:param np.array points2_clusters: a (N,2) numpy array containing the obsevations</p>
+<p>:returns: list with numpy arrays for all the clusters obtained</p>
 
 </div>
 
@@ -301,13 +336,6 @@ DBSCAN to obtain the clusters</p>
 
 </div>
 </div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
 
 </div>
     {% endraw %}
