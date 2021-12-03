@@ -2,12 +2,12 @@
 
 __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 
-index = {"cluster": "00_TreeClusters.ipynb",
-         "NodeCluster": "00_TreeClusters.ipynb",
-         "TreeClusters": "00_TreeClusters.ipynb",
-         "inside_polygon": "00_TreeClusters.ipynb",
+index = {"inside_polygon": "00_TreeClusters.ipynb",
          "poligon_non_convex_from_Points": "00_TreeClusters.ipynb",
          "poligon_non_convex_random_gen": "00_TreeClusters.ipynb",
+         "cluster": "00_TreeClusters.ipynb",
+         "NodeCluster": "00_TreeClusters.ipynb",
+         "TreeClusters": "00_TreeClusters.ipynb",
          "module_path": "01_Clustering.ipynb",
          "clustering": "01_Clustering.ipynb",
          "recursive_clustering": "01_Clustering.ipynb",
