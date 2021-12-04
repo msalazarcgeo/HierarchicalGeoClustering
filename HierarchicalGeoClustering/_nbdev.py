@@ -15,7 +15,8 @@ index = {"inside_polygon": "00_TreeClusters.ipynb",
          "adap_DBSCAN": "01_Clustering.ipynb",
          "compute_hdbscan": "01_Clustering.ipynb",
          "compute_OPTICS": "01_Clustering.ipynb",
-         "compute_Natural_cities": "01_Clustering.ipynb"}
+         "compute_Natural_cities": "01_Clustering.ipynb",
+         "generate_tree_clusterize_form": "01_Clustering.ipynb"}
 
 modules = ["TreeClusters.py",
            "Clustering.py"]

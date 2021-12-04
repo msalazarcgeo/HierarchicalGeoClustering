@@ -76,7 +76,7 @@ def poligon_non_convex_random_gen(npoints):
 
     :param int npoints: Number of point to generate the polygon
 
-    :returns shapely.grometry.Polygon: The poligon created
+    :returns shapely.geometry.Polygon: The polygon created
     """
     points_r = np.random.random((npoints, 2))
     triangles = shapely.ops.triangulate(shapely.geometry.Polygon(points_r))
@@ -157,10 +157,7 @@ class NodeCluster(cluster, NodeMixin):
         :param double min_scale_y: min y value range ( Default=.1 )
 
         :param double max_scale_y: max y value range ( Default=.5 )
-
         """
-
-
         self.density = density
         random.seed(random_state) ## initialize random state
         avoid_intersec= kwargs.get('avoid_intersec', False)
@@ -965,7 +962,9 @@ class TreeClusters(object):
 
         :returns None:
         """
-
+        verbose = kwargs.get('verbose', False)
+        if verbose:
+            print("Entro a la funcion populate_tree" )
         for level_id, level in  enumerate(self.levels_nodes):
             rand_cluster_state= np.random.randint(0, 1500, len(level)) ## Random ints for random_seed
             if level_id ==0 :

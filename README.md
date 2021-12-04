@@ -13,29 +13,62 @@ This file will become your README and also the index of your documentation.
 Fill me in please! Don't forget code examples:
 
 ```python
-Hier_geo_clus= TreeClusters(3)
-Hier_geo_clus.populate_tree(number_per_cluster=200)
+Hier_geo_clus= TreeClusters(3, random_state=1)
+```
+
+```python
+Hier_geo_clus.populate_tree(number_per_cluster=100, verbose= True)
+```
+
+    
+
+
+```python
+Hier_geo_clus.print_structure()
+```
+
+    Root
+    Root    
+
+
+```python
+Hier_geo_clus.populate_tree(number_per_cluster=200, avoid_intersec= True, verbose= True)
+```
+
+    
+
+
+```python
+Hier_geo_clus.root.polygon_cluster
 ```
 
 
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    /tmp/ipykernel_3163093/921516667.py in <module>
-          1 Hier_geo_clus= TreeClusters(3)
-    ----> 2 Hier_geo_clus.populate_tree(number_per_cluster=200)
-    
-
-    /Partition1/Cgeo/git/HierarchicalGeoClustering/HierarchicalGeoClustering/TreeClusters.py in populate_tree(self, number_per_cluster, density_init, factor_density, density_init_list, **kwargs)
-        847                 n_childs = random.randint(0, 5)
-        848                 node_childs = [
-    --> 849                     NodeCluster(name = prev.name +'_'+level_str+str(level)+'_'+node_str+str(i),
-        850                                 parent=prev) for i in  range(n_childs)
-        851                             ]
 
 
-    NameError: name 'np' is not defined
+![svg](docs/images/output_9_0.svg)
+
+
+
+```python
+Hier_geo_clus.get_deepth()
+```
+
+
+
+
+    4
+
+
+
+```python
+Hier_geo_clus.root.children
+```
+
+
+
+
+    ()
+
 
 
 tree_original= tree_clusters(4)
