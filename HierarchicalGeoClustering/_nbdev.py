@@ -5,6 +5,8 @@ __all__ = ["index", "modules", "custom_doc_links", "git_url"]
 index = {"inside_polygon": "00_TreeClusters.ipynb",
          "poligon_non_convex_from_Points": "00_TreeClusters.ipynb",
          "poligon_non_convex_random_gen": "00_TreeClusters.ipynb",
+         "string_recursive_tag": "00_TreeClusters.ipynb",
+         "retag_from_strings": "00_TreeClusters.ipynb",
          "cluster": "00_TreeClusters.ipynb",
          "NodeCluster": "00_TreeClusters.ipynb",
          "TreeClusters": "00_TreeClusters.ipynb",
@@ -24,7 +26,8 @@ index = {"inside_polygon": "00_TreeClusters.ipynb",
          "collinear": "01_Clustering.ipynb",
          "get_segments": "01_Clustering.ipynb",
          "get_polygons_buf": "01_Clustering.ipynb",
-         "labels_filtra": "01_Clustering.ipynb"}
+         "labels_filtra": "01_Clustering.ipynb",
+         "similarity_clusterings": "01_Clustering.ipynb"}
 
 modules = ["TreeClusters.py",
            "Clustering.py"]
