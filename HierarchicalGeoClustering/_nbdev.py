@@ -21,13 +21,13 @@ index = {"inside_polygon": "00_TreeClusters.ipynb",
          "compute_Natural_cities": "01_Clustering.ipynb",
          "generate_tree_clusterize_form": "01_Clustering.ipynb",
          "get_tree_from_clustering": "01_Clustering.ipynb",
+         "SMF": "01_Clustering.ipynb",
          "get_alpha_shape": "01_Clustering.ipynb",
          "set_colinear": "01_Clustering.ipynb",
          "collinear": "01_Clustering.ipynb",
          "get_segments": "01_Clustering.ipynb",
          "get_polygons_buf": "01_Clustering.ipynb",
-         "labels_filtra": "01_Clustering.ipynb",
-         "similarity_clusterings": "01_Clustering.ipynb"}
+         "labels_filtra": "01_Clustering.ipynb"}
 
 modules = ["TreeClusters.py",
            "Clustering.py"]

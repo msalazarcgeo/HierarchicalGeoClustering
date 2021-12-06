@@ -413,7 +413,7 @@ with the similarity measurment created</p>
 
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h1 id="Helper-functions">Helper functions<a class="anchor-link" href="#Helper-functions"> </a></h1><p>These functions are use by the clustering algorithms and to create the structure, mosly by handly the names for each node</p>
+<h2 id="Similarity-form-metric">Similarity form metric<a class="anchor-link" href="#Similarity-form-metric"> </a></h2><p>The function use the <em>Jaccar</em> index to and the points in the clusterization to obtain a metric tha is use to compare the clusters on level basis.</p>
 
 </div>
 </div>
@@ -436,7 +436,51 @@ with the similarity measurment created</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_alpha_shape" class="doc_header"><code>get_alpha_shape</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L883" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_alpha_shape</code>(<strong><code>point_list</code></strong>)</p>
+<h4 id="SMF" class="doc_header"><code>SMF</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L883" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>SMF</code>(<strong><code>list_poly_c_1</code></strong>, <strong><code>list_poly_c_2</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+</blockquote>
+<p>The function calculates the Similarity Form Measurment (SMF)
+between two clusterizations</p>
+<p>:param: list of nodes with points and polygons</p>
+<p>:param: list of nodes with points and polygons</p>
+<p>:param bool verbose: To print to debugg</p>
+<p>:returns double: The similarity mesuarment</p>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Helper-functions">Helper functions<a class="anchor-link" href="#Helper-functions"> </a></h2><p>These functions are use by the clustering algorithms and to create the structure, mosly by handly the names for each node</p>
+
+</div>
+</div>
+</div>
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+</div>
+    {% endraw %}
+
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_markdown rendered_html output_subarea ">
+<h4 id="get_alpha_shape" class="doc_header"><code>get_alpha_shape</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L951" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_alpha_shape</code>(<strong><code>point_list</code></strong>)</p>
 </blockquote>
 <p>Returns a polygon representing the hull of the points sample.</p>
 <p>:param list point_list: list list of tuples with samples coordinates.</p>
@@ -470,7 +514,7 @@ with the similarity measurment created</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="set_colinear" class="doc_header"><code>set_colinear</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L919" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>set_colinear</code>(<strong><code>list_points</code></strong>)</p>
+<h4 id="set_colinear" class="doc_header"><code>set_colinear</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L987" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>set_colinear</code>(<strong><code>list_points</code></strong>)</p>
 </blockquote>
 <p>Check if in the list of points any of triplet of points
 is colinear
@@ -505,7 +549,7 @@ is colinear
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="collinear" class="doc_header"><code>collinear</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L933" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>collinear</code>(<strong><code>p1</code></strong>, <strong><code>p2</code></strong>, <strong><code>p3</code></strong>)</p>
+<h4 id="collinear" class="doc_header"><code>collinear</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L1001" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>collinear</code>(<strong><code>p1</code></strong>, <strong><code>p2</code></strong>, <strong><code>p3</code></strong>)</p>
 </blockquote>
 <p>Check if the points are colinear</p>
 <p>:param shapely Point p1: point to chek if is colinear</p>
@@ -541,7 +585,7 @@ is colinear
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_segments" class="doc_header"><code>get_segments</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L948" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_segments</code>(<strong><code>points</code></strong>)</p>
+<h4 id="get_segments" class="doc_header"><code>get_segments</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L1016" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_segments</code>(<strong><code>points</code></strong>)</p>
 </blockquote>
 <p>Get the segments from a delaunay triangulation</p>
 <p>:param points: Point to get Delaunay triangulation and exctract points</p>
@@ -575,7 +619,7 @@ is colinear
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_polygons_buf" class="doc_header"><code>get_polygons_buf</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L969" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_polygons_buf</code>(<strong><code>lines</code></strong>)</p>
+<h4 id="get_polygons_buf" class="doc_header"><code>get_polygons_buf</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L1037" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_polygons_buf</code>(<strong><code>lines</code></strong>)</p>
 </blockquote>
 <p>Obtain the poligons from the lines</p>
 <p>:param list lines: List of lines</p>
@@ -610,7 +654,7 @@ edges (Polygon or multypolygon)</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="labels_filtra" class="doc_header"><code>labels_filtra</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L986" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>labels_filtra</code>(<strong><code>point_points</code></strong>, <strong><code>multy_pol</code></strong>)</p>
+<h4 id="labels_filtra" class="doc_header"><code>labels_filtra</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L1054" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>labels_filtra</code>(<strong><code>point_points</code></strong>, <strong><code>multy_pol</code></strong>)</p>
 </blockquote>
 <p>Labels the points in the multy_pol if no polygon contains
 a point is label as -1</p>
@@ -618,42 +662,6 @@ a point is label as -1</p>
 <p>:param multy_pol</p>
 <p>:returns np.array: Label array with -1 if is not contained
 in a polygon</p>
-
-</div>
-
-</div>
-
-</div>
-</div>
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-</div>
-    {% endraw %}
-
-    {% raw %}
-    
-<div class="cell border-box-sizing code_cell rendered">
-
-<div class="output_wrapper">
-<div class="output">
-
-<div class="output_area">
-
-
-<div class="output_markdown rendered_html output_subarea ">
-<h4 id="similarity_clusterings" class="doc_header"><code>similarity_clusterings</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L1021" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>similarity_clusterings</code>(<strong><code>list_poly_c_1</code></strong>, <strong><code>list_poly_c_2</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
-</blockquote>
-<p>The function calculates the similarity measurment
-between two clusterizations</p>
-<p>param: list of nodes with points and polygons</p>
-<p>param: list of nodes with points and polygons</p>
-<p>:returns double: The similarity mesuarment</p>
 
 </div>
 

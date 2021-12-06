@@ -138,7 +138,7 @@ form_metric=[]
 
 for l in range(0, 4):
     d = { 'Level': l,                              
-        'adaptive DBSCAN':similarity_clusterings(HGC.levels_nodes[l],
+        'adaptive DBSCAN':SMF(HGC.levels_nodes[l],
                             HGC_adapta_DBSCAN.levels_nodes[l])
         }
     form_metric.append(d)

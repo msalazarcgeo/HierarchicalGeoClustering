@@ -2,8 +2,8 @@
 
 __all__ = ['module_path', 'clustering', 'recursive_clustering', 'recursive_clustering_tree', 'compute_dbscan',
            'adaptive_DBSCAN', 'compute_hdbscan', 'compute_OPTICS', 'compute_Natural_cities',
-           'generate_tree_clusterize_form', 'get_tree_from_clustering', 'get_alpha_shape', 'set_colinear', 'collinear',
-           'get_segments', 'get_polygons_buf', 'labels_filtra', 'similarity_clusterings']
+           'generate_tree_clusterize_form', 'get_tree_from_clustering', 'SMF', 'get_alpha_shape', 'set_colinear',
+           'collinear', 'get_segments', 'get_polygons_buf', 'labels_filtra']
 
 # Cell
 import os
@@ -880,6 +880,74 @@ def get_tree_from_clustering(cluster_tree_clusters):
      return  all_level_clusters
 
 # Cell
+def SMF(list_poly_c_1,list_poly_c_2 ,**kwargs):
+    """
+    The function calculates the Similarity Form Measurment (SMF)
+    between two clusterizations
+
+    :param: list of nodes with points and polygons
+
+    :param: list of nodes with points and polygons
+
+    :param bool verbose: To print to debugg
+
+    :returns double: The similarity mesuarment
+    """
+    verbose= kwargs.get('verbose', False)
+    ##### Get intersection
+    list_de=[]
+    for i in list_poly_c_1:
+        list_de.append([ i.polygon_cluster.intersection(  j.polygon_cluster ) for  j in list_poly_c_2])
+
+    list_de_bool = []
+    for i in list_de:
+        list_de_bool.append([not j.is_empty for j in i])
+
+    list_de_index = []
+    #print(list_de_bool)
+    for i in list_de_bool:
+        if any(i):
+            list_de_index.append(i.index(True))
+        else:
+            list_de_index.append(None)
+    jacc_sim_po = []
+    for num, node in enumerate(list_poly_c_1):
+        ### ver eque pasa cuando se tienen 2
+        if list_de_index[num] is not None:
+            node_get = list_poly_c_2[list_de_index[num]]
+            poli_int = list_de[num][list_de_index[num]]
+
+            ####Puntos en la interseccion
+            #print(node)
+            points_all = node.get_point_decendent()
+            res_bool =[ poli_int.contains(p) for p in points_all] ### Como no necesito los puntos basta con esto
+            card = sum(res_bool)
+            ###Obtenemos jaccard
+            sim_jacc = (poli_int.area)/(node.polygon_cluster.area + node_get.polygon_cluster.area - poli_int.area)
+            if verbose:
+                print("jaccard: " ,sim_jacc)
+                print("cardinal: " ,card )
+            jacc_sim_po.append(sim_jacc* card)#####Cuando hay interseccion
+        else:
+            jacc_sim_po.append(0) #### Cuando no hay
+
+    arr_bool = np.array(list_de_bool)
+
+    Q_not= []
+    for col in range(arr_bool.shape[1]):
+        cols_sel= arr_bool[:,col].any()
+        if cols_sel ==False:
+            Q_not.append(col)
+    #print(Q_not)
+    len_Q_not=[]
+    if Q_not:
+         len_Q_not =[len(list_poly_c_2[i].get_point_decendent())  for i in Q_not]
+
+    P_sum = sum([len(node.get_point_decendent())  for node in list_poly_c_1])
+    deno =P_sum + sum(len_Q_not)
+    return sum(jacc_sim_po)/deno
+
+# Cell
 def get_alpha_shape(point_list):
     """
     Returns a polygon representing the hull of the points sample.
@@ -1016,69 +1084,3 @@ def labels_filtra(point_points, multy_pol):
         raise ValueError('The input is not MultiPolygon or Polygon type')
 
     return np.array(labels_p)
-
-# Cell
-def similarity_clusterings(list_poly_c_1,list_poly_c_2 ,**kwargs):
-    """
-    The function calculates the similarity measurment
-    between two clusterizations
-
-    param: list of nodes with points and polygons
-
-    param: list of nodes with points and polygons
-
-    :returns double: The similarity mesuarment
-    """
-    verbose= kwargs.get('verbose', False)
-    ##### Get intersection
-    list_de=[]
-    for i in list_poly_c_1:
-        list_de.append([ i.polygon_cluster.intersection(  j.polygon_cluster ) for  j in list_poly_c_2])
-
-    list_de_bool = []
-    for i in list_de:
-        list_de_bool.append([not j.is_empty for j in i])
-
-    list_de_index = []
-    #print(list_de_bool)
-    for i in list_de_bool:
-        if any(i):
-            list_de_index.append(i.index(True))
-        else:
-            list_de_index.append(None)
-    jacc_sim_po = []
-    for num, node in enumerate(list_poly_c_1):
-        ### ver eque pasa cuando se tienen 2
-        if list_de_index[num] is not None:
-            node_get = list_poly_c_2[list_de_index[num]]
-            poli_int = list_de[num][list_de_index[num]]
-
-            ####Puntos en la interseccion
-            #print(node)
-            points_all = node.get_point_decendent()
-            res_bool =[ poli_int.contains(p) for p in points_all] ### Como no necesito los puntos basta con esto
-            card = sum(res_bool)
-            ###Obtenemos jaccard
-            sim_jacc = (poli_int.area)/(node.polygon_cluster.area + node_get.polygon_cluster.area - poli_int.area)
-            if verbose:
-                print("jaccard: " ,sim_jacc)
-                print("cardinal: " ,card )
-            jacc_sim_po.append(sim_jacc* card)#####Cuando hay interseccion
-        else:
-            jacc_sim_po.append(0) #### Cuando no hay
-
-    arr_bool = np.array(list_de_bool)
-
-    Q_not= []
-    for col in range(arr_bool.shape[1]):
-        cols_sel= arr_bool[:,col].any()
-        if cols_sel ==False:
-            Q_not.append(col)
-    #print(Q_not)
-    len_Q_not=[]
-    if Q_not:
-         len_Q_not =[len(list_poly_c_2[i].get_point_decendent())  for i in Q_not]
-
-    P_sum = sum([len(node.get_point_decendent())  for node in list_poly_c_1])
-    deno =P_sum + sum(len_Q_not)
-    return sum(jacc_sim_po)/deno
