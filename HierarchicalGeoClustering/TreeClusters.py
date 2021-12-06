@@ -926,7 +926,10 @@ class TreeClusters(object):
 
     def get_level(self, level):
         """
+        Get the level
+
         :param int level: Level to get nodes
+
         :returns List: All the nodes in the level
         """
         return self.levels_nodes[level]
