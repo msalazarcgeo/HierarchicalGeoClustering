@@ -120,6 +120,9 @@ HGC_adapta_DBSCAN = recursive_clustering_tree(dic_points,
                                       )
 ```
 
+    The min_k value is too large for the number of points returns empty clusters
+
+
 ```python
 fig, axs = plt.subplots( figsize=(8,8))
 HGC_adapta_DBSCAN.visualize(axs, polygon=True)
@@ -138,25 +141,31 @@ form_metric=[]
 
 for l in range(0, 4):
     d = { 'Level': l,                              
-        'adaptive DBSCAN':SMF(HGC.levels_nodes[l],
+        'adaptive DBSCAN':SSM(HGC.levels_nodes[l],
                             HGC_adapta_DBSCAN.levels_nodes[l])
         }
     form_metric.append(d)
 ```
 
+
+    ---------------------------------------------------------------------------
+
+    NameError                                 Traceback (most recent call last)
+
+    /tmp/ipykernel_3972286/1116655081.py in <module>
+          3 for l in range(0, 4):
+          4     d = { 'Level': l,                              
+    ----> 5         'adaptive DBSCAN':SSM(HGC.levels_nodes[l],
+          6                             HGC_adapta_DBSCAN.levels_nodes[l])
+          7         }
+
+
+    NameError: name 'SSM' is not defined
+
+
 ```python
 form_metric
 ```
-
-
-
-
-    [{'Level': 0, 'adaptive DBSCAN': 0.8072675637368917},
-     {'Level': 1, 'adaptive DBSCAN': 0.49739315930558003},
-     {'Level': 2, 'adaptive DBSCAN': 0.463981718186057},
-     {'Level': 3, 'adaptive DBSCAN': 0.20288774565650466}]
-
-
 
 ```python
 df_metric_form = pd.DataFrame(form_metric)
@@ -165,55 +174,3 @@ df_metric_form = pd.DataFrame(form_metric)
 ```python
 df_metric_form
 ```
-
-
-
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Level</th>
-      <th>adaptive DBSCAN</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>0</th>
-      <td>0</td>
-      <td>0.807268</td>
-    </tr>
-    <tr>
-      <th>1</th>
-      <td>1</td>
-      <td>0.497393</td>
-    </tr>
-    <tr>
-      <th>2</th>
-      <td>2</td>
-      <td>0.463982</td>
-    </tr>
-    <tr>
-      <th>3</th>
-      <td>3</td>
-      <td>0.202888</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-

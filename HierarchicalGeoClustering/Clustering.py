@@ -2,7 +2,7 @@
 
 __all__ = ['module_path', 'clustering', 'recursive_clustering', 'recursive_clustering_tree', 'compute_dbscan',
            'adaptive_DBSCAN', 'compute_hdbscan', 'compute_OPTICS', 'compute_Natural_cities',
-           'generate_tree_clusterize_form', 'get_tree_from_clustering', 'SMF', 'get_alpha_shape', 'set_colinear',
+           'generate_tree_clusterize_form', 'get_tree_from_clustering', 'SSM', 'get_alpha_shape', 'set_colinear',
            'collinear', 'get_segments', 'get_polygons_buf', 'labels_filtra']
 
 # Cell
@@ -660,7 +660,7 @@ def generate_tree_clusterize_form(**kwargs ):
                                               algorithm = 'optics')
     tree_knee = recursive_clustering_tree(dic_points_ori,
                                                levels_clustering = levels_cluster,
-                                              algorithm = 'auto_knee_average')
+                                              algorithm = 'adaptive_DBSCAN')
     if verbose:
         print('DONE clusterize and creating the trees')
     ######  get the points dataframe for each tree
@@ -683,7 +683,7 @@ def generate_tree_clusterize_form(**kwargs ):
         print('DBSCAN size',df_DBSCAN.shape)
         print('HDBSCAN size',df_HDBSCAN.shape)
         print('OPTICS size',df_OPTICS.shape)
-        print('KNEE size',df_knee.shape)
+        print('adaptive_DBSCAN size',df_knee.shape)
 
     ######For each dataframe
     if verbose:
@@ -754,7 +754,7 @@ def generate_tree_clusterize_form(**kwargs ):
                         dic_lev)
     ##### Knee
     if verbose:
-        print('get dataframe Knee')
+        print('get adaptive DBSCAN')
 
     dic_final_levels_knee = get_dics_labels(tree_original, tree_knee, levels_cluster)
     dic_label_final_levels_knee=[ {'level_ori':dic['level_ori'], 'dict':mod_cid_label(dic['dict']) } for dic in  dic_final_levels_knee]
@@ -779,7 +779,7 @@ def generate_tree_clusterize_form(**kwargs ):
     df_DBSCAN_sig_noise.name= 'I_DBSCAN'
     df_HDBSCAN_sig_noise.name= 'I_HDBSCAN'
     df_OPTICS_sig_noise.name= 'I_OPTICS'
-    df_knee_sig_noise.name = 'I_knee'
+    df_knee_sig_noise.name = 'I_Ada_DBSCAN'
 
 
 
@@ -880,7 +880,7 @@ def get_tree_from_clustering(cluster_tree_clusters):
      return  all_level_clusters
 
 # Cell
-def SMF(list_poly_c_1,list_poly_c_2 ,**kwargs):
+def SSM(list_poly_c_1,list_poly_c_2 ,**kwargs):
     """
     The function calculates the Similarity Form Measurment (SMF)
     between two clusterizations

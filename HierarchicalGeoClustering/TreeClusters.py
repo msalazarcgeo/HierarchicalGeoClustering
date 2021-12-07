@@ -12,6 +12,8 @@ import numpy as np
 import shapely
 import pandas as pd
 import re
+import matplotlib
+import matplotlib.pyplot as plt
 from shapely.geometry import LineString
 from shapely.ops import polygonize, cascaded_union
 from shapely.geometry import box
@@ -1130,6 +1132,16 @@ class TreeClusters(object):
                         axs,
                         **kwargs
                         ):
+        """
+        Visualize a specific level
+
+        :param axe matplolib  axs: where thte plot will be draw
+
+        :param list int levels: list of levels to  visualizelevel
+
+        :returns None:
+
+        """
         levels_vis = kwargs.get('levels', [0]),
         # print(levels_vis)
         color_map_val= kwargs.get('color_map_val', 'jet')
