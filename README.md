@@ -116,12 +116,9 @@ dic_points={'points':[X_2], 'parent':''}
 ```python
 HGC_adapta_DBSCAN = recursive_clustering_tree(dic_points,
                                        levels_clustering = 3,
-                                       algorithm = 'adaptive_DBSCAN'
+                                       algorithm = 'adaptative_DBSCAN'
                                       )
 ```
-
-    The min_k value is too large for the number of points returns empty clusters
-
 
 ```python
 fig, axs = plt.subplots( figsize=(8,8))
@@ -132,9 +129,9 @@ HGC_adapta_DBSCAN.visualize(axs, polygon=True)
 ![png](docs/images/output_14_0.png)
 
 
-### Get the Similarity Form Measurement
+### Get the Similarity Shape Measurement
 
-To obtain the SMF the trees has to be use 
+To obtain the SSM the clusters tree has to be used, this due to the use of the geometric shape in the metric. Therefore the polygons of each cluster on each level has to be able to compare. 
 
 ```python
 form_metric=[]
@@ -147,25 +144,19 @@ for l in range(0, 4):
     form_metric.append(d)
 ```
 
-
-    ---------------------------------------------------------------------------
-
-    NameError                                 Traceback (most recent call last)
-
-    /tmp/ipykernel_3972286/1116655081.py in <module>
-          3 for l in range(0, 4):
-          4     d = { 'Level': l,                              
-    ----> 5         'adaptive DBSCAN':SSM(HGC.levels_nodes[l],
-          6                             HGC_adapta_DBSCAN.levels_nodes[l])
-          7         }
-
-
-    NameError: name 'SSM' is not defined
-
-
 ```python
 form_metric
 ```
+
+
+
+
+    [{'Level': 0, 'adaptive DBSCAN': 0.6046098496677557},
+     {'Level': 1, 'adaptive DBSCAN': 0.6195370749041116},
+     {'Level': 2, 'adaptive DBSCAN': 0.4080125145736268},
+     {'Level': 3, 'adaptive DBSCAN': 0.22732397098600046}]
+
+
 
 ```python
 df_metric_form = pd.DataFrame(form_metric)
@@ -174,3 +165,55 @@ df_metric_form = pd.DataFrame(form_metric)
 ```python
 df_metric_form
 ```
+
+
+
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Level</th>
+      <th>adaptive DBSCAN</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0.604610</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1</td>
+      <td>0.619537</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>2</td>
+      <td>0.408013</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>3</td>
+      <td>0.227324</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+

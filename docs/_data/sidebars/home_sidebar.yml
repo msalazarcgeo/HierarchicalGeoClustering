@@ -10,7 +10,7 @@ entries:
       title: Overview
       url: /
     - output: web,pdf
-      title: 'Tree of clusters '
+      title: Cluster Tree
       url: TreeClusters.html
     - output: web,pdf
       title: 'Clustering '
