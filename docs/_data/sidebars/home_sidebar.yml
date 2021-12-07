@@ -15,6 +15,9 @@ entries:
     - output: web,pdf
       title: 'Clustering '
       url: Clustering.html
+    - output: web,pdf
+      title: Tutorial
+      url: tutorial.html
     output: web
     title: HierarchicalGeoClustering
   output: web
