@@ -695,7 +695,6 @@ Root
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="c1">#slow</span>
-
 <span class="n">adaptative_DBSCAN_HGC</span> <span class="o">=</span> <span class="n">recursive_clustering_tree</span><span class="p">(</span>
                     <span class="n">dic_points</span><span class="p">,</span>
                     <span class="n">levels_clustering</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span>
@@ -754,8 +753,11 @@ Root
 </div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<p>The evaluation using a</p>
-
+<p>To evaluate the clusterizations on a specific level $i$ using the $SSM$, the need for the shape of all the polygons on the level $i$ is needed. Therefore the evaluation is made using the nodes in the <a href="/HierarchicalGeoClustering/TreeClusters.html#TreeClusters"><code>TreeClusters</code></a> objects for the specific level to evaluate on the clusterizations to evaluate.</p>
+$$
+SSM(\mathcal{P}_i^O , \mathcal{Q}_i^{C}) =\frac{\sum\limits_{P_{l}^O\in \mathcal{P}_i^O  Q_{k}^C \in{Q}_i^{C} } | P_{l}^O\cap Q_{k}^C |* Jacc(P_{l}^O,Q_{k}^C)} {\sum\limits_{P \in \mathcal{P}_i^O} |P|  
++  \sum\limits_{Q \in \mathcal{Q}_{not}} |Q|} 
+$$
 </div>
 </div>
 </div>
@@ -865,9 +867,45 @@ Root
 </div>
     {% endraw %}
 
+    {% raw %}
+    
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">level</span><span class="o">=</span><span class="mi">3</span>
+<span class="n">SSM</span><span class="p">(</span><span class="n">HGC</span><span class="o">.</span><span class="n">levels_nodes</span><span class="p">[</span><span class="n">level</span><span class="p">],</span>
+    <span class="n">adaptative_DBSCAN_HGC</span><span class="o">.</span><span class="n">levels_nodes</span><span class="p">[</span><span class="n">level</span><span class="p">]</span>
+   <span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.5420769847262458</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+    {% endraw %}
+
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
-<h3 id="Obtain-the-tags">Obtain the tags<a class="anchor-link" href="#Obtain-the-tags"> </a></h3><p>To obtain the specific tag for each point and insert into a dataframe the <code>get_dataframe_recursive_node_label</code> method is available.</p>
+<h3 id="Obtain-the-tags">Obtain the tags<a class="anchor-link" href="#Obtain-the-tags"> </a></h3><p>If the specific label for each point is needed for some other purpose, the <code>get_dataframe_recursive_node_label</code> method is available. The method obtains the tag for all the points and puts them into a dataframe.</p>
 
 </div>
 </div>
