@@ -8,6 +8,7 @@ __all__ = ['module_path', 'get_alpha_shape', 'set_colinear', 'collinear', 'get_s
            'generate_tree_clusterize_form']
 
 # Cell
+#export
 import os
 import sys
 import numpy as np
@@ -16,6 +17,7 @@ import kneed
 import itertools
 import shapely
 import random
+import time
 from CGAL.CGAL_Alpha_shape_2 import *
 from CGAL.CGAL_Kernel import Point_2
 from sklearn.cluster import DBSCAN, OPTICS
