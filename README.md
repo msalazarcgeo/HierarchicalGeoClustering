@@ -4,6 +4,9 @@
 
 ## Install
 
+The library uses the cgal library, if the library is use inside a conda enviroment the installation procedure should create the enviroment and install the cgal library using ` conda install -c conda-forge cgal`. 
+
+
 To install the library can be simply:
 
 `pip install git+https://github.com/CentroGeo/HierarchicalGeoClustering.git`
