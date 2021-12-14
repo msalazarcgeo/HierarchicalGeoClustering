@@ -54,7 +54,7 @@ nb_path: "src/01_Clustering.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="clustering" class="doc_header"><code>clustering</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L33" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>clustering</code>(<strong><code>t_next_level_2</code></strong>, <strong><code>level</code></strong>=<em><code>None</code></em>, <strong><code>algorithm</code></strong>=<em><code>'dbscan'</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="clustering" class="doc_header"><code>clustering</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L34" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>clustering</code>(<strong><code>t_next_level_2</code></strong>, <strong><code>level</code></strong>=<em><code>None</code></em>, <strong><code>algorithm</code></strong>=<em><code>'dbscan'</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Function to get the clusters for single group by</p>
 <p>:param t_next_level_2 Dictionary with the points to compute the
@@ -95,7 +95,7 @@ nb_path: "src/01_Clustering.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="recursive_clustering" class="doc_header"><code>recursive_clustering</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L153" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>recursive_clustering</code>(<strong><code>this_level</code></strong>, <strong><code>to_process</code></strong>, <strong><code>cluster_tree</code></strong>, <strong><code>level</code></strong>=<em><code>0</code></em>, <strong><code>algorithm</code></strong>=<em><code>'dbscan'</code></em>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="recursive_clustering" class="doc_header"><code>recursive_clustering</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L154" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>recursive_clustering</code>(<strong><code>this_level</code></strong>, <strong><code>to_process</code></strong>, <strong><code>cluster_tree</code></strong>, <strong><code>level</code></strong>=<em><code>0</code></em>, <strong><code>algorithm</code></strong>=<em><code>'dbscan'</code></em>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Performs the recursive clustering.
 Calls compute_dbscan for each
@@ -131,7 +131,7 @@ until no more clusters satisfy the condition</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="recursive_clustering_tree" class="doc_header"><code>recursive_clustering_tree</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L232" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>recursive_clustering_tree</code>(<strong><code>dic_points_ori</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="recursive_clustering_tree" class="doc_header"><code>recursive_clustering_tree</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L233" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>recursive_clustering_tree</code>(<strong><code>dic_points_ori</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Obtaing the recursive tree using a specific algorithm</p>
 
@@ -177,7 +177,7 @@ until no more clusters satisfy the condition</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="compute_dbscan" class="doc_header"><code>compute_dbscan</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L255" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compute_dbscan</code>(<strong><code>cluster</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="compute_dbscan" class="doc_header"><code>compute_dbscan</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L256" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compute_dbscan</code>(<strong><code>cluster</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Sklearn DBSCAN wrapper.</p>
 <p>:param cluster: a (N,2) numpy array containing the obsevations</p>
@@ -211,7 +211,7 @@ until no more clusters satisfy the condition</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="adaptative_DBSCAN" class="doc_header"><code>adaptative_DBSCAN</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L303" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>adaptative_DBSCAN</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="adaptative_DBSCAN" class="doc_header"><code>adaptative_DBSCAN</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L304" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>adaptative_DBSCAN</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>The function use the knee and average to obtain a good value for epsilon and use
 DBSCAN to obtain the clusters</p>
@@ -253,7 +253,7 @@ DBSCAN to obtain the clusters</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="compute_hdbscan" class="doc_header"><code>compute_hdbscan</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L427" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compute_hdbscan</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="compute_hdbscan" class="doc_header"><code>compute_hdbscan</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L428" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compute_hdbscan</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>HDBSCAN wrapper.</p>
 <p>:param np.array cluster: a (N,2) numpy array containing the obsevations</p>
@@ -287,7 +287,7 @@ DBSCAN to obtain the clusters</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="compute_OPTICS" class="doc_header"><code>compute_OPTICS</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L475" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compute_OPTICS</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="compute_OPTICS" class="doc_header"><code>compute_OPTICS</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L476" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compute_OPTICS</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>OPTICS wrapper.
 :param np.array cluster: a (N,2) numpy array containing the obsevations
@@ -321,7 +321,7 @@ DBSCAN to obtain the clusters</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="compute_Natural_cities" class="doc_header"><code>compute_Natural_cities</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L526" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compute_Natural_cities</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="compute_Natural_cities" class="doc_header"><code>compute_Natural_cities</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L527" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>compute_Natural_cities</code>(<strong><code>points2_clusters</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Compute Natural cities clustering</p>
 <p>:param np.array points2_clusters: a (N,2) numpy array containing the obsevations</p>
@@ -354,7 +354,7 @@ DBSCAN to obtain the clusters</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="generate_tree_clusterize_form" class="doc_header"><code>generate_tree_clusterize_form</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L590" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>generate_tree_clusterize_form</code>(<strong>**<code>kwargs</code></strong>)</p>
+<h4 id="generate_tree_clusterize_form" class="doc_header"><code>generate_tree_clusterize_form</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L591" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>generate_tree_clusterize_form</code>(<strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>Generates all the experiment all the experiment creates the data and clusterize using the algorithm available</p>
 <p>:param levels_tree: Levels for the tree</p>
@@ -392,7 +392,7 @@ with the similarity measurment created</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_tree_from_clustering" class="doc_header"><code>get_tree_from_clustering</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L833" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_tree_from_clustering</code>(<strong><code>cluster_tree_clusters</code></strong>)</p>
+<h4 id="get_tree_from_clustering" class="doc_header"><code>get_tree_from_clustering</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L834" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_tree_from_clustering</code>(<strong><code>cluster_tree_clusters</code></strong>)</p>
 </blockquote>
 <p>Returns the tree from the iterative clustering, the cluster_tree_cluster</p>
 <p>:param cluster_tree_clusters is a list of list with a dictionary that
@@ -436,7 +436,7 @@ with the similarity measurment created</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="SSM" class="doc_header"><code>SSM</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L883" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>SSM</code>(<strong><code>list_poly_c_1</code></strong>, <strong><code>list_poly_c_2</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
+<h4 id="SSM" class="doc_header"><code>SSM</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L884" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>SSM</code>(<strong><code>list_poly_c_1</code></strong>, <strong><code>list_poly_c_2</code></strong>, <strong>**<code>kwargs</code></strong>)</p>
 </blockquote>
 <p>The function calculates the Similarity Form Measurment (SMF)
 between two clusterizations</p>
@@ -480,7 +480,7 @@ between two clusterizations</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_alpha_shape" class="doc_header"><code>get_alpha_shape</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L951" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_alpha_shape</code>(<strong><code>point_list</code></strong>)</p>
+<h4 id="get_alpha_shape" class="doc_header"><code>get_alpha_shape</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L952" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_alpha_shape</code>(<strong><code>point_list</code></strong>)</p>
 </blockquote>
 <p>Returns a polygon representing the hull of the points sample.</p>
 <p>:param list point_list: list list of tuples with samples coordinates.</p>
@@ -514,7 +514,7 @@ between two clusterizations</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="set_colinear" class="doc_header"><code>set_colinear</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L987" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>set_colinear</code>(<strong><code>list_points</code></strong>)</p>
+<h4 id="set_colinear" class="doc_header"><code>set_colinear</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L988" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>set_colinear</code>(<strong><code>list_points</code></strong>)</p>
 </blockquote>
 <p>Check if in the list of points any of triplet of points
 is colinear
@@ -549,7 +549,7 @@ is colinear
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="collinear" class="doc_header"><code>collinear</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L1001" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>collinear</code>(<strong><code>p1</code></strong>, <strong><code>p2</code></strong>, <strong><code>p3</code></strong>)</p>
+<h4 id="collinear" class="doc_header"><code>collinear</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L1002" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>collinear</code>(<strong><code>p1</code></strong>, <strong><code>p2</code></strong>, <strong><code>p3</code></strong>)</p>
 </blockquote>
 <p>Check if the points are colinear</p>
 <p>:param shapely Point p1: point to chek if is colinear</p>
@@ -585,7 +585,7 @@ is colinear
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_segments" class="doc_header"><code>get_segments</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L1016" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_segments</code>(<strong><code>points</code></strong>)</p>
+<h4 id="get_segments" class="doc_header"><code>get_segments</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L1017" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_segments</code>(<strong><code>points</code></strong>)</p>
 </blockquote>
 <p>Get the segments from a delaunay triangulation</p>
 <p>:param points: Point to get Delaunay triangulation and exctract points</p>
@@ -619,7 +619,7 @@ is colinear
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="get_polygons_buf" class="doc_header"><code>get_polygons_buf</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L1037" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_polygons_buf</code>(<strong><code>lines</code></strong>)</p>
+<h4 id="get_polygons_buf" class="doc_header"><code>get_polygons_buf</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L1038" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>get_polygons_buf</code>(<strong><code>lines</code></strong>)</p>
 </blockquote>
 <p>Obtain the poligons from the lines</p>
 <p>:param list lines: List of lines</p>
@@ -654,7 +654,7 @@ edges (Polygon or multypolygon)</p>
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="labels_filtra" class="doc_header"><code>labels_filtra</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L1054" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>labels_filtra</code>(<strong><code>point_points</code></strong>, <strong><code>multy_pol</code></strong>)</p>
+<h4 id="labels_filtra" class="doc_header"><code>labels_filtra</code><a href="https://github.com/CentroGeo/HierarchicalGeoClustering/tree/master/HierarchicalGeoClustering/Clustering.py#L1055" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>labels_filtra</code>(<strong><code>point_points</code></strong>, <strong><code>multy_pol</code></strong>)</p>
 </blockquote>
 <p>Labels the points in the multy_pol if no polygon contains
 a point is label as -1</p>

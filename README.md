@@ -4,7 +4,9 @@
 
 ## Install
 
-`pip install your_project_name`
+To install the library can be simply:
+
+`pip install git+https://github.com/CentroGeo/HierarchicalGeoClustering.git`
 
 ## How to use
 
@@ -79,7 +81,7 @@ HGC.visualize(axs, polygon=True)
 ```
 
 
-![png](docs/images/output_8_0.png)
+![png](docs/images/output_9_0.png)
 
 
 ```python
@@ -89,7 +91,7 @@ HGC.root.polygon_cluster
 
 
 
-![svg](docs/images/output_9_0.svg)
+![svg](docs/images/output_10_0.svg)
 
 
 
@@ -126,7 +128,7 @@ HGC_adapta_DBSCAN.visualize(axs, polygon=True)
 ```
 
 
-![png](docs/images/output_14_0.png)
+![png](docs/images/output_15_0.png)
 
 
 ### Get the Similarity Shape Measurement

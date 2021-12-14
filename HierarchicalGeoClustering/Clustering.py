@@ -13,6 +13,7 @@ import pandas as pd
 import kneed
 import itertools
 import shapely
+import random
 from CGAL.CGAL_Alpha_shape_2 import *
 from CGAL.CGAL_Kernel import Point_2
 from sklearn.cluster import DBSCAN, OPTICS
