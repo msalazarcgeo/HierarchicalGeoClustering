@@ -1102,7 +1102,7 @@ def generate_tree_clusterize_form(**kwargs ):
     tree_OPTICS= recursive_clustering_tree(dic_points_ori,
                                                levels_clustering = levels_cluster,
                                               algorithm = 'optics')
-    tree_knee = recursive_clustering_tree(dic_points_ori,
+    tree_Adap_DBSCAN = recursive_clustering_tree(dic_points_ori,
                                                levels_clustering = levels_cluster,
                                               algorithm = 'adaptative_DBSCAN')
     if verbose:
@@ -1113,13 +1113,13 @@ def generate_tree_clusterize_form(**kwargs ):
     df_DBSCAN = tree_DBSCAN.get_dataframe_recursive_node_label()
     df_HDBSCAN = tree_HDBSCAN.get_dataframe_recursive_node_label()
     df_OPTICS = tree_OPTICS.get_dataframe_recursive_node_label()
-    df_knee = tree_knee.get_dataframe_recursive_node_label()
+    df_Adap_DBSCAN = tree_Adap_DBSCAN.get_dataframe_recursive_node_label()
 
     df_Natural.name='Natural_C'
     df_DBSCAN.name= 'DBSCAN'
     df_HDBSCAN.name= 'HDBSCAN'
     df_OPTICS.name= 'OPTICS'
-    df_knee.name = 'knee'
+    df_Adap_DBSCAN.name = 'Adap_DBSCAN'
 
     if verbose:
         print('Original size',data_fram_or.shape )
@@ -1127,7 +1127,7 @@ def generate_tree_clusterize_form(**kwargs ):
         print('DBSCAN size',df_DBSCAN.shape)
         print('HDBSCAN size',df_HDBSCAN.shape)
         print('OPTICS size',df_OPTICS.shape)
-        print('adaptative_DBSCAN size',df_knee.shape)
+        print('adaptative_DBSCAN size',df_Adap_DBSCAN.shape)
 
     ######For each dataframe
     if verbose:
@@ -1196,18 +1196,18 @@ def generate_tree_clusterize_form(**kwargs ):
                         tag_ori,
                         tag_ori,#### Como se hizo con la misma funcion tienen las misma etiqueta
                         dic_lev)
-    ##### Knee
+    ##### Adap_DBSCAN
     if verbose:
         print('get adaptative DBSCAN')
 
-    dic_final_levels_knee = get_dics_labels(tree_original, tree_knee, levels_cluster)
-    dic_label_final_levels_knee=[ {'level_ori':dic['level_ori'], 'dict':mod_cid_label(dic['dict']) } for dic in  dic_final_levels_knee]
-    get_tag_level_df_labels(df_knee, levels_cluster)
-    for dic in dic_label_final_levels_knee[1:]: ## En el nivel 0 no tiene sentido
+    dic_final_levels_Adap_DBSCAN = get_dics_labels(tree_original, tree_Adap_DBSCAN, levels_cluster)
+    dic_label_final_levels_Adap_DBSCAN=[ {'level_ori':dic['level_ori'], 'dict':mod_cid_label(dic['dict']) } for dic in  dic_final_levels_Adap_DBSCAN]
+    get_tag_level_df_labels(df_Adap_DBSCAN, levels_cluster)
+    for dic in dic_label_final_levels_Adap_DBSCAN[1:]: ## En el nivel 0 no tiene sentido
         tag_ori = dic['level_ori']
         dic_lev = dic['dict']
         retag_originals(data_fram_or,
-                        df_knee,
+                        df_Adap_DBSCAN,
                         tag_ori,
                         tag_ori,#### Como se hizo con la misma funcion tienen las misma etiqueta
                         dic_lev)
@@ -1217,13 +1217,13 @@ def generate_tree_clusterize_form(**kwargs ):
     df_DBSCAN_sig_noise = tree_DBSCAN.get_tag_noise_signal_tree()
     df_HDBSCAN_sig_noise = tree_HDBSCAN.get_tag_noise_signal_tree()
     df_OPTICS_sig_noise = tree_OPTICS.get_tag_noise_signal_tree()
-    df_knee_sig_noise = tree_knee.get_tag_noise_signal_tree()
+    df_Adap_DBSCAN_sig_noise = tree_Adap_DBSCAN.get_tag_noise_signal_tree()
 
     df_Natural_sig_noise.name='I_Natural_C'
     df_DBSCAN_sig_noise.name= 'I_DBSCAN'
     df_HDBSCAN_sig_noise.name= 'I_HDBSCAN'
     df_OPTICS_sig_noise.name= 'I_OPTICS'
-    df_knee_sig_noise.name = 'I_Ada_DBSCAN'
+    df_Adap_DBSCAN_sig_noise.name = 'I_Adap_DBSCAN'
 
 
 
@@ -1248,8 +1248,8 @@ def generate_tree_clusterize_form(**kwargs ):
                                              tree_Natural_c.levels_nodes[l]),
              'OPTICS': SSM(tree_original.levels_nodes[l],
                                             tree_OPTICS.levels_nodes[l]),
-             'knee': SSM(tree_original.levels_nodes[l],
-                                          tree_knee.levels_nodes[l])
+             'Adap_DBSCAN': SSM(tree_original.levels_nodes[l],
+                                          tree_Adap_DBSCAN.levels_nodes[l])
              }
         resultado_form_metric.append(d)
 
@@ -1259,7 +1259,7 @@ def generate_tree_clusterize_form(**kwargs ):
             'DBSCAN':df_DBSCAN,
             'HDBSCAN':df_HDBSCAN,
             'OPTICS':df_OPTICS,
-            'knee':df_knee
+            'Adap_DBSCAN':df_Adap_DBSCAN
            }, 'metric_form': resultado_form_metric,
             'Noise_signal':{
             'original_retag':data_fram_or_sig_noise,
@@ -1267,7 +1267,7 @@ def generate_tree_clusterize_form(**kwargs ):
             'DBSCAN':df_DBSCAN_sig_noise,
             'HDBSCAN':df_HDBSCAN_sig_noise,
             'OPTICS':df_OPTICS_sig_noise,
-            'knee':df_knee_sig_noise
+            'Adap_DBSCAN':df_Adap_DBSCAN_sig_noise
             }
 
            }
