@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: "Salazar Montiel"
+  given-names: "J. Miguel"
+  
+- family-names: "López-Ramírez"
+  given-names: "Pablo"
+  
+- family-names: "Sánchez-Siordia"
+  given-names: "Oscar"
+  
+title: "HierarchicalGeoClustering"
+version: 1.0.0
+doi: 10.5281/zenodo.1234
+date-released: 2021-12-17
+url: "https://github.com/CentroGeo/HierarchicalGeoClustering"
