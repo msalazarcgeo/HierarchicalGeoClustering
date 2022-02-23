@@ -1008,7 +1008,14 @@ def get_tree_from_clustering(cluster_tree_clusters):
                                    axis=0
                               )
 
-            node_l.polygon_cluster =  get_alpha_shape(points_poly)
+
+
+            if len(points_poly) <3:
+                node_l.polygon_cluster = None
+            else:
+                node_l.polygon_cluster = get_alpha_shape(points_poly)
+
+
             ##### Es necesario que si es el último nivel todos los puntos sean
             ## considerados como ruido pues aunque se haya hecho la clusterizacion
             #  ya no se bajo al siguiente nivel
