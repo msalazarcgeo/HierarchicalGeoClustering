@@ -364,7 +364,7 @@ def clustering(
     ):
     """Function to get the clusters for single group by
 
-    :param t_next_level_2 Dictionary with the points to compute the
+    :param t_next_level_2: Dictionary with the points to compute the
             cluster
     :param level:  None Level to compute (Default None)
 
@@ -980,53 +980,55 @@ def SSM(list_poly_c_1,list_poly_c_2 ,**kwargs):
 
 # Cell
 def get_tree_from_clustering(cluster_tree_clusters):
-     """ Returns the tree from the iterative clustering, the cluster_tree_cluster
+    """ Returns the tree from the iterative clustering, the cluster_tree_cluster
 
      :param cluster_tree_clusters is a list of list with a dictionary that
-            should contain the point of the next level clusters, the name of the parent
+            should contain the points of the next level clusters, the name of the parent
             cluster of such clusters (name of the current node), and the point that
             are consider noise.
 
      :return A list of list that contains the nodes for each level of the tree.
-     """
+    """
      ##### La estructura de arbol
-     all_level_clusters =[]
-     previus_level=[]
-     list_len = len(cluster_tree_clusters)-1
-     for level_num_clus, level_cluster in enumerate(cluster_tree_clusters):
-          level_nodes=[]
-          for cluster_te in level_cluster:
-               node_l = NodeCluster(name= cluster_te['parent'])
-               to_concat= [point_arr for point_arr in cluster_te['points']]
-               if len(to_concat)>0:
-                    points_poly = np.concatenate(to_concat)
-               else:
-                    points_poly = np.array([], dtype= np.float64).reshape(0,2)
+    all_level_clusters =[]
+    previus_level=[]
+    list_len = len(cluster_tree_clusters)-1
+    for level_num_clus, level_cluster in enumerate(cluster_tree_clusters):
+        level_nodes=[]
+        for cluster_te in level_cluster:
+            node_l = NodeCluster(name= cluster_te['parent'])
+            to_concat= [point_arr for point_arr in cluster_te['points']]
+            if len(to_concat)>0:
+                points_poly = np.concatenate(to_concat)
+            else:
+                points_poly = np.array([], dtype= np.float64).reshape(0,2)
 
-               points_poly = np.concatenate(
+            points_poly = np.concatenate(
                                    (points_poly,cluster_te['noise_points']),
                                    axis=0
                               )
 
-               node_l.polygon_cluster =  get_alpha_shape(points_poly)
-               ##### Es necesario que si es el último nivel todos los puntoas sean
-               ## considerados como ruido pues aunque se haya hecho la clusterizacion
-               #  ya no se bajo al siguiente nivel
-               ##
-               if level_num_clus==list_len:
-                    node_l.point_cluster_noise = shapely.geometry.MultiPoint(points_poly)
-               else:
-                    node_l.point_cluster_noise = shapely.geometry.MultiPoint(cluster_te['noise_points'])
-               pos=node_l.name.rfind('_L')
-               if node_l.name[:pos]=='':
-                    node_l.parent = None
-               else:
-                    lis_pa=[item  for item in previus_level if item.name == node_l.name[:pos]]
-                    node_l.parent= lis_pa[0]
-               level_nodes.append(node_l)
-          all_level_clusters.append(level_nodes)
-          previus_level = level_nodes
-     return  all_level_clusters
+            node_l.polygon_cluster =  get_alpha_shape(points_poly)
+            ##### Es necesario que si es el último nivel todos los puntos sean
+            ## considerados como ruido pues aunque se haya hecho la clusterizacion
+            #  ya no se bajo al siguiente nivel
+            ##
+            if level_num_clus==list_len:
+                node_l.point_cluster_noise = shapely.geometry.MultiPoint(points_poly)
+            else:
+                node_l.point_cluster_noise = shapely.geometry.MultiPoint(cluster_te['noise_points'])
+
+            pos=node_l.name.rfind('_L')
+            if node_l.name[:pos]=='':
+                node_l.parent = None
+            else:
+                lis_pa=[item  for item in previus_level if item.name == node_l.name[:pos]]
+                node_l.parent= lis_pa[0]
+            level_nodes.append(node_l)
+        all_level_clusters.append(level_nodes)
+        previus_level = level_nodes
+
+    return  all_level_clusters
 
 # Cell
 #export
