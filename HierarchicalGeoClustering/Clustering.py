@@ -481,7 +481,7 @@ def recursive_clustering(
                 to_process,  # levels to process
                 cluster_tree,  # to store the clusters
                 level = 0,  # current level
-                algorithm ='dbscan',  # Algorithm to use
+
                 **kwargs
                ):
     """
@@ -506,17 +506,24 @@ def recursive_clustering(
 
     :param str algorithm:  The string of the algorithm name to use
     """
-
+    algorithm= kwargs.get('algorithm' ,'dbscan')    # Algorithm to use
     verbose= kwargs.get('verbose',False)
     min_points = kwargs.get( 'min_points_cluster', 50)
     decay = kwargs.get('decay', 0.7)
     eps = kwargs.get('eps' ,0.8)  # Epsilon distance to DBSCAN parameter
+    max_k_increase = kwargs.get('max_k_increase', None)
     tmp = None
 
     if level == 0:
         kwargs['eps'] = eps
     else:
         kwargs['eps'] = eps  * decay
+
+    if max_k_increase != None:
+        if level == 0:
+            kwargs['max_k_percent'] = 0.1
+        else:
+            kwargs['max_k_percent'] = kwargs['max_k_percent'] * max_k_increase
 
     cluster_result_polygons = []
     if level > to_process:
@@ -527,8 +534,6 @@ def recursive_clustering(
     all_l = clustering(
                     this_level,
                     level=level,
-                    algorithm=algorithm,
-
                     **kwargs
                     )
     ##########
@@ -546,7 +551,6 @@ def recursive_clustering(
                                to_process=to_process,
                                cluster_tree=cluster_tree,
                                level= level,
-                               algorithm=algorithm,
                                **kwargs
                                )
     else:
@@ -560,16 +564,12 @@ def recursive_clustering_tree(dic_points_ori, **kwargs):
     Obtaing the recursive tree using a specific algorithm
     """
     levels_clustering= kwargs.get('levels_clustering',4)
-    algorithm = kwargs.get('algorithm','dbscan')
-    verbose = kwargs.get('verbose', False)
     cluster_tree = []
     recursive_clustering([dic_points_ori],  # Dictionary with Points
                 levels_clustering,  # levels to process
                 cluster_tree,  # to store the clusters
                 level=0,  # current level
-                algorithm = algorithm,  # Algorithm to use
-                return_noise = True,
-                verbose=verbose
+                **kwargs
                 )
     tree_clus= get_tree_from_clustering(cluster_tree)
     tree_from_clus= TreeClusters()
@@ -651,6 +651,7 @@ def adaptative_DBSCAN(points2_clusters ,
     :returns list : list of cluster. If ret_noise = True return tuple list of cluter and noise
     """
     max_k = kwargs.get('max_k', int(len(points2_clusters)*.1))
+    max_k_percent = kwargs.get('max_k_percent', None)
     min_k = kwargs.get('min_k', 50)
     step_k = kwargs.get('step_k', 50)
     leaf_size =  kwargs.get('leaf_size',50)
@@ -660,9 +661,12 @@ def adaptative_DBSCAN(points2_clusters ,
     ###### Se tienen que hacer algunos cambios para cuando
     #  los clusters son menores a los minimos establecidos previemente
 
-    ##### Establecer los minimos posibles
+    ##### Establecer los minimos y maximos posibles
     if max_k > len(points2_clusters):
         raise ValueError('The max_k value is too large for the number of points')
+
+    if max_k_percent != None:
+        max_k = int(len(points2_clusters)*max_k_percent)
 
     if min_k >  len(points2_clusters):
         print('The min_k value is too large for the number of points returns empty clusters')
