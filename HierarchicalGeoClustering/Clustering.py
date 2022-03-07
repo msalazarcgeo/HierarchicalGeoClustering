@@ -382,7 +382,7 @@ def clustering(
     """
     verbose= kwargs.get('verbose',False)
     min_points = kwargs.get( 'min_points_cluster', 50)
-    ret_noise= kwargs.get('return_noise', False)
+    ret_noise= kwargs.get('return_noise', True)
     eps = kwargs.get('eps',0.8)  # Epsilon value to dbscan
     t_next_level_n = []
     if level == None:
@@ -1074,7 +1074,7 @@ def generate_tree_clusterize_form(**kwargs ):
     print('Random to use: ',random_seed )
     print('With',levels_tree , ' levels' )
     tree_original= TreeClusters(levels_tree, random_seed= random_seed)
-    tree_original.populate_tree(number_per_cluster=per_cluster, avoid_intersec= True)
+    tree_original.populate_tree(number_per_cluster=per_cluster, **kwargs)
     tree_original_points= tree_original.get_points_tree()
     X_2=np.array([[p.x,p.y] for p in tree_original_points])
     dic_points_ori={'points':[X_2], 'parent':''}
@@ -1104,20 +1104,29 @@ def generate_tree_clusterize_form(**kwargs ):
 
     tree_Natural_c = recursive_clustering_tree(dic_points_ori,
                                                levels_clustering = levels_cluster,
-                                              algorithm = 'natural_cities'
+                                              algorithm = 'natural_cities',
+                                               **kwargs,
                                               )
     tree_DBSCAN = recursive_clustering_tree(dic_points_ori,
-                                               levels_clustering = levels_cluster,
-                                              algorithm = 'dbscan')
+                                              levels_clustering = levels_cluster,
+                                              algorithm = 'dbscan',
+                                              **kwargs,
+                                           )
     tree_HDBSCAN = recursive_clustering_tree(dic_points_ori,
-                                               levels_clustering = levels_cluster,
-                                              algorithm = 'hdbscan')
+                                              levels_clustering = levels_cluster,
+                                              algorithm = 'hdbscan',
+                                              **kwargs,
+                                            )
     tree_OPTICS= recursive_clustering_tree(dic_points_ori,
-                                               levels_clustering = levels_cluster,
-                                              algorithm = 'optics')
+                                              levels_clustering = levels_cluster,
+                                              algorithm = 'optics',
+                                              **kwargs,
+                                            )
     tree_Adap_DBSCAN = recursive_clustering_tree(dic_points_ori,
-                                               levels_clustering = levels_cluster,
-                                              algorithm = 'adaptative_DBSCAN')
+                                              levels_clustering = levels_cluster,
+                                              algorithm = 'adaptative_DBSCAN',
+                                              **kwargs,
+                                            )
     if verbose:
         print('DONE clusterize and creating the trees')
     ######  get the points dataframe for each tree
