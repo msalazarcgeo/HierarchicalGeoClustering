@@ -222,3 +222,5 @@ df_metric_form
 </div>
 
 
+
+For more detail please see the tutorial available on the documentation inside the [githubpages](https://centrogeo.github.io/HierarchicalGeoClustering/) of this repository.
