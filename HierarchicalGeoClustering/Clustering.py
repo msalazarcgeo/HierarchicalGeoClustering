@@ -943,7 +943,7 @@ def compute_AMOEBA(points_array, **kwargs):
     else:
         points_arr = points_array
 
-    gr, pos =graph_tool.triangulation(points_arr, "delaunay")
+    gr, pos = triangulation(points_arr, "delaunay")
     dis = gr.new_edge_property("double")
     gr.edge_properties["dis"] = dis
     gr.vertex_properties["pos"] = pos
@@ -954,7 +954,7 @@ def compute_AMOEBA(points_array, **kwargs):
     all_remove_level =[]
     all_keep_level = []
     for vert in gr.vertices():
-        local_mean= np.mean([g.edge_properties['dis'][vo_edge]  for vo_edge in vert.out_edges()])
+        local_mean= np.mean([gr.edge_properties['dis'][vo_edge]  for vo_edge in vert.out_edges()])
         tolerance = global_edge_std * (global_edge_mean/local_mean)
         rem_edg_loc = []
         keep_edg_loc = []
@@ -977,9 +977,9 @@ def compute_AMOEBA(points_array, **kwargs):
 
     #### Probably not needed or can be reduce
     #### The edge tolerance
-    for i in all_remove_flat:
+    for i in all_remove_level_flat:
         gr.edge_properties['level_n_tolerance'][i]= False
-    for i in all_keep_flat:
+    for i in all_keep_level_flat:
         gr.edge_properties['level_n_tolerance'][i]= True
 
     gr.set_edge_filter(prop =  gr.edge_properties['level_n_tolerance'])
@@ -996,7 +996,7 @@ def compute_AMOEBA(points_array, **kwargs):
     gr.set_vertex_filter(prop =  gr.vertex_properties['level_n_r'])
 
     ## Get the connected components
-    level_n_components_arr, comp_n_hist = graph_tool.label_components(gr)
+    level_n_components_arr, comp_n_hist = label_components(gr)
     gr.set_vertex_filter(None)
 
     gr.vertex_properties["compo_level_n"] = gr.new_vertex_property("int", -1)
@@ -1008,7 +1008,7 @@ def compute_AMOEBA(points_array, **kwargs):
     compo_level_res_n.a = level_n_components_arr.a
     gr.vertex_properties["compo_level_res_n"] = compo_level_res_n
 
-    for vert in g.vertices():
+    for vert in gr.vertices():
         # print(num)
         if vert.in_degree() + vert.out_degree()> 0:
             gr.vertex_properties['compo_level_n'][vert]= gr.vertex_properties["compo_level_res_n"][vert]
@@ -1020,13 +1020,17 @@ def compute_AMOEBA(points_array, **kwargs):
     ####### get the points for each cluster
     clusters_result_n= np.nan_to_num(np.unique(gr.vertex_properties['compo_level_n'].a))
     clusters=[]
+    # print(clusters_result_n)
+    noise_level= None
     for clas in clusters_result_n :
         if clas != -1:
             clas_mask = ( gr.vertex_properties['compo_level_n'].a == clas)
             clusters.append(points_array[clas_mask])
         else:
             clas_mask = ( gr.vertex_properties['compo_level_n'].a == clas)
-            noise_level= points_array[clas_mask]
+            noise_level = points_array[clas_mask]
+
+    # print(len(noise_level))
     if ret_noise == True:
         return clusters, noise_level
     return clusters
