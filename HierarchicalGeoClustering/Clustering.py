@@ -29,6 +29,8 @@ from shapely.geometry import box
 from shapely.geometry import Point, Polygon, MultiPolygon
 from shapely.ops import polygonize_full, linemerge, unary_union
 from scipy.spatial import cKDTree, Delaunay
+from graph_tool.all import triangulation, label_components
+
 import hdbscan
 import graph_tool
 module_path = os.path.abspath(os.path.join('..'))
