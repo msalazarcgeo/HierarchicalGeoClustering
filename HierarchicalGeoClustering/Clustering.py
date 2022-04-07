@@ -388,6 +388,7 @@ def clustering(
     min_points = kwargs.get( 'min_points_cluster', 50)
     ret_noise= kwargs.get('return_noise', True)
     eps = kwargs.get('eps',0.8)  # Epsilon value to dbscan
+    min_leng_clus= kwargs.get('min_lenght_cluster', 5)
     t_next_level_n = []
     if level == None:
         level = 0
@@ -403,7 +404,7 @@ def clustering(
                 print("Size cluster: ", len(cluster))
                 print('Algorithm: ', algorithm)
 
-            if len(cluster) > 5:
+            if len(cluster) > min_leng_clus:
                 if algorithm == 'dbscan':
                     if verbose:
                         print("Epsilon Value: ", eps)
@@ -1134,7 +1135,7 @@ def get_tree_from_clustering(cluster_tree_clusters):
                               )
 
 
-
+            ####### NOt a posible cluster
             if len(points_poly) <3:
                 node_l.polygon_cluster = None
             else:
