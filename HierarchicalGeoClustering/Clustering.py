@@ -30,6 +30,7 @@ from shapely.geometry import Point, Polygon, MultiPolygon
 from shapely.ops import polygonize_full, linemerge, unary_union
 from scipy.spatial import cKDTree, Delaunay
 from graph_tool.all import triangulation, label_components
+from scipy.linalg import norm
 
 import hdbscan
 import graph_tool
@@ -926,10 +927,9 @@ def compute_Natural_cities(points2_clusters,  **kwargs):
 
 # Cell
 def compute_AMOEBA(points_array, **kwargs):
-    """The function obtains the AMOEBA algorithm on level basis,
-    the algorithm is obtain as a graph analisys using the graph-tool library
+    """The function obtains the AMOEBA algorithm on level basis
 
-    :param np.array points_array: a (N,2) numpy array containing the obsevations (points )
+    :param np.array points2_clusters: a (N,2) numpy array containing the obsevations
 
     :returns: list with numpy arrays for all the clusters obtained
     """
@@ -943,11 +943,12 @@ def compute_AMOEBA(points_array, **kwargs):
     else:
         points_arr = points_array
 
-    gr, pos = triangulation(points_arr, "delaunay")
-    dis = gr.new_edge_property("double")
-    gr.edge_properties["dis"] = dis
-    gr.vertex_properties["pos"] = pos
-    ### this probably shiould be as graph properties
+    gr, pos_d =triangulation(points_arr, "delaunay")
+    dis_d = gr.new_edge_property("double")
+    for e in gr.edges():
+        dis_d[e] =  norm(pos_d[e.target()].a - pos_d[e.source()].a)
+    gr.edge_properties["dis"] = dis_d
+    gr.vertex_properties["pos"] = pos_d
     global_edge_mean= np.nan_to_num(gr.edge_properties['dis'].get_array().mean())
     global_edge_std = np.nan_to_num(gr.edge_properties['dis'].get_array().std() )
 
@@ -1020,7 +1021,6 @@ def compute_AMOEBA(points_array, **kwargs):
     ####### get the points for each cluster
     clusters_result_n= np.nan_to_num(np.unique(gr.vertex_properties['compo_level_n'].a))
     clusters=[]
-    # print(clusters_result_n)
     noise_level= None
     for clas in clusters_result_n :
         if clas != -1:
@@ -1028,9 +1028,7 @@ def compute_AMOEBA(points_array, **kwargs):
             clusters.append(points_array[clas_mask])
         else:
             clas_mask = ( gr.vertex_properties['compo_level_n'].a == clas)
-            noise_level = points_array[clas_mask]
-
-    # print(len(noise_level))
+            noise_level= points_array[clas_mask]
     if ret_noise == True:
         return clusters, noise_level
     return clusters
