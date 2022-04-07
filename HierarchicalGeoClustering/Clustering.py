@@ -1021,7 +1021,7 @@ def compute_AMOEBA(points_array, **kwargs):
     ####### get the points for each cluster
     clusters_result_n= np.nan_to_num(np.unique(gr.vertex_properties['compo_level_n'].a))
     clusters=[]
-    noise_level= None
+    noise_level= np.empty((0,2))
     for clas in clusters_result_n :
         if clas != -1:
             clas_mask = ( gr.vertex_properties['compo_level_n'].a == clas)
