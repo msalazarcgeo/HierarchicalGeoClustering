@@ -385,7 +385,7 @@ def clustering(
     :returns list t_next_level_n: A list with dictionaries with the points, the parent, and nois
     """
     verbose= kwargs.get('verbose',False)
-    min_points = kwargs.get( 'min_points_cluster', 50)
+    min_points = kwargs.get( 'min_points_cluster', 50) #### creo que se deberia quitar o poner bien
     ret_noise= kwargs.get('return_noise', True)
     eps = kwargs.get('eps',0.8)  # Epsilon value to dbscan
     min_leng_clus= kwargs.get('min_lenght_cluster', 5)
@@ -938,11 +938,21 @@ def compute_AMOEBA(points_array, **kwargs):
     scale_points= kwargs.get('scale_points',True)
     debugg = kwargs.get('verbose',False)
     ret_noise = kwargs.get('return_noise', True)
+    min_leng_clus= kwargs.get('min_lenght_cluster', 3)
     if scale_points ==True:
         scaler = StandardScaler()
         points_arr = scaler.fit_transform(points_array)
     else:
         points_arr = points_array
+    ########
+    if len(points_arr) < min_leng_clus:
+        clusters=[]
+        noise_level= np.empty((0,2))
+        if ret_noise == True:
+            return clusters, noise_level
+        else:
+            return clusters
+
 
     gr, pos_d =triangulation(points_arr, "delaunay")
     dis_d = gr.new_edge_property("double")
