@@ -938,14 +938,14 @@ def compute_AMOEBA(points_array, **kwargs):
     scale_points= kwargs.get('scale_points',True)
     debugg = kwargs.get('verbose',False)
     ret_noise = kwargs.get('return_noise', True)
-    min_leng_clus= kwargs.get('min_lenght_cluster', 3)
+    min_leng_clus_AMOEBA= kwargs.get('min_lenght_cluster_AMOEBA', 3)
     if scale_points ==True:
         scaler = StandardScaler()
         points_arr = scaler.fit_transform(points_array)
     else:
         points_arr = points_array
     ########
-    if len(points_arr) < min_leng_clus:
+    if len(points_arr) < min_leng_clus_AMOEBA:
         clusters=[]
         noise_level= np.empty((0,2))
         if ret_noise == True:

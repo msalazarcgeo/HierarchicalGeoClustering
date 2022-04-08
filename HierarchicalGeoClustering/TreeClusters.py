@@ -738,7 +738,7 @@ class NodeCluster(cluster, NodeMixin):
             for child in self.children:
                  child.viewer_cluster(ax, **kwargs)
 
-        if polygon_con:
+        if polygon_con and self.polygon_cluster != None:
             x_polygon, y_polygon  =self.polygon_cluster.exterior.xy
             ax.plot(x_polygon,
                     y_polygon,
