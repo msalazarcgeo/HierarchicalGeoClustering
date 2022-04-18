@@ -1149,7 +1149,10 @@ def get_tree_from_clustering(cluster_tree_clusters):
             if len(points_poly) <3:
                 node_l.polygon_cluster = None
             else:
-                node_l.polygon_cluster = get_alpha_shape(points_poly)
+                try:
+                    node_l.polygon_cluster = get_alpha_shape(points_poly)
+                except:
+                    node_l.polygon_cluster = None
 
 
             ##### Es necesario que si es el último nivel todos los puntos sean
