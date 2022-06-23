@@ -223,4 +223,5 @@ df_metric_form
 
 
 
-For more detail please see the tutorial available on the documentation inside the [githubpages](https://centrogeo.github.io/HierarchicalGeoClustering/) of this repository.
+
+A detail [documentation](https://centrogeo.github.io/HierarchicalGeoClustering/) is available 

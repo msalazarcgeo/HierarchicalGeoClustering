@@ -4,8 +4,8 @@ __all__ = ['module_path', 'get_alpha_shape', 'set_colinear', 'collinear', 'get_s
            'labels_filtra', 'levels_from_strings', 'get_tag_level_df_labels', 'level_tag', 'get_dics_labels',
            'get_label_clusters_df', 'get_mini_jaccars', 'jaccard_distance', 'mod_cid_label', 'retag_originals',
            'clustering', 'recursive_clustering', 'recursive_clustering_tree', 'compute_dbscan', 'adaptative_DBSCAN',
-           'compute_hdbscan', 'compute_OPTICS', 'compute_Natural_cities', 'SSM', 'get_tree_from_clustering',
-           'generate_tree_clusterize_form']
+           'compute_hdbscan', 'compute_OPTICS', 'compute_Natural_cities', 'compute_AMOEBA', 'SSM',
+           'get_tree_from_clustering', 'generate_tree_clusterize_form']
 
 # Cell
 #export
@@ -29,7 +29,11 @@ from shapely.geometry import box
 from shapely.geometry import Point, Polygon, MultiPolygon
 from shapely.ops import polygonize_full, linemerge, unary_union
 from scipy.spatial import cKDTree, Delaunay
+from graph_tool.all import triangulation, label_components
+from scipy.linalg import norm
+
 import hdbscan
+import graph_tool
 module_path = os.path.abspath(os.path.join('..'))
 if module_path not in sys.path:
     sys.path.append(module_path)
@@ -381,9 +385,10 @@ def clustering(
     :returns list t_next_level_n: A list with dictionaries with the points, the parent, and nois
     """
     verbose= kwargs.get('verbose',False)
-    min_points = kwargs.get( 'min_points_cluster', 50)
+    min_points = kwargs.get( 'min_points_cluster', 50) #### creo que se deberia quitar o poner bien
     ret_noise= kwargs.get('return_noise', True)
     eps = kwargs.get('eps',0.8)  # Epsilon value to dbscan
+    min_leng_clus= kwargs.get('min_lenght_cluster', 5)
     t_next_level_n = []
     if level == None:
         level = 0
@@ -399,7 +404,7 @@ def clustering(
                 print("Size cluster: ", len(cluster))
                 print('Algorithm: ', algorithm)
 
-            if len(cluster) > 5:
+            if len(cluster) > min_leng_clus:
                 if algorithm == 'dbscan':
                     if verbose:
                         print("Epsilon Value: ", eps)
@@ -442,6 +447,13 @@ def clustering(
                         noise_points = tmp[1]
                         tmp =  tmp[0]
                 ##########
+                elif algorithm == 'amoeba':
+                    tmp = compute_AMOEBA(cluster,
+                                **kwargs)
+                    if ret_noise:
+                        noise_points = tmp[1]
+                        tmp =  tmp[0]
+                #########
                 else:
                     raise ValueError('Algorithm must be dbscan or hdbscan')
                     # sys.exit("1")
@@ -915,6 +927,126 @@ def compute_Natural_cities(points2_clusters,  **kwargs):
     return clusters
 
 # Cell
+def compute_AMOEBA(points_array, **kwargs):
+    """The function obtains the AMOEBA algorithm on level basis
+
+    :param np.array points2_clusters: a (N,2) numpy array containing the obsevations
+
+    :returns: list with numpy arrays for all the clusters obtained
+    """
+
+    scale_points= kwargs.get('scale_points',True)
+    debugg = kwargs.get('verbose',False)
+    ret_noise = kwargs.get('return_noise', True)
+    min_leng_clus_AMOEBA= kwargs.get('min_lenght_cluster_AMOEBA', 3)
+    if scale_points ==True:
+        scaler = StandardScaler()
+        points_arr = scaler.fit_transform(points_array)
+    else:
+        points_arr = points_array
+    ########
+    if len(points_arr) < min_leng_clus_AMOEBA:
+        clusters=[]
+        noise_level= np.empty((0,2))
+        if ret_noise == True:
+            return clusters, noise_level
+        else:
+            return clusters
+
+
+    gr, pos_d =triangulation(points_arr, "delaunay")
+    dis_d = gr.new_edge_property("double")
+    for e in gr.edges():
+        dis_d[e] =  norm(pos_d[e.target()].a - pos_d[e.source()].a)
+    gr.edge_properties["dis"] = dis_d
+    gr.vertex_properties["pos"] = pos_d
+    global_edge_mean= np.nan_to_num(gr.edge_properties['dis'].get_array().mean())
+    global_edge_std = np.nan_to_num(gr.edge_properties['dis'].get_array().std() )
+
+    all_remove_level =[]
+    all_keep_level = []
+    for vert in gr.vertices():
+        local_mean= np.mean([gr.edge_properties['dis'][vo_edge]  for vo_edge in vert.out_edges()])
+        tolerance = global_edge_std * (global_edge_mean/local_mean)
+        rem_edg_loc = []
+        keep_edg_loc = []
+        for ed in vert.all_edges():
+            if gr.edge_properties['dis'][ed] > tolerance + global_edge_mean:
+                rem_edg_loc.append(ed)
+            else:
+                keep_edg_loc.append(ed)
+        all_keep_level.append(keep_edg_loc)
+        all_remove_level.append(rem_edg_loc)
+
+    all_remove_level_flat= []
+    for _list in all_remove_level:
+        all_remove_level_flat += _list
+    all_keep_level_flat= []
+    for _list in all_keep_level:
+        all_keep_level_flat += _list
+    level_n = gr.new_edge_property("bool", True)
+    gr.edge_properties["level_n_tolerance"] = level_n
+
+    #### Probably not needed or can be reduce
+    #### The edge tolerance
+    for i in all_remove_level_flat:
+        gr.edge_properties['level_n_tolerance'][i]= False
+    for i in all_keep_level_flat:
+        gr.edge_properties['level_n_tolerance'][i]= True
+
+    gr.set_edge_filter(prop =  gr.edge_properties['level_n_tolerance'])
+
+
+    ##### If the vertex should be keep
+    gr.vertex_properties["level_n_r"] = gr.new_vertex_property("bool", False)
+    for vert in gr.vertices():
+        if vert.in_degree() + vert.out_degree()> 0:
+            gr.vertex_properties['level_n_r'][vert]= True
+        else:
+            gr.vertex_properties['level_n_r'][vert]= False
+    ##  to not consider the noise points
+    gr.set_vertex_filter(prop =  gr.vertex_properties['level_n_r'])
+
+    ## Get the connected components
+    level_n_components_arr, comp_n_hist = label_components(gr)
+    gr.set_vertex_filter(None)
+
+    gr.vertex_properties["compo_level_n"] = gr.new_vertex_property("int", -1)
+
+    gr.set_vertex_filter(prop =  gr.vertex_properties['level_n_r'])
+
+
+    compo_level_res_n = gr.new_vertex_property("int", -1)
+    compo_level_res_n.a = level_n_components_arr.a
+    gr.vertex_properties["compo_level_res_n"] = compo_level_res_n
+
+    for vert in gr.vertices():
+        # print(num)
+        if vert.in_degree() + vert.out_degree()> 0:
+            gr.vertex_properties['compo_level_n'][vert]= gr.vertex_properties["compo_level_res_n"][vert]
+        else:
+            # print('No edge')
+            gr.vertex_properties['compo_level_n'][vert]= -1
+
+
+    ####### get the points for each cluster
+    clusters_result_n= np.nan_to_num(np.unique(gr.vertex_properties['compo_level_n'].a))
+    clusters=[]
+    noise_level= np.empty((0,2))
+    for clas in clusters_result_n :
+        if clas != -1:
+            clas_mask = ( gr.vertex_properties['compo_level_n'].a == clas)
+            clusters.append(points_array[clas_mask])
+        else:
+            clas_mask = ( gr.vertex_properties['compo_level_n'].a == clas)
+            noise_level= points_array[clas_mask]
+    if ret_noise == True:
+        return clusters, noise_level
+    return clusters
+
+
+
+# Cell
 def SSM(list_poly_c_1,list_poly_c_2 ,**kwargs):
     """
     The function calculates the Similarity Form Measurment (SMF)
@@ -1013,11 +1145,14 @@ def get_tree_from_clustering(cluster_tree_clusters):
                               )
 
 
-
+            ####### NOt a posible cluster
             if len(points_poly) <3:
                 node_l.polygon_cluster = None
             else:
-                node_l.polygon_cluster = get_alpha_shape(points_poly)
+                try:
+                    node_l.polygon_cluster = get_alpha_shape(points_poly)
+                except:
+                    node_l.polygon_cluster = None
 
 
             ##### Es necesario que si es el último nivel todos los puntos sean

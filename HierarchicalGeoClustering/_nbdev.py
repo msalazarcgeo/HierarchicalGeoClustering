@@ -34,6 +34,7 @@ index = {"inside_polygon": "00_TreeClusters.ipynb",
          "compute_hdbscan": "01_Clustering.ipynb",
          "compute_OPTICS": "01_Clustering.ipynb",
          "compute_Natural_cities": "01_Clustering.ipynb",
+         "compute_AMOEBA": "01_Clustering.ipynb",
          "SSM": "01_Clustering.ipynb",
          "get_tree_from_clustering": "01_Clustering.ipynb",
          "generate_tree_clusterize_form": "01_Clustering.ipynb"}
