@@ -751,6 +751,19 @@ def adaptative_DBSCAN(points2_clusters ,
     else:
         points_ret = points_arr
     clusters = []
+    #######check that not returning the same cluster
+    if len(unique_labels) == 1 and len(points2_clusters) == sum(labels == 0):
+        if debugg:
+            print('Only one cluster with the same number of points \n')
+            print('Returns the points as noise')
+        print('Its the same set of points after clustering')
+        if ret_noise == True:
+            class_member_mask = (labels == 0)
+            return clusters, points_ret[class_member_mask]
+        else:
+            return clusters # return empty cluster
+
+    ########
     for l in unique_labels:
         if l != -1:
             class_member_mask = (labels == l)

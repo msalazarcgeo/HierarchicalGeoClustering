@@ -223,5 +223,4 @@ df_metric_form
 
 
 
-
 A detail [documentation](https://centrogeo.github.io/HierarchicalGeoClustering/) is available 
