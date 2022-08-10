@@ -967,14 +967,14 @@ def compute_Natural_cities(points2_clusters,  **kwargs):
 
     clusters = []
     #######check that not returning the same cluster
-    if len(unique_labels) == 1 and len(points2_clusters) == sum(labels == 0):
+    if len(unique_labels) == 1 and len(points2_clusters) == sum(labels_points == 0):
         if debugg:
             print('Its the same set of points after clustering')
             print('Only one cluster with the same number of points \n')
             print('Returns the points as noise')
 
         if ret_noise == True:
-            class_member_mask = (labels == 0)
+            class_member_mask = (labels_points == 0)
             return clusters, points_ret[class_member_mask]
         else:
             return clusters # return empty cluster
