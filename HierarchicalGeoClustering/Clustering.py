@@ -620,6 +620,20 @@ def compute_dbscan(cluster,  **kwargs):
     unique_labels = set(labels)
     cluster = scaler.inverse_transform(cluster)
     clusters = []
+    #######check that not returning the same cluster
+    if len(unique_labels) == 1 and len(points2_clusters) == sum(labels == 0):
+        if debugg:
+            print('Its the same set of points after clustering')
+            print('Only one cluster with the same number of points \n')
+            print('Returns the points as noise')
+
+        if ret_noise == True:
+            class_member_mask = (labels == 0)
+            return clusters, points_ret[class_member_mask]
+        else:
+            return clusters # return empty cluster
+
+    ########
     if debugg:
         print('Number of clusters:' ,l_unique_labels)
 
@@ -811,6 +825,20 @@ def compute_hdbscan(points2_clusters,  **kwargs):
     else:
         points_ret = points_arr
     clusters = []
+    #######check that not returning the same cluster
+    if len(unique_labels) == 1 and len(points2_clusters) == sum(labels == 0):
+        if debugg:
+            print('Its the same set of points after clustering')
+            print('Only one cluster with the same number of points \n')
+            print('Returns the points as noise')
+
+        if ret_noise == True:
+            class_member_mask = (labels == 0)
+            return clusters, points_ret[class_member_mask]
+        else:
+            return clusters # return empty cluster
+
+    ########
 
     for l in unique_labels:
         if l != -1:
@@ -862,7 +890,20 @@ def compute_OPTICS(points2_clusters,  **kwargs):
     else:
         points_ret = points_arr
     clusters = []
+    #######check that not returning the same cluster
+    if len(unique_labels) == 1 and len(points2_clusters) == sum(labels == 0):
+        if debugg:
+            print('Its the same set of points after clustering')
+            print('Only one cluster with the same number of points \n')
+            print('Returns the points as noise')
 
+        if ret_noise == True:
+            class_member_mask = (labels == 0)
+            return clusters, points_ret[class_member_mask]
+        else:
+            return clusters # return empty cluster
+
+    ########
     for l in unique_labels:
         if l != -1:
             class_member_mask = (labels == l)
@@ -925,6 +966,20 @@ def compute_Natural_cities(points2_clusters,  **kwargs):
 
 
     clusters = []
+    #######check that not returning the same cluster
+    if len(unique_labels) == 1 and len(points2_clusters) == sum(labels == 0):
+        if debugg:
+            print('Its the same set of points after clustering')
+            print('Only one cluster with the same number of points \n')
+            print('Returns the points as noise')
+
+        if ret_noise == True:
+            class_member_mask = (labels == 0)
+            return clusters, points_ret[class_member_mask]
+        else:
+            return clusters # return empty cluster
+
+    ########
     for l in unique_labels:
         if l != -1:
             class_member_mask = (labels_points == l)
@@ -1046,6 +1101,23 @@ def compute_AMOEBA(points_array, **kwargs):
     clusters_result_n= np.nan_to_num(np.unique(gr.vertex_properties['compo_level_n'].a))
     clusters=[]
     noise_level= np.empty((0,2))
+    #######check that not returning the same cluster
+    if len(clusters_result_n) == 1 and len(points_array) == sum(gr.vertex_properties['compo_level_n'].a  == 0):
+        if debugg:
+            print('Its the same set of points after clustering')
+            print('Only one cluster with the same number of points \n')
+            print('Returns the points as noise')
+
+        if ret_noise == True:
+            class_mask = (gr.vertex_properties['compo_level_n'].a  == 0)
+            return clusters, points_array[class_mask] #Empty cluster list an all the points as noise
+        else:
+            return clusters # return empty cluster
+
+    ########
+
+
+
     for clas in clusters_result_n :
         if clas != -1:
             clas_mask = ( gr.vertex_properties['compo_level_n'].a == clas)
