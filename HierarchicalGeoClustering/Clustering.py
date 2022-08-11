@@ -932,6 +932,7 @@ def compute_Natural_cities(points2_clusters,  **kwargs):
     scale_points= kwargs.get('scale_points',True)
     debugg = kwargs.get('verbose',False)
     ret_noise = kwargs.get('return_noise', True)
+    tail_particion = kwargs.get('return_noise', 0.55)
 
     if scale_points ==True:
         scaler = StandardScaler()
@@ -941,7 +942,24 @@ def compute_Natural_cities(points2_clusters,  **kwargs):
 
     edges= get_segments(points_arr)
     lenght_av  =  np.average(np.array([i.length for i in edges ]))
+    ##### HT threshold
+    size_edges_len= len(edges)
     edges = [i for i in edges  if i.length < lenght_av]
+    size_tail_edges = len(edges)
+    if debugg:
+        print('Percentage in the tail: ', size_tail_edges/size_edges_len)
+    if (size_tail_edges/size_edges_len < tail_particion):
+        if debugg:
+            print('Not meating the minimun tail size')
+
+        if ret_noise == True:
+            if debugg:
+                print('Entro')
+            return [], points_arr
+        else:
+            return [] # return empty cluster
+
+
     polygons_natural_cities=  get_polygons_buf(edges)
     if debugg:
         if type(polygons_natural_cities)==shapely.geometry.MultiPolygon:
@@ -986,7 +1004,7 @@ def compute_Natural_cities(points2_clusters,  **kwargs):
             clusters.append(points_ret[class_member_mask])
         elif l == -1 and debugg == True:
             class_member_mask = (labels_points == l)
-            print("Point conscider noise: ",  sum(class_member_mask))
+            print("Point consider noise: ",  sum(class_member_mask))
 
     if ret_noise == True:
         class_member_mask = (labels_points == -1)
