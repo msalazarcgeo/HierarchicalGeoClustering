@@ -13,6 +13,7 @@ import numpy as np
 import shapely
 import pandas as pd
 import re
+import math
 import matplotlib
 import matplotlib.pyplot as plt
 from shapely.geometry import LineString
@@ -213,7 +214,7 @@ class NodeCluster(cluster, NodeMixin):
         """
         Populate the cluster on random bases 
         
-        :param int random_state: Rando state 
+        :param int random_state: Random state 
         
         :param double min_scale_x: min x value range ( Default=.1 )
         
@@ -288,7 +289,7 @@ class NodeCluster(cluster, NodeMixin):
                 origin= random_point_center
             )
             
-            ###### A qui se tiene que verificar si ha caido en alguno. 
+            ###### Aqui se tiene que verificar si ha caido en alguno. 
             if avoid_intersec == False:
                 self.polygon_cluster  = polygon
                 self.center = random_point_center
@@ -758,6 +759,9 @@ class NodeCluster(cluster, NodeMixin):
                 self,
                 **kwargs
                 ):
+        """
+        Get a similar polyon with respect to the node polygon
+        """
         percent_construc_poligon = kwargs.get( 'percent_construc_poligon',.85)
         u= kwargs.get( 'u', 20)
         ###### The factors has to be symilar respect to the bounding box
@@ -826,7 +830,8 @@ class NodeCluster(cluster, NodeMixin):
         """
 
         pref=kwargs.get('copy_pref', 'copy_')
-        new_cluster = NodeCluster( pref+ self.name )
+        new_cluster = NodeCluster( name = pref+ self.name )
+        ##print(new_cluster.name)
         density_in = kwargs.get('parent', None)
         parent_in= kwargs.get('parent', None),
         children_in = kwargs.get('children', None)
@@ -934,7 +939,7 @@ class NodeCluster(cluster, NodeMixin):
         return polygon, random_point_center
 
 
-# %% ../src/00_TreeClusters.ipynb 41
+# %% ../src/00_TreeClusters.ipynb 52
 class TreeClusters(object):
     levels = 0
     levels_nodes=[]
