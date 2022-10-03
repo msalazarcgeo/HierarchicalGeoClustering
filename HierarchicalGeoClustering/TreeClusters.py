@@ -29,7 +29,7 @@ def inside_polygon(list_points, poligon_check, min_percent):
     """
     Help function to validate the number of points that are inside the polygon 
     
-    :param list list_points: List of points to concider 
+    :param list list_points: List of points to consider 
     
     :param shapely.geometry.Polygon poligon_check:   
     
@@ -43,12 +43,12 @@ def inside_polygon(list_points, poligon_check, min_percent):
     #print(len(inside))
     if len(inside) > int(min_percent*len(list_points)):
         
-        return True , list_points
+        return True , inside
     else: 
-        
+
         return False , inside
 
-# %% ../src/00_TreeClusters.ipynb 6
+# %% ../src/00_TreeClusters.ipynb 7
 def poligon_non_convex_from_Points( points_li ):
     """
     Create a random (no convex) poligon from the points
@@ -72,7 +72,7 @@ def poligon_non_convex_from_Points( points_li ):
             keep_triangles.append(i)
     return shapely.ops.cascaded_union(keep_triangles)
 
-# %% ../src/00_TreeClusters.ipynb 7
+# %% ../src/00_TreeClusters.ipynb 9
 def poligon_non_convex_random_gen(npoints):
     """
     Create a random (no convex) poligon from n points
@@ -96,7 +96,7 @@ def poligon_non_convex_random_gen(npoints):
             keep_triangles.append(i)
     return shapely.ops.cascaded_union(keep_triangles)
 
-# %% ../src/00_TreeClusters.ipynb 8
+# %% ../src/00_TreeClusters.ipynb 11
 def string_recursive_tag( string_tag, **kwargs):
     """
     params: level_str level string
@@ -144,7 +144,7 @@ def string_recursive_tag( string_tag, **kwargs):
                 nodeid.append(str(num))
     return levels, nodeid
 
-# %% ../src/00_TreeClusters.ipynb 9
+# %% ../src/00_TreeClusters.ipynb 12
 def retag_from_strings(string_tag) :
     """
     Returns only the final node tag
@@ -157,7 +157,7 @@ def retag_from_strings(string_tag) :
     return tag_recal
 
 
-# %% ../src/00_TreeClusters.ipynb 10
+# %% ../src/00_TreeClusters.ipynb 13
 class cluster(object):
     """
     A Basic class of a cluster 
@@ -171,7 +171,7 @@ class cluster(object):
         self.point_cluster_noise = None
     
 
-# %% ../src/00_TreeClusters.ipynb 13
+# %% ../src/00_TreeClusters.ipynb 16
 class NodeCluster(cluster, NodeMixin):
     def __init__(self, 
                 name,
@@ -934,7 +934,7 @@ class NodeCluster(cluster, NodeMixin):
         return polygon, random_point_center
 
 
-# %% ../src/00_TreeClusters.ipynb 35
+# %% ../src/00_TreeClusters.ipynb 41
 class TreeClusters(object):
     levels = 0
     levels_nodes=[]
