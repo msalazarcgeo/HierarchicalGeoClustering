@@ -1230,13 +1230,19 @@ class TreeClusters(object):
     
     def get_dataframe(self, **kwargs):
         """
-        Get a pandas Dataframe with the points and the tags of for aech point
-        :returns pandas.DataFrame : Returns a dataframe with the columns 'Tag ', 'Final_tag', 'level', and 'cluster_id'
+        Get a pandas Dataframe with the points and the tags of for each point
+        :returns pandas.DataFrame : Returns a dataframe with the columns 'Tag ',
+                                    'Final_tag', 'level', and 'cluster_id'
+    
         Tag: is the reference of the point belong to a cluster as noise
-        Final_tag: the point can belong to a inner cluster this tag tell 
-        wich is the las tag category the point belong to.
+        
+        Final_tag: The point can belong to a inner cluster this tag tell 
+                     wich is the last tag category the point belong to.
+        
         level: list of levels of the clusters that the point belongs to.
+        
         cluster_id: list of cluster id that the points belongs to.  
+        
         """
         points_tags = self.root.tag_all_point()
         df_points_tag= pd.DataFrame(points_tags, columns= ['Points', 'Tag'])
@@ -1250,11 +1256,13 @@ class TreeClusters(object):
     def get_dataframe_recursive(self,  **kwargs):
         """
         Returns a dataframe with the columns 'Tag ', 'Final_tag', 'level', and 'cluster_id'
+        
         This function is with the purpouse to obtain the same tags for the 'level' and 
         'cluster_id' from the recorsive clustering function
+        
         Tag: is the reference of the point belong to a cluster as noise
         Final_tag: the point can belong to a inner cluster this tag tell 
-        wich is the las tag category the point belong to.
+                    wich is the las tag category the point belong to.
         level: list of levels of the clusters that the point belongs to.
         cluster_id: list of cluster id that the points belongs to.  
         """
