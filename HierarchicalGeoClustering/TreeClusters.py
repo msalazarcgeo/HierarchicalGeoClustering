@@ -95,7 +95,7 @@ def poligon_non_convex_random_gen(npoints):
             remove_triangles.append(i)
         else:
             keep_triangles.append(i)
-    return shapely.ops.cascaded_union(keep_triangles)
+    return shapely.ops.unary_union(keep_triangles)
 
 # %% ../src/00_TreeClusters.ipynb 11
 def string_recursive_tag( string_tag, **kwargs):
@@ -277,8 +277,6 @@ class NodeCluster(cluster, NodeMixin):
             
             scale_factor_max_x  = min (fact_pol, max_scale_x)
             scale_factor_max_y  = min (fact_pol, max_scale_y)
-            
-          
             # print('scale x:', scale_factor_max_x)
             # print('scale y:', scale_factor_max_y)
             ##########
@@ -351,7 +349,9 @@ class NodeCluster(cluster, NodeMixin):
 
         return ret_points    
     #### create random_points
-    def create_random_points(self, npoints_polygon=1000, random_state = 120):
+    def create_random_points(self, 
+                             npoints_polygon=1000,
+                             random_state = 120):
         """
         Create random points 
         
@@ -373,7 +373,7 @@ class NodeCluster(cluster, NodeMixin):
             points_cluster[:, 1] = (maxy_b - miny_b) * \
                 points_cluster[:, 1] + miny_b
             points_cluster = shapely.geometry.MultiPoint(list(points_cluster))
-            points_cluster_o = [p for p in points_cluster if
+            points_cluster_o = [p for p in points_cluster.geoms if
                                 self.polygon_cluster.contains(p)
                                 ]
             point_cluster_noise = point_cluster_noise + points_cluster_o
@@ -1279,7 +1279,8 @@ class TreeClusters(object):
         return df_points_tag
     
     def get_labels_point_nodes(self, **kwargs):
-        """The function returns the poinst of the tree labeled for each node
+        """The function returns the points of the tree labeled for each
+        node
         """
         all_points=[] 
         level_get = kwargs.get('level_get' , self.get_deepth())

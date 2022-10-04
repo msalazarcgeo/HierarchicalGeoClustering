@@ -3,7 +3,7 @@
 # %% auto 0
 __all__ = ['module_path', 'get_alpha_shape', 'set_colinear', 'collinear', 'get_segments', 'get_polygons_buf', 'labels_filtra',
            'levels_from_strings', 'get_tag_level_df_labels', 'level_tag', 'get_dics_labels', 'get_label_clusters_df',
-           'get_mini_jaccars', 'jaccard_distance', 'mod_cid_label', 'retag_originals', 'clustering',
+           'jaccard_distance', 'get_mini_jaccars', 'mod_cid_label', 'retag_originals', 'clustering',
            'recursive_clustering', 'recursive_clustering_tree', 'compute_dbscan', 'adaptative_DBSCAN',
            'compute_hdbscan', 'compute_OPTICS', 'compute_Natural_cities', 'compute_AMOEBA', 'SSM',
            'get_tree_from_clustering', 'generate_tree_clusterize_form']
@@ -197,13 +197,26 @@ def levels_from_strings(
     """
     
     positions = [i.start() for i in re.finditer( level_str, string_tag )]
-    levels = [string_tag[i+len(level_str)] for i in positions ]
     nodeid_positions = [i.start() for i in re.finditer( node_str, string_tag )]    
-    nodeid = [string_tag[i+len(node_str)] for i in nodeid_positions ]
+    
+    
+    #evels = [string_tag[i+len(level_str)] for i in positions ]
+    levels=[]
+    for i in positions:
+        if string_tag[i+len(level_str):].find(node_str) != -1:   
+            levels.append(string_tag[i+len(level_str):][:string_tag[i+len(level_str):].find(node_str)-1])
+        else:
+            levels.append(string_tag[i+len(level_str):])
+    nodeid=[]
+    for i in nodeid_positions:
+        if string_tag[i+len(node_str):].find(level_str) != -1:   
+            nodeid.append(string_tag[i+len(node_str):][:string_tag[i+len(node_str):].find(level_str)-1])
+        else:
+            nodeid.append(string_tag[i+len(node_str):])
 
     return levels, nodeid
 
-# %% ../src/01_Clustering.ipynb 15
+# %% ../src/01_Clustering.ipynb 16
 def get_tag_level_df_labels(df, levels_int ):
     """
     Get the tag for the cluster
@@ -217,10 +230,10 @@ def get_tag_level_df_labels(df, levels_int ):
     for i in range(levels_int):
         df['level_'+ str(i) +'_cluster']= df['cluster_id'].apply(lambda l:  level_tag(l,i))
 
-# %% ../src/01_Clustering.ipynb 16
+# %% ../src/01_Clustering.ipynb 18
 def level_tag(list_tags, level_int  ):
     """
-    Tags if the are nois or signal
+    Tags if the are noise or signal
     """
     if len(list_tags)==0:
         return 'noise'
@@ -229,7 +242,7 @@ def level_tag(list_tags, level_int  ):
     except:
         return 'noise'   
 
-# %% ../src/01_Clustering.ipynb 17
+# %% ../src/01_Clustering.ipynb 20
 def get_dics_labels(tree_or, tree_res, **kwargs):
     """
     Obtains a list of dictionaries to retag the original tree_tag with their 
@@ -257,7 +270,7 @@ def get_dics_labels(tree_or, tree_res, **kwargs):
         dic_list_levels.append({'level_ori':'level_'+str(i)+'_cluster', 'dict': dic_lev})
     return dic_list_levels
 
-# %% ../src/01_Clustering.ipynb 18
+# %% ../src/01_Clustering.ipynb 21
 def get_label_clusters_df(tree_1, tree_2, level_int):
     """
     Obtains the dataframe with the label 
@@ -290,20 +303,7 @@ def get_label_clusters_df(tree_1, tree_2, level_int):
     
     return df_level_clus
 
-# %% ../src/01_Clustering.ipynb 19
-def get_mini_jaccars(cluster, tree_2, level_int):
-    """
-    Find the most similar cluster in the tree_2 at level level_int
-    returns int the index of the most similar polygon in the level
-    """
-    tree_2_level= tree_2.get_level(level_int)
-    Jaccard_i= [jaccard_distance(cluster.polygon_cluster, j.polygon_cluster) for j in tree_2_level]  
-    
-    valu_min = Jaccard_i.index( min(Jaccard_i))
-    return valu_min
-    
-
-# %% ../src/01_Clustering.ipynb 20
+# %% ../src/01_Clustering.ipynb 22
 def jaccard_distance(p1, p2):
     """
     Computes the Jaccard similarity between two polygons.
@@ -317,7 +317,20 @@ def jaccard_distance(p1, p2):
     jacc= 1 - (intersection_area)/(p1.area + p2.area - intersection_area)
     return jacc
 
-# %% ../src/01_Clustering.ipynb 21
+# %% ../src/01_Clustering.ipynb 24
+def get_mini_jaccars(cluster, tree_2, level_int):
+    """
+    Find the most similar cluster in the tree_2 at level level_int
+    returns int the index of the most similar polygon in the level
+    """
+    tree_2_level= tree_2.get_level(level_int)
+    Jaccard_i= [jaccard_distance(cluster.polygon_cluster, j.polygon_cluster) for j in tree_2_level]  
+    
+    valu_min = Jaccard_i.index( min(Jaccard_i))
+    return valu_min
+    
+
+# %% ../src/01_Clustering.ipynb 26
 def mod_cid_label(dic_label):
     """
     
@@ -326,13 +339,16 @@ def mod_cid_label(dic_label):
     dic_label['noise'] = 'noise'
     return dic_label
 
-# %% ../src/01_Clustering.ipynb 22
-def retag_originals(df_fram_or , df_results, tag_original, tag_results, dic_tag_or_res):
+# %% ../src/01_Clustering.ipynb 27
+def retag_originals(df_fram_or ,
+                    df_results,
+                    tag_original,
+                    tag_results,
+                    dic_tag_or_res):
     """
     Retags the labels in the df_fram_or using the dictionary dic_tag_or_res to match 
     the tags with the corresponding tag in the df_result and all the labels that are
     not in the dictionary generate a new tag fo them. 
-    
     
     :param Pandas.DataFrame df_fram_or
     
@@ -348,7 +364,7 @@ def retag_originals(df_fram_or , df_results, tag_original, tag_results, dic_tag_
     tag_plus=  len(df_results[tag_results].unique()) +100  - len(df_results[tag_results].unique())%100
     df_fram_or['re_tag_'+str(df_results.name)+'_'+tag_original] = df_fram_or[tag_original].apply(lambda l: dic_tag_or_res[l] if l in dic_tag_or_res.keys() else   str(int(l) +tag_plus) )
 
-# %% ../src/01_Clustering.ipynb 25
+# %% ../src/01_Clustering.ipynb 29
 def clustering(
             t_next_level_2,
             level=None,
@@ -477,7 +493,7 @@ def clustering(
     
     return t_next_level_n
 
-# %% ../src/01_Clustering.ipynb 28
+# %% ../src/01_Clustering.ipynb 32
 def recursive_clustering(
                 this_level,  # Dictionary with Points
                 to_process,  # levels to process
@@ -559,7 +575,7 @@ def recursive_clustering(
             print('done clustering')
         return
 
-# %% ../src/01_Clustering.ipynb 31
+# %% ../src/01_Clustering.ipynb 35
 def recursive_clustering_tree(dic_points_ori, **kwargs):
     """
     Obtaing the recursive tree using a specific algorithm
@@ -578,7 +594,7 @@ def recursive_clustering_tree(dic_points_ori, **kwargs):
     tree_from_clus.root= tree_from_clus.levels_nodes[0][0]   
     return tree_from_clus
 
-# %% ../src/01_Clustering.ipynb 34
+# %% ../src/01_Clustering.ipynb 37
 def compute_dbscan(cluster,  **kwargs):
     
     """ 
@@ -640,7 +656,7 @@ def compute_dbscan(cluster,  **kwargs):
     
     return clusters
 
-# %% ../src/01_Clustering.ipynb 37
+# %% ../src/01_Clustering.ipynb 40
 def adaptative_DBSCAN(points2_clusters ,
                 **kwargs):
     """
@@ -781,7 +797,7 @@ def adaptative_DBSCAN(points2_clusters ,
 
     return clusters
 
-# %% ../src/01_Clustering.ipynb 39
+# %% ../src/01_Clustering.ipynb 43
 def compute_hdbscan(points2_clusters,  **kwargs):
     
     """
@@ -843,7 +859,7 @@ def compute_hdbscan(points2_clusters,  **kwargs):
 
     return clusters
 
-# %% ../src/01_Clustering.ipynb 43
+# %% ../src/01_Clustering.ipynb 46
 def compute_OPTICS(points2_clusters,  **kwargs):
     
     """ OPTICS wrapper.
@@ -907,7 +923,7 @@ def compute_OPTICS(points2_clusters,  **kwargs):
 
     return clusters
 
-# %% ../src/01_Clustering.ipynb 46
+# %% ../src/01_Clustering.ipynb 49
 def compute_Natural_cities(points2_clusters,  **kwargs):
     
     """
@@ -1001,7 +1017,7 @@ def compute_Natural_cities(points2_clusters,  **kwargs):
 
     return clusters
 
-# %% ../src/01_Clustering.ipynb 49
+# %% ../src/01_Clustering.ipynb 53
 def compute_AMOEBA(points_array, **kwargs):
     """The function obtains the AMOEBA algorithm on level basis
     
@@ -1138,7 +1154,7 @@ def compute_AMOEBA(points_array, **kwargs):
         
     
 
-# %% ../src/01_Clustering.ipynb 53
+# %% ../src/01_Clustering.ipynb 57
 def SSM(list_poly_c_1,list_poly_c_2 ,**kwargs):
     """
     The function calculates the Similarity Form Measurment (SMF)
@@ -1206,7 +1222,7 @@ def SSM(list_poly_c_1,list_poly_c_2 ,**kwargs):
     deno =P_sum + sum(len_Q_not)
     return sum(jacc_sim_po)/deno
 
-# %% ../src/01_Clustering.ipynb 55
+# %% ../src/01_Clustering.ipynb 59
 def get_tree_from_clustering(cluster_tree_clusters):
     """ Returns the tree from the iterative clustering, the cluster_tree_cluster
      
@@ -1269,7 +1285,7 @@ def get_tree_from_clustering(cluster_tree_clusters):
     
     return  all_level_clusters
 
-# %% ../src/01_Clustering.ipynb 56
+# %% ../src/01_Clustering.ipynb 60
 def generate_tree_clusterize_form(**kwargs ):
     """
     Generates all the experiment all the experiment creates the data and clusterize using the algorithm available
