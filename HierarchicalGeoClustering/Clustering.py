@@ -2,11 +2,11 @@
 
 # %% auto 0
 __all__ = ['module_path', 'get_alpha_shape', 'set_colinear', 'collinear', 'get_segments', 'get_polygons_buf', 'jaccard_distance',
-           'labels_filtra', 'compute_dbscan', 'adaptative_DBSCAN', 'compute_hdbscan', 'compute_OPTICS', 'clustering',
-           'recursive_clustering', 'recursive_clustering_tree', 'compute_Natural_cities', 'compute_AMOEBA', 'SSM',
-           'get_tree_from_clustering', 'generate_tree_clusterize_form', 'levels_from_strings', 'get_mini_jaccars',
-           'level_tag', 'get_tag_level_df_labels', 'get_dics_labels', 'get_label_clusters_df', 'mod_cid_label',
-           'retag_originals']
+           'labels_filtra', 'compute_dbscan', 'adaptative_DBSCAN', 'compute_hdbscan', 'compute_OPTICS',
+           'compute_Natural_cities', 'compute_AMOEBA', 'clustering', 'recursive_clustering',
+           'recursive_clustering_tree', 'SSM', 'get_tree_from_clustering', 'generate_tree_clusterize_form',
+           'levels_from_strings', 'get_mini_jaccars', 'level_tag', 'get_tag_level_df_labels', 'get_dics_labels',
+           'get_label_clusters_df', 'mod_cid_label', 'retag_originals']
 
 # %% ../src/01_Clustering.ipynb 2
 import os
@@ -521,236 +521,6 @@ def compute_OPTICS(points2_clusters,  **kwargs):
     return clusters
 
 # %% ../src/01_Clustering.ipynb 30
-def clustering(
-            t_next_level_2,
-            level=None,
-            algorithm='dbscan',
-            **kwargs
-    ):
-    """Function to get the clusters for single group by
-    
-    :param t_next_level_2: Dictionary with the points to compute the
-            cluster
-    :param level:  None Level to compute (Default None)
-    
-    :param str algorithm : Algorithm type is supported (Default= 'dbscan')
-    
-    :param int min_points_cluster:  minimun number of point to consider a cluster(Default 50)
-    
-    :param double eps: Epsilon parameter In case is needed
-    
-    :param bool return_noise: To return the noise (Default False)
-    
-    :param bool verbose: Printing (Dafault False)  
-    
-    :returns list t_next_level_n: A list with dictionaries with the points, the parent, and nois 
-    """
-    verbose= kwargs.get('verbose',False)
-    min_points = kwargs.get( 'min_points_cluster', 50) #### creo que se deberia quitar o poner bien
-    ret_noise= kwargs.get('return_noise', True)
-    eps = kwargs.get('eps',0.8)  # Epsilon value to dbscan
-    min_leng_clus= kwargs.get('min_lenght_cluster', 5)
-    t_next_level_n = []
-    if level == None:
-        level = 0
-
-    for li_num, cluster_list_D in enumerate(t_next_level_2):
-        cluster_list = cluster_list_D['points']
-        cluster_list_pa = cluster_list_D['parent']
-        if verbose:
-            print("Size cluster list: ", len(cluster_list))
-            
-        for c_num, cluster in enumerate(cluster_list):
-            if verbose:
-                print("Size cluster: ", len(cluster))
-                print('Algorithm: ', algorithm)
-
-            if len(cluster) > min_leng_clus:
-                if algorithm == 'dbscan':
-                    if verbose:
-                        print("Epsilon Value: ", eps)
-                    tmp = compute_dbscan(cluster,
-                                 eps_DBSCAN = eps,
-                                 debugg=verbose,
-                                  **kwargs)
-                    if ret_noise:
-                        noise_points = tmp[1]
-                        tmp =  tmp[0]
-                
-               
-                elif algorithm == 'hdbscan':
-                    tmp = compute_hdbscan(cluster,
-                                **kwargs)
-                    if ret_noise:
-                        noise_points = tmp[1]
-                        tmp =  tmp[0]
-                ##########  
-                elif algorithm == 'adaptative_DBSCAN':
-                    #### If the number of cluster is too small 
-                    
-                    tmp = adaptative_DBSCAN(cluster, **kwargs)
-                    if ret_noise:
-                        noise_points = tmp[1]
-                        tmp =  tmp[0]
-
-                elif algorithm == 'optics':
-                    tmp = compute_OPTICS(cluster,
-                                eps_OPTICS = eps,
-                                **kwargs)
-                    if ret_noise:
-                        noise_points = tmp[1]
-                        tmp =  tmp[0]
-                ##########  
-                elif algorithm == 'natural_cities':
-                    tmp = compute_Natural_cities(cluster,
-                                **kwargs)
-                    if ret_noise:
-                        noise_points = tmp[1]
-                        tmp =  tmp[0]
-                ##########  
-                elif algorithm == 'amoeba':
-                    tmp = compute_AMOEBA(cluster,
-                                **kwargs)
-                    if ret_noise:
-                        noise_points = tmp[1]
-                        tmp =  tmp[0]
-                #########
-                else:
-                    raise ValueError('Algorithm must be: \n', 
-                                     'dbscan, hdbscan, adaptative_DBSCAN, optics, natural_cities or amoeba')
-                    # sys.exit("1")
-                
-                
-                
-                if verbose:
-                    print("The number of resulting clusters is : ", len(tmp))
-                if ret_noise:
-                    dic_clos = {'points': tmp,
-                           'parent': cluster_list_pa + '_L_'+str(level) +
-                            '_l_' + str(li_num) + '_c_'+str(c_num), 
-                            'noise_points':noise_points
-                    }
-                else:
-                    dic_clos = {'points': tmp, 'parent': cluster_list_pa +
-                            '_L_'+str(level) + '_l_' + str(li_num) + '_c_'+str(c_num)}
-                
-                t_next_level_n.append(dic_clos)
-            else:
-                if ret_noise:
-                    dic_clos = {'points': [],
-                           'parent': cluster_list_pa + '_L_'+str(level) +
-                            '_l_' + str(li_num) + '_c_'+str(c_num), 
-                            'noise_points':cluster
-                    }
-                else:
-                    dic_clos = {'points': [], 'parent': cluster_list_pa +
-                            '_L_'+str(level) + '_l_' + str(li_num) + '_c_'+str(c_num)}
-                t_next_level_n.append(dic_clos)
-    
-    return t_next_level_n
-
-# %% ../src/01_Clustering.ipynb 33
-def recursive_clustering(
-                this_level,  # Dictionary with Points
-                to_process,  # levels to process
-                cluster_tree,  # to store the clusters
-                level = 0,  # current level
-                **kwargs
-               ):
-    """
-    Performs the recursive clustering.
-    Calls compute_dbscan for each
-    list of clusters keepen the structure and then calls itself
-    until no more clusters satisfy the condition
-        
-    :param dict this_level: level is the current level 
-    
-    :param int to_process: the max level to process
-    
-    :param double eps: The epsilon parameter distance to pass to the needed algorithm 
-    
-    :param list cluster_tree : list of list to insert the levels 
-    
-    :param bool verbose : To print 
-    
-    :param double decay: In the use of dbscan the deacy parameter to reduce eps
-    
-    :param int min_points_cluster: The min point for each cluster to pass to algorithm
-    
-    :param str algorithm:  The string of the algorithm name to use
-    """
-    algorithm= kwargs.get('algorithm' ,'dbscan')    # Algorithm to use
-    verbose= kwargs.get('verbose',False)
-    min_points = kwargs.get( 'min_points_cluster', 50)
-    decay = kwargs.get('decay', 0.7)
-    eps = kwargs.get('eps' ,0.8)  # Epsilon distance to DBSCAN parameter
-    max_k_increase = kwargs.get('max_k_increase', None)
-    tmp = None
-
-    if level == 0:
-        kwargs['eps'] = eps
-    else:
-        kwargs['eps'] = eps  * decay
-
-    if max_k_increase != None:
-        if level == 0:
-            kwargs['max_k_percent'] = 0.1
-        else:
-            kwargs['max_k_percent'] = kwargs['max_k_percent'] * max_k_increase
-    
-    cluster_result_polygons = []
-    if level > to_process:
-        if verbose:
-            print('Done clustering')
-        return
-    ######## Get the clusters for the current list of points 
-    all_l = clustering(
-                    this_level,
-                    level=level,                    
-                    **kwargs
-                    )
-    ##########
-
-    cluster_tree.append(all_l)
-    cluster_n = 0
-    for i in all_l:
-        cluster_n += len(i['points'])
-    if verbose:
-        print('At level ', level, ' the number of lists are ',
-              len(all_l), ' with ', cluster_n, 'clusters')
-    level += 1
-    if len(all_l) > 0:
-        return recursive_clustering(all_l, 
-                               to_process=to_process,
-                               cluster_tree=cluster_tree,
-                               level= level,
-                               **kwargs
-                               )
-    else:
-        if verbose:
-            print('done clustering')
-        return
-
-# %% ../src/01_Clustering.ipynb 36
-def recursive_clustering_tree(dic_points_ori, **kwargs):
-    """
-    Obtaing the recursive tree using a specific algorithm
-    """
-    levels_clustering= kwargs.get('levels_clustering',4)
-    cluster_tree = []
-    recursive_clustering([dic_points_ori],  # Dictionary with Points
-                levels_clustering,  # levels to process
-                cluster_tree,  # to store the clusters
-                level=0,  # current level
-                **kwargs
-                )
-    tree_clus= get_tree_from_clustering(cluster_tree)
-    tree_from_clus= TreeClusters()
-    tree_from_clus.levels_nodes = tree_clus
-    tree_from_clus.root= tree_from_clus.levels_nodes[0][0]   
-    return tree_from_clus
-
-# %% ../src/01_Clustering.ipynb 37
 def compute_Natural_cities(points2_clusters,  **kwargs):
     
     """
@@ -844,7 +614,7 @@ def compute_Natural_cities(points2_clusters,  **kwargs):
 
     return clusters
 
-# %% ../src/01_Clustering.ipynb 40
+# %% ../src/01_Clustering.ipynb 33
 def compute_AMOEBA(points_array, **kwargs):
     """The function obtains the AMOEBA algorithm on level basis
     
@@ -981,7 +751,238 @@ def compute_AMOEBA(points_array, **kwargs):
         
     
 
-# %% ../src/01_Clustering.ipynb 44
+# %% ../src/01_Clustering.ipynb 37
+def clustering(
+            t_next_level_2,
+            level=None,
+            algorithm='dbscan',
+            **kwargs
+    ):
+    """Function to get the clusters for single group by
+    
+    :param t_next_level_2: Dictionary with the points to compute the
+            cluster
+    :param level:  None Level to compute (Default None)
+    
+    :param str algorithm : Algorithm type is supported (Default= 'dbscan')
+    
+    :param int min_points_cluster:  minimun number of point to consider a cluster(Default 50)
+    
+    :param double eps: Epsilon parameter in the case that is needed (DBSCAN).
+    
+    :param bool return_noise: To return the noise (Default= True)
+    
+    :param bool verbose: Printing (Default= False)  
+    
+    :returns list t_next_level_n: A list with dictionaries with the points, 
+                        the parent, and noise
+    """
+    verbose= kwargs.get('verbose',False)
+    min_points = kwargs.get( 'min_points_cluster', 50) #### creo que se deberia quitar o poner bien
+    ret_noise= kwargs.get('return_noise', True)
+    eps = kwargs.get('eps',0.8)  # Epsilon value to dbscan
+    min_leng_clus= kwargs.get('min_lenght_cluster', 5)
+    t_next_level_n = []
+    if level == None:
+        level = 0
+
+    for li_num, cluster_list_D in enumerate(t_next_level_2):
+        cluster_list = cluster_list_D['points']
+        cluster_list_pa = cluster_list_D['parent']
+        if verbose:
+            print("Size cluster list: ", len(cluster_list))
+            
+        for c_num, cluster in enumerate(cluster_list):
+            if verbose:
+                print("Size cluster: ", len(cluster))
+                print('Algorithm: ', algorithm)
+
+            if len(cluster) > min_leng_clus:
+                if algorithm == 'dbscan':
+                    if verbose:
+                        print("Epsilon Value: ", eps)
+                    tmp = compute_dbscan(cluster,
+                                 eps_DBSCAN = eps,
+                                 debugg=verbose,
+                                  **kwargs)
+                    if ret_noise:
+                        noise_points = tmp[1]
+                        tmp =  tmp[0]
+                
+               
+                elif algorithm == 'hdbscan':
+                    tmp = compute_hdbscan(cluster,
+                                **kwargs)
+                    if ret_noise:
+                        noise_points = tmp[1]
+                        tmp =  tmp[0]
+                ##########  
+                elif algorithm == 'adaptative_DBSCAN':
+                    #### If the number of cluster is too small 
+                    
+                    tmp = adaptative_DBSCAN(cluster, **kwargs)
+                    if ret_noise:
+                        noise_points = tmp[1]
+                        tmp =  tmp[0]
+
+                elif algorithm == 'optics':
+                    tmp = compute_OPTICS(cluster,
+                                eps_OPTICS = eps,
+                                **kwargs)
+                    if ret_noise:
+                        noise_points = tmp[1]
+                        tmp =  tmp[0]
+                ##########  
+                elif algorithm == 'natural_cities':
+                    tmp = compute_Natural_cities(cluster,
+                                **kwargs)
+                    if ret_noise:
+                        noise_points = tmp[1]
+                        tmp =  tmp[0]
+                ##########  
+                elif algorithm == 'amoeba':
+                    tmp = compute_AMOEBA(cluster,
+                                **kwargs)
+                    if ret_noise:
+                        noise_points = tmp[1]
+                        tmp =  tmp[0]
+                #########
+                else:
+                    raise ValueError('Algorithm must be: \n', 
+                                     'dbscan, hdbscan, adaptative_DBSCAN, optics, natural_cities or amoeba')
+                    # sys.exit("1")
+                
+                
+                
+                if verbose:
+                    print("The number of resulting clusters is : ", len(tmp))
+                if ret_noise:
+                    dic_clos = {'points': tmp,
+                           'parent': cluster_list_pa + '_L_'+str(level) +
+                            '_l_' + str(li_num) + '_c_'+str(c_num), 
+                            'noise_points':noise_points
+                    }
+                else:
+                    dic_clos = {'points': tmp, 'parent': cluster_list_pa +
+                            '_L_'+str(level) + '_l_' + str(li_num) + '_c_'+str(c_num)}
+                
+                t_next_level_n.append(dic_clos)
+            else:
+                if ret_noise:
+                    dic_clos = {'points': [],
+                           'parent': cluster_list_pa + '_L_'+str(level) +
+                            '_l_' + str(li_num) + '_c_'+str(c_num), 
+                            'noise_points':cluster
+                    }
+                else:
+                    dic_clos = {'points': [], 'parent': cluster_list_pa +
+                            '_L_'+str(level) + '_l_' + str(li_num) + '_c_'+str(c_num)}
+                t_next_level_n.append(dic_clos)
+    
+    return t_next_level_n
+
+# %% ../src/01_Clustering.ipynb 40
+def recursive_clustering(
+                this_level,  # Dictionary with Points
+                to_process,  # levels to process
+                cluster_tree,  # to store the clusters
+                level = 0,  # current level
+                **kwargs
+               ):
+    """
+    Performs the recursive clustering.
+    Calls compute_dbscan for each
+    list of clusters keepen the structure and then calls itself
+    until no more clusters satisfy the condition
+        
+    :param dict this_level: level is the current level 
+    
+    :param int to_process: the max level to process
+    
+    :param double eps: The epsilon parameter distance to pass to the needed algorithm 
+    
+    :param list cluster_tree : list of list to insert the levels 
+    
+    :param bool verbose : To print 
+    
+    :param double decay: In the use of dbscan the deacy parameter to reduce eps
+    
+    :param int min_points_cluster: The min point for each cluster to pass to algorithm
+    
+    :param str algorithm:  The string of the algorithm name to use
+    """
+    algorithm= kwargs.get('algorithm' ,'dbscan')    # Algorithm to use
+    verbose= kwargs.get('verbose',False)
+    min_points = kwargs.get( 'min_points_cluster', 50)
+    decay = kwargs.get('decay', 0.7)
+    eps = kwargs.get('eps' ,0.8)  # Epsilon distance to DBSCAN parameter
+    max_k_increase = kwargs.get('max_k_increase', None)
+    tmp = None
+
+    if level == 0:
+        kwargs['eps'] = eps
+    else:
+        kwargs['eps'] = eps  * decay
+
+    if max_k_increase != None:
+        if level == 0:
+            kwargs['max_k_percent'] = 0.1
+        else:
+            kwargs['max_k_percent'] = kwargs['max_k_percent'] * max_k_increase
+    
+    cluster_result_polygons = []
+    if level > to_process:
+        if verbose:
+            print('Done clustering')
+        return
+    ######## Get the clusters for the current list of points 
+    all_l = clustering(
+                    this_level,
+                    level=level,                    
+                    **kwargs
+                    )
+    ##########
+
+    cluster_tree.append(all_l)
+    cluster_n = 0
+    for i in all_l:
+        cluster_n += len(i['points'])
+    if verbose:
+        print('At level ', level, ' the number of lists are ',
+              len(all_l), ' with ', cluster_n, 'clusters')
+    level += 1
+    if len(all_l) > 0:
+        return recursive_clustering(all_l, 
+                               to_process=to_process,
+                               cluster_tree=cluster_tree,
+                               level= level,
+                               **kwargs
+                               )
+    else:
+        if verbose:
+            print('done clustering')
+        return
+
+# %% ../src/01_Clustering.ipynb 43
+def recursive_clustering_tree(dic_points_ori, **kwargs):
+    """
+    Obtaing the recursive tree using a specific algorithm
+    """
+    levels_clustering= kwargs.get('levels_clustering',4)
+    cluster_tree = []
+    recursive_clustering([dic_points_ori],  # Dictionary with Points
+                levels_clustering,  # levels to process
+                cluster_tree,  # to store the clusters
+                level=0,  # current level
+                **kwargs
+                )
+    tree_clus= get_tree_from_clustering(cluster_tree)
+    tree_from_clus= TreeClusters()
+    tree_from_clus.levels_nodes = tree_clus
+    tree_from_clus.root= tree_from_clus.levels_nodes[0][0]   
+    return tree_from_clus
+
+# %% ../src/01_Clustering.ipynb 45
 def SSM(list_poly_c_1,list_poly_c_2 ,**kwargs):
     """
     The function calculates the Similarity Shape Measurement (SSM)
@@ -1049,7 +1050,7 @@ def SSM(list_poly_c_1,list_poly_c_2 ,**kwargs):
     deno =P_sum + sum(len_Q_not)
     return sum(jacc_sim_po)/deno
 
-# %% ../src/01_Clustering.ipynb 46
+# %% ../src/01_Clustering.ipynb 47
 def get_tree_from_clustering(cluster_tree_clusters):
     """ Returns the tree from the iterative clustering, the cluster_tree_cluster
      
@@ -1112,7 +1113,7 @@ def get_tree_from_clustering(cluster_tree_clusters):
     
     return  all_level_clusters
 
-# %% ../src/01_Clustering.ipynb 47
+# %% ../src/01_Clustering.ipynb 48
 def generate_tree_clusterize_form(**kwargs ):
     """
     Generates all the experiment all the experiment creates the data and clusterize using the algorithm available
@@ -1364,7 +1365,7 @@ def generate_tree_clusterize_form(**kwargs ):
            }
 
 
-# %% ../src/01_Clustering.ipynb 60
+# %% ../src/01_Clustering.ipynb 61
 def levels_from_strings(
             string_tag,
             level_str='l_',
@@ -1403,7 +1404,7 @@ def levels_from_strings(
 
     return levels, nodeid
 
-# %% ../src/01_Clustering.ipynb 62
+# %% ../src/01_Clustering.ipynb 63
 def get_mini_jaccars(cluster, tree_2, level_int):
     """
     Find the most similar cluster in the tree_2 at level level_int
@@ -1416,7 +1417,7 @@ def get_mini_jaccars(cluster, tree_2, level_int):
     return valu_min
     
 
-# %% ../src/01_Clustering.ipynb 63
+# %% ../src/01_Clustering.ipynb 64
 def level_tag(list_tags, level_int  ):
     """
     Tags if the are noise or signal
@@ -1428,7 +1429,7 @@ def level_tag(list_tags, level_int  ):
     except:
         return 'noise'   
 
-# %% ../src/01_Clustering.ipynb 64
+# %% ../src/01_Clustering.ipynb 65
 def get_tag_level_df_labels(df, levels_int ):
     """
     Get the tag for the cluster
@@ -1442,7 +1443,7 @@ def get_tag_level_df_labels(df, levels_int ):
     for i in range(levels_int):
         df['level_'+ str(i) +'_cluster']= df['cluster_id'].apply(lambda l:  level_tag(l,i))
 
-# %% ../src/01_Clustering.ipynb 65
+# %% ../src/01_Clustering.ipynb 66
 def get_dics_labels(tree_or, tree_res, **kwargs):
     """
     Obtains a list of dictionaries to retag the original tree_tag with their 
@@ -1470,7 +1471,7 @@ def get_dics_labels(tree_or, tree_res, **kwargs):
         dic_list_levels.append({'level_ori':'level_'+str(i)+'_cluster', 'dict': dic_lev})
     return dic_list_levels
 
-# %% ../src/01_Clustering.ipynb 66
+# %% ../src/01_Clustering.ipynb 67
 def get_label_clusters_df(tree_1, tree_2, level_int):
     """
     Obtains the dataframe with the label 
@@ -1503,7 +1504,7 @@ def get_label_clusters_df(tree_1, tree_2, level_int):
     
     return df_level_clus
 
-# %% ../src/01_Clustering.ipynb 67
+# %% ../src/01_Clustering.ipynb 68
 def mod_cid_label(dic_label):
     """
     
@@ -1512,7 +1513,7 @@ def mod_cid_label(dic_label):
     dic_label['noise'] = 'noise'
     return dic_label
 
-# %% ../src/01_Clustering.ipynb 68
+# %% ../src/01_Clustering.ipynb 69
 def retag_originals(df_fram_or ,
                     df_results,
                     tag_original,
