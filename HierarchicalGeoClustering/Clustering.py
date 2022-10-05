@@ -3,8 +3,8 @@
 # %% auto 0
 __all__ = ['module_path', 'get_alpha_shape', 'set_colinear', 'collinear', 'get_segments', 'get_polygons_buf', 'jaccard_distance',
            'labels_filtra', 'compute_dbscan', 'adaptative_DBSCAN', 'compute_hdbscan', 'compute_OPTICS',
-           'compute_Natural_cities', 'compute_AMOEBA', 'clustering', 'recursive_clustering',
-           'recursive_clustering_tree', 'SSM', 'get_tree_from_clustering', 'generate_tree_clusterize_form',
+           'compute_Natural_cities', 'compute_AMOEBA', 'clustering', 'recursive_clustering', 'SSM',
+           'get_tree_from_clustering', 'generate_tree_clusterize_form', 'recursive_clustering_tree',
            'levels_from_strings', 'get_mini_jaccars', 'level_tag', 'get_tag_level_df_labels', 'get_dics_labels',
            'get_label_clusters_df', 'mod_cid_label', 'retag_originals']
 
@@ -204,7 +204,7 @@ def compute_dbscan(cluster,  **kwargs):
     eps = kwargs.get( 'eps_DBSCAN',.04)
     debugg= kwargs.get( 'debugg',False)
     min_samples= kwargs.get( 'min_samples',50)
-    ret_noise = kwargs.get('return_noise', False)
+    ret_noise = kwargs.get('return_noise', True)
     # Standarize sample
     scaler = StandardScaler()
     cluster = scaler.fit_transform(cluster)
@@ -963,26 +963,7 @@ def recursive_clustering(
             print('done clustering')
         return
 
-# %% ../src/01_Clustering.ipynb 43
-def recursive_clustering_tree(dic_points_ori, **kwargs):
-    """
-    Obtaing the recursive tree using a specific algorithm
-    """
-    levels_clustering= kwargs.get('levels_clustering',4)
-    cluster_tree = []
-    recursive_clustering([dic_points_ori],  # Dictionary with Points
-                levels_clustering,  # levels to process
-                cluster_tree,  # to store the clusters
-                level=0,  # current level
-                **kwargs
-                )
-    tree_clus= get_tree_from_clustering(cluster_tree)
-    tree_from_clus= TreeClusters()
-    tree_from_clus.levels_nodes = tree_clus
-    tree_from_clus.root= tree_from_clus.levels_nodes[0][0]   
-    return tree_from_clus
-
-# %% ../src/01_Clustering.ipynb 45
+# %% ../src/01_Clustering.ipynb 44
 def SSM(list_poly_c_1,list_poly_c_2 ,**kwargs):
     """
     The function calculates the Similarity Shape Measurement (SSM)
@@ -1050,7 +1031,7 @@ def SSM(list_poly_c_1,list_poly_c_2 ,**kwargs):
     deno =P_sum + sum(len_Q_not)
     return sum(jacc_sim_po)/deno
 
-# %% ../src/01_Clustering.ipynb 47
+# %% ../src/01_Clustering.ipynb 46
 def get_tree_from_clustering(cluster_tree_clusters):
     """ Returns the tree from the iterative clustering, the cluster_tree_cluster
      
@@ -1113,7 +1094,7 @@ def get_tree_from_clustering(cluster_tree_clusters):
     
     return  all_level_clusters
 
-# %% ../src/01_Clustering.ipynb 48
+# %% ../src/01_Clustering.ipynb 47
 def generate_tree_clusterize_form(**kwargs ):
     """
     Generates all the experiment all the experiment creates the data and clusterize using the algorithm available
@@ -1365,7 +1346,30 @@ def generate_tree_clusterize_form(**kwargs ):
            }
 
 
-# %% ../src/01_Clustering.ipynb 61
+# %% ../src/01_Clustering.ipynb 48
+def recursive_clustering_tree(dic_points_ori, **kwargs):
+    """
+    Obtaing the recursive tree using a specific algorithm
+    :param dict dic_points_ori: A dictionary with two keys 'points':['Array points'],
+                                'parent':'name_parent' 
+    :param int levels_clustering: levels to cluster  
+    :returns TreeClusters: wih the clusters as nodes
+    """
+    levels_clustering= kwargs.get('levels_clustering',4)
+    cluster_tree = []
+    recursive_clustering([dic_points_ori],  # Dictionary with Points
+                levels_clustering,  # levels to process
+                cluster_tree,  # to store the clusters
+                level=0,  # current level
+                **kwargs
+                )
+    tree_clus= get_tree_from_clustering(cluster_tree)
+    tree_from_clus= TreeClusters()
+    tree_from_clus.levels_nodes = tree_clus
+    tree_from_clus.root= tree_from_clus.levels_nodes[0][0]   
+    return tree_from_clus
+
+# %% ../src/01_Clustering.ipynb 62
 def levels_from_strings(
             string_tag,
             level_str='l_',
@@ -1404,7 +1408,7 @@ def levels_from_strings(
 
     return levels, nodeid
 
-# %% ../src/01_Clustering.ipynb 63
+# %% ../src/01_Clustering.ipynb 64
 def get_mini_jaccars(cluster, tree_2, level_int):
     """
     Find the most similar cluster in the tree_2 at level level_int
@@ -1417,7 +1421,7 @@ def get_mini_jaccars(cluster, tree_2, level_int):
     return valu_min
     
 
-# %% ../src/01_Clustering.ipynb 64
+# %% ../src/01_Clustering.ipynb 65
 def level_tag(list_tags, level_int  ):
     """
     Tags if the are noise or signal
@@ -1429,7 +1433,7 @@ def level_tag(list_tags, level_int  ):
     except:
         return 'noise'   
 
-# %% ../src/01_Clustering.ipynb 65
+# %% ../src/01_Clustering.ipynb 66
 def get_tag_level_df_labels(df, levels_int ):
     """
     Get the tag for the cluster
@@ -1443,7 +1447,7 @@ def get_tag_level_df_labels(df, levels_int ):
     for i in range(levels_int):
         df['level_'+ str(i) +'_cluster']= df['cluster_id'].apply(lambda l:  level_tag(l,i))
 
-# %% ../src/01_Clustering.ipynb 66
+# %% ../src/01_Clustering.ipynb 67
 def get_dics_labels(tree_or, tree_res, **kwargs):
     """
     Obtains a list of dictionaries to retag the original tree_tag with their 
@@ -1471,7 +1475,7 @@ def get_dics_labels(tree_or, tree_res, **kwargs):
         dic_list_levels.append({'level_ori':'level_'+str(i)+'_cluster', 'dict': dic_lev})
     return dic_list_levels
 
-# %% ../src/01_Clustering.ipynb 67
+# %% ../src/01_Clustering.ipynb 68
 def get_label_clusters_df(tree_1, tree_2, level_int):
     """
     Obtains the dataframe with the label 
@@ -1504,7 +1508,7 @@ def get_label_clusters_df(tree_1, tree_2, level_int):
     
     return df_level_clus
 
-# %% ../src/01_Clustering.ipynb 68
+# %% ../src/01_Clustering.ipynb 69
 def mod_cid_label(dic_label):
     """
     
@@ -1513,7 +1517,7 @@ def mod_cid_label(dic_label):
     dic_label['noise'] = 'noise'
     return dic_label
 
-# %% ../src/01_Clustering.ipynb 69
+# %% ../src/01_Clustering.ipynb 70
 def retag_originals(df_fram_or ,
                     df_results,
                     tag_original,
