@@ -4,7 +4,7 @@
 __all__ = ['inside_polygon', 'poligon_non_convex_from_Points', 'poligon_non_convex_random_gen', 'string_recursive_tag',
            'retag_from_strings', 'cluster', 'NodeCluster', 'TreeClusters']
 
-# %% ../src/00_TreeClusters.ipynb 4
+# %% ../src/00_TreeClusters.ipynb 2
 import sklearn
 from sklearn import cluster, datasets
 import anytree
@@ -25,18 +25,13 @@ from matplotlib import cm
 from anytree import NodeMixin, RenderTree
 
 
-# %% ../src/00_TreeClusters.ipynb 5
-def inside_polygon(list_points, poligon_check, min_percent):
+# %% ../src/00_TreeClusters.ipynb 6
+def inside_polygon(list_points:list, # List of points to consider
+                   poligon_check: shapely.geometry.Polygon, # Polygon to consider
+                   min_percent:float # Minimun percent of point to be consider inside 
+                  )->tuple: # (bool, list of point inside). 
     """
-    Help function to validate the number of points that are inside the polygon 
-    
-    :param list list_points: List of points to consider 
-    
-    :param shapely.geometry.Polygon poligon_check:   
-    
-    :param min_percent: Minimun percent of point to be consider inside 
-    
-    :returns tuple: (bool, list of point inside).   
+    Help function to validate the number of points that are inside the polygon
     """
     if len(list_points)< 2:
         return False
@@ -49,16 +44,12 @@ def inside_polygon(list_points, poligon_check, min_percent):
 
         return False , inside
 
-# %% ../src/00_TreeClusters.ipynb 7
-def poligon_non_convex_from_Points( points_li ):
+# %% ../src/00_TreeClusters.ipynb 8
+def poligon_non_convex_from_Points( points_li:list # A list of shapely.geometry.Point 
+                                  ) -> shapely.geometry.Polygon : #The polygon created 
     """
-    Create a random (no convex) poligon from the points
-    The algorithm returns a polygon creatated from the points, the 
-    non convex part it is not always guaranteed.
-    
-    :param list points_li: list of shapely.geometry.Point 
-    
-    :returns shapely.grometry.Polygon: The polygon created 
+    Create a random (no convex) poligon from the points. The algorithm returns a polygon
+    creatated from the points, the non convex part it is not guaranteed.
     """
     
     triangles = shapely.ops.triangulate(shapely.geometry.Polygon(points_li))
@@ -71,18 +62,15 @@ def poligon_non_convex_from_Points( points_li ):
             remove_triangles.append(i)
         else:
             keep_triangles.append(i)
-    return shapely.ops.cascaded_union(keep_triangles)
+    return shapely.ops.unary_union(keep_triangles)
 
-# %% ../src/00_TreeClusters.ipynb 9
-def poligon_non_convex_random_gen(npoints):
+# %% ../src/00_TreeClusters.ipynb 10
+def poligon_non_convex_random_gen(npoints # Number of point to generate the polygon 
+                                 )-> shapely.geometry.Polygon: # The polygon created
     """
     Create a random (no convex) poligon from n points
     The algorithm returns a polygon creatated from n random 2d points the 
     non convex part it is not always guaranteed.
-    
-    :param int npoints: Number of point to generate the polygon 
-    
-    :returns shapely.geometry.Polygon: The polygon created
     """
     points_r = np.random.random((npoints, 2))
     triangles = shapely.ops.triangulate(shapely.geometry.Polygon(points_r))
@@ -97,17 +85,38 @@ def poligon_non_convex_random_gen(npoints):
             keep_triangles.append(i)
     return shapely.ops.unary_union(keep_triangles)
 
-# %% ../src/00_TreeClusters.ipynb 11
-def string_recursive_tag( string_tag, **kwargs):
+# %% ../src/00_TreeClusters.ipynb 12
+def string_recursive_tag( string_tag,
+                         **kwargs):
     """
-    params: level_str level string
-    params: until_level_str level string finish
-    params: node_str node string 
-    params: until_node_str node string finish
-    params: noise_str nois string
-    params: tree_rec tree to obtain the final cluster id
+    The string labels to add to the node 
     
-    returns level and cluster id from the tag using a tree 
+        --------
+        Parameters
+        --------
+        
+            level_str : str optional
+                The level string to use to to separete the level 
+
+            until_level_str : str 
+                The level string finish
+
+            node_str: str 
+                The node string to use 
+
+            until_node_str: str
+                The node string finish
+
+            noise_str: str
+                The noise string 
+
+            tree_rec: str
+                tree to obtain the final cluster id
+                
+        -------
+        Returns
+        --------
+         level and cluster id from the tag using a tree 
     """
     
     level_str = kwargs.get('level_str', '_L_' )
@@ -145,8 +154,10 @@ def string_recursive_tag( string_tag, **kwargs):
                 nodeid.append(str(num))
     return levels, nodeid
 
-# %% ../src/00_TreeClusters.ipynb 12
-def retag_from_strings(string_tag) :
+# %% ../src/00_TreeClusters.ipynb 13
+#|code-fold: true
+def retag_from_strings(string_tag:str # String 
+                      )-> str :
     """
     Returns only the final node tag
     """
@@ -158,7 +169,7 @@ def retag_from_strings(string_tag) :
     return tag_recal
 
 
-# %% ../src/00_TreeClusters.ipynb 14
+# %% ../src/00_TreeClusters.ipynb 15
 class cluster(object):
     """
     A Basic class of a cluster 
@@ -172,24 +183,32 @@ class cluster(object):
         self.point_cluster_noise = None
     
 
-# %% ../src/00_TreeClusters.ipynb 16
+# %% ../src/00_TreeClusters.ipynb 17
 class NodeCluster(cluster, NodeMixin):
     def __init__(self, 
-                name,
-                density=None,
+                name:str,
+                density:float=None,
                 parent=None,
-                children=None):
+                children:list=None):
         """
         Constructor of the class
         
-        :param str name: Name of the cluster
-        
-        :param double density: Density of the cluster (Default =None)
-        
-        :param NodeCluster parent: Cluster parent (Default = None)
-        
-        :param list children: List of its children (Default =None)
-        
+            -------
+            Parameters
+            -------
+            
+            name : str 
+                Name of the cluster
+            density :  float 
+                Density of the cluster (Default =None)
+            parent :NodeCluster 
+                Cluster parent (Default = None)
+            children : list 
+                List of its children (Default =None)
+            -----
+            Returns
+            -------
+                Nothing
         """
         
         super(cluster, self).__init__()
@@ -201,28 +220,43 @@ class NodeCluster(cluster, NodeMixin):
 
     
     def populate_cluster(self,
-                    from_points_num=20,
-                    density=None,
-                    num_points=None,
-                    min_scale_x= .1,
-                    max_scale_x=.5,
-                    min_scale_y= .1,
-                    max_scale_y=.5,
-                    random_state= 170, 
+                    from_points_num:int=20,
+                    density:float=None,
+                    num_points:int=None,
+                    min_scale_x:float= .1,
+                    max_scale_x:float=.5,
+                    min_scale_y:float= .1,
+                    max_scale_y:float=.5,
+                    random_state:float= 170, 
                     **kwargs
                     ):
         """
-        Populate the cluster on random bases 
+        Populate the cluster on random bases
         
-        :param int random_state: Random state 
-        
-        :param double min_scale_x: min x value range ( Default=.1 )
-        
-        :param double max_scale_x: max x value range ( Default=.5 )
-        
-        :param double min_scale_y: min y value range ( Default=.1 )
-        
-        :param double max_scale_y: max y value range ( Default=.5 )
+            -------
+            Parameters
+            -------
+                from_points_num: int 
+                    Number of points use to create the cluster (Default = 20)
+                num_points: int
+                    Number of points inside the cluster (Default = None)
+                random_state : int 
+                    Random state 
+                min_scale_x :double 
+                    min x value range ( Default=.1 )
+                max_scale_x : double 
+                    max x value range ( Default=.5 )
+                min_scale_y : double 
+                    min y value range ( Default=.1 )
+                max_scale_y : double 
+                    max y value range ( Default=.5 )
+                avoid_intersec : bool 
+                    Avoid intersection of nodes (Default = False)
+                
+            -------
+            Returns
+            -------
+                Nothing
         """
         self.density = density
         random.seed(random_state) ## initialize random state 
@@ -292,7 +326,7 @@ class NodeCluster(cluster, NodeMixin):
                 self.polygon_cluster  = polygon
                 self.center = random_point_center
             else:
-                ### Se tiene que modificar
+                
                 self.polygon_cluster, self.center = self.parent.polygon_not_intersec_children(random_state= random_state)
                 
 
@@ -314,9 +348,16 @@ class NodeCluster(cluster, NodeMixin):
     def create_polygon(self,  from_points_num=20):
         """
         Generate a random polygon for the cluster
-        
-        :param from_points_num: The number of points to 
-        generate the cluster from 
+            
+            ----------
+            Parameters
+            ----------
+                from_points_num: int 
+                    The number of points to generate the polygon from 
+            --------
+            Returns
+            --------
+                Polygon
         """
         polygon = poligon_non_convex_random_gen(from_points_num)
         while type(polygon) == shapely.geometry.MultiPolygon:
@@ -325,15 +366,23 @@ class NodeCluster(cluster, NodeMixin):
         return polygon
 
 
-    def get_random_points(self, n_points, random_state= 150):
+    def get_random_points(self, n_points:int,
+                          random_state:int = 150):
         """
         Returns random points inside the cluster polygon
         
-        :param n_points Number of point to be generated
-        
-        :param random_state Random state
-        
-        :returns: A list with points
+            ----------
+            Parameters
+            ----------
+                n_points : int 
+                    Number of point to be generated
+                random_state :
+                    Random state
+                    
+            --------
+            Returns
+            --------
+                A list with points
         """
         random.seed(random_state)
         x_min, y_min ,x_max, y_max =self.polygon_cluster.bounds
@@ -350,16 +399,25 @@ class NodeCluster(cluster, NodeMixin):
         return ret_points    
     #### create random_points
     def create_random_points(self, 
-                             npoints_polygon=1000,
-                             random_state = 120):
+                             npoints_polygon:int=1000,
+                             random_state: int = 120):
         """
         Create random points 
+            
+            ----------
+            Parameters
+            ----------
+                npoints_polygon : int
+                    Number of point to get
         
-        :param npoints_polygon Number of point to get
+                random_state : int
+                    Random state integer
         
-        :random_state Random state integer to ste random
-        
-        :returns: A shapely multyPoint clas witn npoints_polygon points
+            --------
+            Returns
+            --------
+                MultyPoint 
+                     A shapely multyPoint class witn npoints_polygon points
         
         """
         random.seed(random_state)
@@ -387,15 +445,24 @@ class NodeCluster(cluster, NodeMixin):
 
     def scale(self,x_scale, y_scale, center_scale= 'center'):
         """
-        Scale the points in the cluster 
+        Scale the points and the polygon of the cluster
         
-        :param x_scale Scale factor to scale in x axis
+            ----------
+            Parameters
+            ----------
+                x_scale : float
+                    Scale factor to scale in x axis
         
-        :param y_scale Scale factor to scale in y axis
+                y_scale : float 
+                    Scale factor to scale in y axis
         
-        :param center_scale Scale center point  (Default = 'center')
-        
-        :returns: No returns
+                center_scale: str 
+                    Scale center point  (Default = 'center')
+            
+            --------
+            Returns
+            --------
+                Nothing
         """
         if self.point_cluster_noise is not None:
             self.point_cluster_noise = shapely.affinity.scale(
@@ -418,7 +485,15 @@ class NodeCluster(cluster, NodeMixin):
         """
         Get the density of the cluster 
         
-        :returns double: The density of the node
+            ----------
+            Parameters
+            ----------
+                
+            --------
+            Returns
+            --------
+                float 
+                    The density of the node
         """
         if self.density is not None:
             return self.density
@@ -445,8 +520,16 @@ class NodeCluster(cluster, NodeMixin):
     def get_center(self):
         """
         Get the center of the bounding box poligon
-        
-        :returns: Shapely Point center 
+            
+            ----------
+            Parameters
+            ----------
+            
+            --------
+            Returns
+            --------
+                Point
+                    Shapely Point center 
         """
         if self.center is not None:
             return self.center
@@ -469,6 +552,15 @@ class NodeCluster(cluster, NodeMixin):
         """ 
         Returns the noise point of the cluster, if all_tag is set true returns  
         all the points of the its decendents
+            ----------
+            Parameters
+            ----------
+            
+            --------
+            Returns
+            --------
+                MultyPoint 
+                    The points of the cluster Node
         """
         if all_tag == False:
             return self.point_cluster_noise
@@ -487,7 +579,15 @@ class NodeCluster(cluster, NodeMixin):
     def get_point_decendent(self):
         """
         Returns all the point of the node and its decendents
-        
+            ----------
+            Parameters
+            ----------
+            
+            --------
+            Returns
+            --------
+                list
+                    A list with all the MultyPoint of the children
         """
         all_p  = []
         all_p= all_p+ [i for i in self.get_points()]
@@ -502,8 +602,18 @@ class NodeCluster(cluster, NodeMixin):
         The tag the element of the node using the labels noise or the child name
         as a tag, if a set of point is pass (point_check != None)  
         the elements are treated as part of the cluster and label it accordingly. 
-        :params self 
-        :params point_check A list MultiPoint or list with Points to tag 
+            
+            ----------
+            Parameters
+            ----------
+                point_check : list
+                    A list MultiPoint or list of Points to tag 
+            --------
+            Returns
+            --------
+                list 
+                    A list with a tuple of point and tag
+        
         """        
         
         if point_check is None:
@@ -539,10 +649,17 @@ class NodeCluster(cluster, NodeMixin):
         the elements are treated as part of the cluster and label it
         accordingly.
         
-        :params list point_check: A list of shapely Points to tag (if None 
-                            tags the points inside the cluster) 
-        
-        :returns: A list of tuples (points , tag)
+            ----------
+            Parameters
+            ----------
+                point_check: list
+                    A list of shapely Points to tag (if None tags the points
+                        inside the cluster)
+            --------
+            Returns
+            --------
+                list 
+                    A list of tuples (points , tag)
         """         
         if point_check is None:
             all_points_cluster = self.get_points()
@@ -573,6 +690,14 @@ class NodeCluster(cluster, NodeMixin):
         """
         Returns all the points and the points of it decendents tag, 
         the tags are the name of the nodes
+            
+            ----------
+            Parameters
+            ----------
+                to_tag
+            --------
+            Returns
+            --------
         """
         level_tags_self = self.tag_low_level()
         if to_tag is not None:
@@ -602,7 +727,13 @@ class NodeCluster(cluster, NodeMixin):
         """
         Returns all the points and the points of it decendents tag or
         noise
-        
+            ----------
+            Parameters
+            ----------
+            
+            --------
+            Returns
+            --------
         """
         level_tags_self = self.tag_low_level_noise_signal()
         if to_tag is not None:
@@ -631,12 +762,16 @@ class NodeCluster(cluster, NodeMixin):
     def check_point_children(self, Points_tocheck):
         """
         Check if the points belong to tis children
-        
-        :param list Points_tocheck: A list of points to check 
-        if they belong to it children
-        
-        :returns list: List of points that are contained in the 
-        children polygons 
+            ----------
+            Parameters
+            ----------
+                Points_tocheck : list 
+                    A list of points to check if they belong to it children
+            --------
+            Returns
+            --------
+                list
+                    List of points that are contained in the children polygons 
         """
         point_chek_bool=[]
         for child in self.children:
@@ -651,22 +786,24 @@ class NodeCluster(cluster, NodeMixin):
     def viewer_cluster(self, ax,  **kwargs):
         """
         Vizualization of the cluster 
-        
-        :param ax: ax of a matplotlib figure
-        
-        :param int level: Level to view 0 only the points of the cluster,
-        1 the children points, -1 all decendent points  (Default = 0 )
-        
-        :param bool polygon: To draw the polygon of the cluster 
-        (Default = False).
-        
-        :param bool polygon_children: Draw the poligon of its children 
-        (Default = False).
-        
-        :param double size_cluster: Point size inside the cluster (noise)
-        (Default = 2)
-        
-        :param str color_cluster : matplotlib color 
+            
+            ----------
+            Parameters
+            ----------
+                ax:
+                    ax of a matplotlib figure
+                level: int
+                    Level to view 0 only the points of the cluster,
+                        1 the children points,
+                        -1 all decendent points  (Default = 0 )
+                polygon: bool
+                    To draw the polygon of the cluster (Default = False).
+                polygon_children: bool
+                    Draw the poligon of its children (Default = False).
+                size_cluster: double  
+                    Size of the points inside the cluster (noise) (Default = 2)
+                color_cluster : str
+                    matplotlib color 
         
         :param double alpha_cluster : alpha channel (Default = 0.5) 
         
@@ -677,6 +814,10 @@ class NodeCluster(cluster, NodeMixin):
         :param double alpha_children : alpha channel (Default = 0.5) 
         
         :param bool polygon_color_children: Plot the children polygon 
+        
+            --------
+            Returns
+            --------
         
         :returns : Draw into the ax.
         """
@@ -761,6 +902,13 @@ class NodeCluster(cluster, NodeMixin):
                 ):
         """
         Get a similar polyon with respect to the node polygon
+            ----------
+            Parameters
+            ----------
+            
+            --------
+            Returns
+            --------
         """
         percent_construc_poligon = kwargs.get( 'percent_construc_poligon',.85)
         u= kwargs.get( 'u', 20)
@@ -826,6 +974,14 @@ class NodeCluster(cluster, NodeMixin):
                        **kwargs):
         """
         The function "duplicate" the cluster node
+            
+            ----------
+            Parameters
+            ----------
+            
+            --------
+            Returns
+            --------
         returns : a NodeCluster class
         """
 
@@ -863,17 +1019,22 @@ class NodeCluster(cluster, NodeMixin):
         """
         Returns a polygon that doesn't touch the any of children polygon's and 
         it is inside the cluter's polygon 
-        
-        
-        :param int random_state: (Default= 123456)
-        
-        :param int from_points_num: (Default= 20)
-        
-        :param double max_scale_x: (Default= 0.5)
-        
-        :param double max_scale_y: (Default= 0.5)
-        
-        :returns tuple: Polygon, random points center  
+            
+            ----------
+            Parameters
+            ----------
+                random_state : int
+                    Random state (Default= 123456)
+                from_points_num : int
+                    Build the polygon from from_points_num (Default= 20)
+                max_scale_x : double
+                    The max x value to get the point from (Default= 0.5)
+                max_scale_y : double
+                    The max y value to get the point from (Default= 0.5)
+            --------
+            Returns
+            --------
+                tuple: Polygon, random points center  
         """
         random_state=kwargs.get('random_state', 123456)
         from_points_num= kwargs.get('from_points_num', 20)
@@ -939,7 +1100,7 @@ class NodeCluster(cluster, NodeMixin):
         return polygon, random_point_center
 
 
-# %% ../src/00_TreeClusters.ipynb 52
+# %% ../src/00_TreeClusters.ipynb 57
 class TreeClusters(object):
     levels = 0
     levels_nodes=[]

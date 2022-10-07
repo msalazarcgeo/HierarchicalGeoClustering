@@ -1369,7 +1369,7 @@ def recursive_clustering_tree(dic_points_ori, **kwargs):
     tree_from_clus.root= tree_from_clus.levels_nodes[0][0]   
     return tree_from_clus
 
-# %% ../src/01_Clustering.ipynb 62
+# %% ../src/01_Clustering.ipynb 63
 def levels_from_strings(
             string_tag,
             level_str='l_',
@@ -1408,7 +1408,7 @@ def levels_from_strings(
 
     return levels, nodeid
 
-# %% ../src/01_Clustering.ipynb 64
+# %% ../src/01_Clustering.ipynb 65
 def get_mini_jaccars(cluster, tree_2, level_int):
     """
     Find the most similar cluster in the tree_2 at level level_int
@@ -1421,7 +1421,7 @@ def get_mini_jaccars(cluster, tree_2, level_int):
     return valu_min
     
 
-# %% ../src/01_Clustering.ipynb 65
+# %% ../src/01_Clustering.ipynb 66
 def level_tag(list_tags, level_int  ):
     """
     Tags if the are noise or signal
@@ -1433,7 +1433,7 @@ def level_tag(list_tags, level_int  ):
     except:
         return 'noise'   
 
-# %% ../src/01_Clustering.ipynb 66
+# %% ../src/01_Clustering.ipynb 67
 def get_tag_level_df_labels(df, levels_int ):
     """
     Get the tag for the cluster
@@ -1447,7 +1447,7 @@ def get_tag_level_df_labels(df, levels_int ):
     for i in range(levels_int):
         df['level_'+ str(i) +'_cluster']= df['cluster_id'].apply(lambda l:  level_tag(l,i))
 
-# %% ../src/01_Clustering.ipynb 67
+# %% ../src/01_Clustering.ipynb 68
 def get_dics_labels(tree_or, tree_res, **kwargs):
     """
     Obtains a list of dictionaries to retag the original tree_tag with their 
@@ -1475,7 +1475,7 @@ def get_dics_labels(tree_or, tree_res, **kwargs):
         dic_list_levels.append({'level_ori':'level_'+str(i)+'_cluster', 'dict': dic_lev})
     return dic_list_levels
 
-# %% ../src/01_Clustering.ipynb 68
+# %% ../src/01_Clustering.ipynb 69
 def get_label_clusters_df(tree_1, tree_2, level_int):
     """
     Obtains the dataframe with the label 
@@ -1508,7 +1508,7 @@ def get_label_clusters_df(tree_1, tree_2, level_int):
     
     return df_level_clus
 
-# %% ../src/01_Clustering.ipynb 69
+# %% ../src/01_Clustering.ipynb 70
 def mod_cid_label(dic_label):
     """
     
@@ -1517,7 +1517,7 @@ def mod_cid_label(dic_label):
     dic_label['noise'] = 'noise'
     return dic_label
 
-# %% ../src/01_Clustering.ipynb 70
+# %% ../src/01_Clustering.ipynb 71
 def retag_originals(df_fram_or ,
                     df_results,
                     tag_original,
