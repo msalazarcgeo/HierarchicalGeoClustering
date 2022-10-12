@@ -4,9 +4,9 @@
 __all__ = ['module_path', 'get_alpha_shape', 'set_colinear', 'collinear', 'get_segments', 'get_polygons_buf', 'jaccard_distance',
            'compute_dbscan', 'adaptative_DBSCAN', 'compute_hdbscan', 'compute_OPTICS', 'compute_Natural_cities',
            'compute_AMOEBA', 'clustering', 'recursive_clustering', 'get_tree_from_clustering',
-           'generate_tree_clusterize_form', 'recursive_clustering_tree', 'SSM', 'labels_filtra', 'levels_from_strings',
-           'get_tag_level_df_labels', 'level_tag', 'get_mini_jaccars', 'get_dics_labels', 'get_label_clusters_df',
-           'mod_cid_label', 'retag_originals']
+           'recursive_clustering_tree', 'SSM', 'labels_filtra', 'levels_from_strings', 'level_tag',
+           'get_tag_level_df_labels', 'get_mini_jaccars', 'get_dics_labels', 'get_label_clusters_df', 'mod_cid_label',
+           'retag_originals', 'generate_tree_clusterize_form']
 
 # %% ../src/01_Clustering.ipynb 2
 import os
@@ -991,7 +991,316 @@ def get_tree_from_clustering(cluster_tree_clusters):
     
     return  all_level_clusters
 
-# %% ../src/01_Clustering.ipynb 45
+# %% ../src/01_Clustering.ipynb 46
+def recursive_clustering_tree(dic_points_ori, **kwargs):
+    """
+    Obtaing the recursive tree using a specific algorithm
+    
+    
+    :param dict dic_points_ori: A dictionary with two keys 'points':['Array points'],
+                                'parent':'name_parent' 
+    :param int levels_clustering: levels to cluster  
+    :returns TreeClusters: wih the clusters as nodes
+    """
+    levels_clustering= kwargs.get('levels_clustering',4)
+    cluster_tree = []
+    recursive_clustering([dic_points_ori],  # Dictionary with Points
+                levels_clustering,  # levels to process
+                cluster_tree,  # to store the clusters
+                level=0,  # current level
+                **kwargs
+                )
+    tree_clus= get_tree_from_clustering(cluster_tree)
+    tree_from_clus= TreeClusters()
+    tree_from_clus.levels_nodes = tree_clus
+    tree_from_clus.root= tree_from_clus.levels_nodes[0][0]   
+    return tree_from_clus
+
+# %% ../src/01_Clustering.ipynb 50
+def SSM(list_poly_c_1,list_poly_c_2 ,**kwargs):
+    """
+    The function calculates the Similarity Shape Measurement (SSM)
+    between two clusterizations 
+    
+    :param: list of nodes with points and polygons 
+    
+    :param: list of nodes with points and polygons 
+    
+    :param bool verbose: To print to debugg
+    
+    :returns double: The similarity mesuarment
+    """
+    verbose= kwargs.get('verbose', False)
+    ##### Get intersection 
+    list_de=[]
+    for i in list_poly_c_1:
+        list_de.append([ i.polygon_cluster.intersection(  j.polygon_cluster ) for  j in list_poly_c_2])
+    
+    list_de_bool = []
+    for i in list_de:
+        list_de_bool.append([not j.is_empty for j in i])
+    
+    list_de_index = []
+    #print(list_de_bool)
+    for i in list_de_bool:
+        if any(i):
+            list_de_index.append(i.index(True))
+        else:
+            list_de_index.append(None)
+    jacc_sim_po = []
+    for num, node in enumerate(list_poly_c_1):
+        ### ver eque pasa cuando se tienen 2 
+        if list_de_index[num] is not None:
+            node_get = list_poly_c_2[list_de_index[num]]
+            poli_int = list_de[num][list_de_index[num]]
+            
+            ####Puntos en la interseccion
+            #print(node)
+            points_all = node.get_point_decendent()
+            res_bool =[ poli_int.contains(p) for p in points_all] ### Como no necesito los puntos basta con esto
+            card = sum(res_bool)
+            ###Obtenemos jaccard 
+            sim_jacc = (poli_int.area)/(node.polygon_cluster.area + node_get.polygon_cluster.area - poli_int.area)
+            if verbose:
+                print("jaccard: " ,sim_jacc)
+                print("cardinal: " ,card )
+            jacc_sim_po.append(sim_jacc* card)#####Cuando hay interseccion 
+        else:
+            jacc_sim_po.append(0) #### Cuando no hay
+    
+    arr_bool = np.array(list_de_bool)
+
+    Q_not= []
+    for col in range(arr_bool.shape[1]):
+        cols_sel= arr_bool[:,col].any()
+        if cols_sel ==False:
+            Q_not.append(col)
+    #print(Q_not)
+    len_Q_not=[]
+    if Q_not:
+         len_Q_not =[len(list_poly_c_2[i].get_point_decendent())  for i in Q_not] 
+
+    P_sum = sum([len(node.get_point_decendent())  for node in list_poly_c_1])
+    deno =P_sum + sum(len_Q_not)
+    return sum(jacc_sim_po)/deno
+
+# %% ../src/01_Clustering.ipynb 61
+def labels_filtra(point_points, multy_pol):
+    """
+    Labels the points in the multy_pol if no polygon contains 
+    a point is label as -1
+    
+    :param shapely MultyPoint point_points: Points to check 
+    
+    :param multy_pol
+    
+    :returns np.array: Label array with -1 if is not contained 
+    in a polygon
+    """
+    point_Po = [Point(i) for i in  point_points]
+    labels_p=[]
+    if type(multy_pol)==shapely.geometry.MultiPolygon :
+        for po in point_Po:
+            if multy_pol.contains(po):
+                for num_pol, poly in enumerate( multy_pol):
+                    if poly.contains(po):
+                        labels_p.append(num_pol)
+                        break
+            else:
+                labels_p.append(-1)
+    elif type(multy_pol)==shapely.geometry.Polygon :
+        for po in point_Po:
+            if multy_pol.contains(po):
+                labels_p.append(0)
+            else:
+                labels_p.append(-1)
+    else:
+        raise ValueError('The input is not MultiPolygon or Polygon type')   
+    
+    return np.array(labels_p)
+
+# %% ../src/01_Clustering.ipynb 64
+def levels_from_strings(
+            string_tag,
+            level_str='l_',
+            node_str = 'n_',
+            **kwargs
+            ):
+    """
+    Returns the levels and the node id using the expected strings 
+    that identify the level id and node id
+    
+    :param str level_str: string for the level
+    
+    :param str node_str: string for the nodes
+    
+    
+    :returns tuple (levels, nodeid): 
+    """
+    
+    positions = [i.start() for i in re.finditer( level_str, string_tag )]
+    nodeid_positions = [i.start() for i in re.finditer( node_str, string_tag )]    
+    
+    
+    #evels = [string_tag[i+len(level_str)] for i in positions ]
+    levels=[]
+    for i in positions:
+        if string_tag[i+len(level_str):].find(node_str) != -1:   
+            levels.append(string_tag[i+len(level_str):][:string_tag[i+len(level_str):].find(node_str)-1])
+        else:
+            levels.append(string_tag[i+len(level_str):])
+    nodeid=[]
+    for i in nodeid_positions:
+        if string_tag[i+len(node_str):].find(level_str) != -1:   
+            nodeid.append(string_tag[i+len(node_str):][:string_tag[i+len(node_str):].find(level_str)-1])
+        else:
+            nodeid.append(string_tag[i+len(node_str):])
+
+    return levels, nodeid
+
+# %% ../src/01_Clustering.ipynb 66
+def level_tag(list_tags, level_int  ):
+    """
+    Tags if the are noise or signal
+    """
+    if len(list_tags)==0:
+        return 'noise'
+    try:
+        return list_tags[level_int]
+    except:
+        return 'noise'   
+
+# %% ../src/01_Clustering.ipynb 68
+def get_tag_level_df_labels(df, levels_int ):
+    """
+    Get the tag for the cluster
+    
+    :param Pandas.DataFrame df:
+    
+    :param int levels_int: 
+    
+    :returns None:
+    """
+    for i in range(levels_int):
+        df['level_'+ str(i) +'_cluster']= df['cluster_id'].apply(lambda l:  level_tag(l,i))
+
+# %% ../src/01_Clustering.ipynb 71
+def get_mini_jaccars(cluster: NodeCluster, # A NodeCluster with a polygon to compare
+                     tree_2: TreeClusters, # A TreeClusters structure to compare  with the poligons to compare to
+                     level_int:int, #  The index of level of the polygons to compare
+                    )-> int :  # The index inside the level that is the most similar
+    
+    """
+    Find the most similar cluster in the tree_2 at level level_int
+    returns int the index of the most similar polygon in the level
+    """
+    tree_2_level= tree_2.get_level(level_int)
+    Jaccard_i= [jaccard_distance(cluster.polygon_cluster, j.polygon_cluster) for j in tree_2_level]  
+    valu_min = Jaccard_i.index( min(Jaccard_i))
+    return valu_min
+    
+
+# %% ../src/01_Clustering.ipynb 74
+def get_dics_labels(tree_or, tree_res, **kwargs):
+    """
+    Obtains a list of dictionaries to retag the original tree_tag with their 
+    correspondance in the tree_res on level level_get +1
+    
+    :param tree_or: Original tree
+    
+    :param tree_res: resulting tree
+    
+    :param level_get: int level to get
+    
+    :param return list of dictionaries:  
+    """
+    dic_list_levels= []
+    ##### If the number of levels is different there is no reason that his should work 
+    min_level_to_ask = min(tree_or.get_deepth(), tree_res.get_deepth())
+    
+    verbose= kwargs.get
+    for i in range(min_level_to_ask):
+        dic_level_df = get_label_clusters_df(tree_or, tree_res, i)
+        ## Eliminate the clusters with nan  
+        dic_level_df.dropna(axis=0, subset=['Sim_cluster'], inplace=True)
+        
+        dic_lev  = dic_level_df['Sim_cluster'].to_dict()
+        dic_list_levels.append({'level_ori':'level_'+str(i)+'_cluster', 'dict': dic_lev})
+    return dic_list_levels
+
+# %% ../src/01_Clustering.ipynb 75
+def get_label_clusters_df(tree_1, tree_2, level_int):
+    """
+    Obtains the dataframe with the label 
+    
+    :param TreeClusters tree_1: 
+    
+    :param TreeClusters tree_2:
+    
+    :param int level_int:
+    
+    :reutrns Pandas.DataFrame df_level_clus: 
+    """
+    level_all = tree_1.get_level(level_int)
+    df_level_clus = pd.DataFrame(level_all, columns=['Clusters'])
+    df_level_clus['Area'] = df_level_clus['Clusters'].apply(lambda l: l.polygon_cluster.area)
+    df_level_clus['Name'] = df_level_clus['Clusters'].apply(lambda l: l.name)
+    
+    df_level_clus['Sim_cluster'] = df_level_clus['Clusters'].apply(lambda l: get_mini_jaccars(l, tree_2,level_int)) ###### Como se hacen las clusterizaciones se debe usar el siguiente nivel
+    
+    #print('', df_level_clus['Sim_cluster'].dtype)
+    df_level_clus= df_level_clus.sort_values(by ='Area', ascending=False)
+    df_level_clus['Sim_cluster'] = (df_level_clus['Sim_cluster']
+                                    .where(~df_level_clus.duplicated(subset=['Sim_cluster']), None))
+    #print(df_level_clus['Sim_cluster'].dtype)
+    level_2= tree_2.get_level(level_int) 
+    df_level_clus['Sim_cluster_name'] =(df_level_clus['Sim_cluster']
+                                         .astype('int32', errors='ignore')
+                                         .replace({np.nan: ''})
+                                         .apply(lambda l:  level_2[int(l)].name if l !=''  else None) )
+    
+    return df_level_clus
+
+# %% ../src/01_Clustering.ipynb 78
+def mod_cid_label(dic_label:dict # Dictionary from 'get_dic_labels' function
+                 )-> dict: # Dictionary with the 'level_ori', 'dict' and 'noise' keys
+    """
+    Get a dictionary for the labels that will be used from 
+    the dictionaries obtain by  the 'get_dic_labels' function.
+    The 'dict' dictionary  conntains the tag that the clusters should be use. 
+    """
+    dic_label={str(k):str(v) for k,v in dic_label.items()} 
+    dic_label['noise'] = 'noise'
+    return dic_label
+
+# %% ../src/01_Clustering.ipynb 81
+def retag_originals(df_fram_or: pd.DataFrame ,
+                    df_results: pd.DataFrame,
+                    tag_original: str,
+                    tag_results:str,
+                    dic_tag_or_res:dict):
+    """
+    
+    Retags the labels in the df_fram_or using the dictionary dic_tag_or_res
+    to match the tags with the corresponding tag in the df_result 
+    and all the labels that are not in the dictionary generate a 
+    new tag fo them. 
+    
+    :param Pandas.DataFrame df_fram_or
+    
+    :param Pandas.DataFrame df_results
+    
+    :param tag_original
+    
+    :param tag_results
+    
+    :param Pandas.DataFrame dic_tag_or_res 
+    
+    """
+    tag_plus=  len(df_results[tag_results].unique()) +100  - len(df_results[tag_results].unique())%100
+    df_fram_or['re_tag_'+str(df_results.name)+'_'+tag_original] = df_fram_or[tag_original].apply(lambda l: dic_tag_or_res[l] if l in dic_tag_or_res.keys() else   str(int(l) +tag_plus) )
+
+# %% ../src/01_Clustering.ipynb 84
 def generate_tree_clusterize_form(**kwargs ):
     """
     Generates all the experiment all the experiment creates the data and clusterize using the algorithm available
@@ -1036,7 +1345,8 @@ def generate_tree_clusterize_form(**kwargs ):
         random_seed = random.randint(0,1500)
         print('Random to use: ',random_seed )
         tree_original= TreeClusters(levels_tree, random_seed= random_seed)
-        tree_original.populate_tree(number_per_cluster=per_cluster, avoid_intersec= True)
+        tree_original.populate_tree(number_per_cluster=per_cluster,
+                                    avoid_intersec= True)
         tree_original_points= tree_original.get_points_tree()
         X_2=np.array([[p.x,p.y] for p in tree_original_points])
         dic_points_ori={'points':[X_2], 'parent':''}
@@ -1242,304 +1552,3 @@ def generate_tree_clusterize_form(**kwargs ):
            
            }
 
-
-# %% ../src/01_Clustering.ipynb 49
-def recursive_clustering_tree(dic_points_ori, **kwargs):
-    """
-    Obtaing the recursive tree using a specific algorithm
-    
-    
-    :param dict dic_points_ori: A dictionary with two keys 'points':['Array points'],
-                                'parent':'name_parent' 
-    :param int levels_clustering: levels to cluster  
-    :returns TreeClusters: wih the clusters as nodes
-    """
-    levels_clustering= kwargs.get('levels_clustering',4)
-    cluster_tree = []
-    recursive_clustering([dic_points_ori],  # Dictionary with Points
-                levels_clustering,  # levels to process
-                cluster_tree,  # to store the clusters
-                level=0,  # current level
-                **kwargs
-                )
-    tree_clus= get_tree_from_clustering(cluster_tree)
-    tree_from_clus= TreeClusters()
-    tree_from_clus.levels_nodes = tree_clus
-    tree_from_clus.root= tree_from_clus.levels_nodes[0][0]   
-    return tree_from_clus
-
-# %% ../src/01_Clustering.ipynb 53
-def SSM(list_poly_c_1,list_poly_c_2 ,**kwargs):
-    """
-    The function calculates the Similarity Shape Measurement (SSM)
-    between two clusterizations 
-    
-    :param: list of nodes with points and polygons 
-    
-    :param: list of nodes with points and polygons 
-    
-    :param bool verbose: To print to debugg
-    
-    :returns double: The similarity mesuarment
-    """
-    verbose= kwargs.get('verbose', False)
-    ##### Get intersection 
-    list_de=[]
-    for i in list_poly_c_1:
-        list_de.append([ i.polygon_cluster.intersection(  j.polygon_cluster ) for  j in list_poly_c_2])
-    
-    list_de_bool = []
-    for i in list_de:
-        list_de_bool.append([not j.is_empty for j in i])
-    
-    list_de_index = []
-    #print(list_de_bool)
-    for i in list_de_bool:
-        if any(i):
-            list_de_index.append(i.index(True))
-        else:
-            list_de_index.append(None)
-    jacc_sim_po = []
-    for num, node in enumerate(list_poly_c_1):
-        ### ver eque pasa cuando se tienen 2 
-        if list_de_index[num] is not None:
-            node_get = list_poly_c_2[list_de_index[num]]
-            poli_int = list_de[num][list_de_index[num]]
-            
-            ####Puntos en la interseccion
-            #print(node)
-            points_all = node.get_point_decendent()
-            res_bool =[ poli_int.contains(p) for p in points_all] ### Como no necesito los puntos basta con esto
-            card = sum(res_bool)
-            ###Obtenemos jaccard 
-            sim_jacc = (poli_int.area)/(node.polygon_cluster.area + node_get.polygon_cluster.area - poli_int.area)
-            if verbose:
-                print("jaccard: " ,sim_jacc)
-                print("cardinal: " ,card )
-            jacc_sim_po.append(sim_jacc* card)#####Cuando hay interseccion 
-        else:
-            jacc_sim_po.append(0) #### Cuando no hay
-    
-    arr_bool = np.array(list_de_bool)
-
-    Q_not= []
-    for col in range(arr_bool.shape[1]):
-        cols_sel= arr_bool[:,col].any()
-        if cols_sel ==False:
-            Q_not.append(col)
-    #print(Q_not)
-    len_Q_not=[]
-    if Q_not:
-         len_Q_not =[len(list_poly_c_2[i].get_point_decendent())  for i in Q_not] 
-
-    P_sum = sum([len(node.get_point_decendent())  for node in list_poly_c_1])
-    deno =P_sum + sum(len_Q_not)
-    return sum(jacc_sim_po)/deno
-
-# %% ../src/01_Clustering.ipynb 67
-def labels_filtra(point_points, multy_pol):
-    """
-    Labels the points in the multy_pol if no polygon contains 
-    a point is label as -1
-    
-    :param shapely MultyPoint point_points: Points to check 
-    
-    :param multy_pol
-    
-    :returns np.array: Label array with -1 if is not contained 
-    in a polygon
-    """
-    point_Po = [Point(i) for i in  point_points]
-    labels_p=[]
-    if type(multy_pol)==shapely.geometry.MultiPolygon :
-        for po in point_Po:
-            if multy_pol.contains(po):
-                for num_pol, poly in enumerate( multy_pol):
-                    if poly.contains(po):
-                        labels_p.append(num_pol)
-                        break
-            else:
-                labels_p.append(-1)
-    elif type(multy_pol)==shapely.geometry.Polygon :
-        for po in point_Po:
-            if multy_pol.contains(po):
-                labels_p.append(0)
-            else:
-                labels_p.append(-1)
-    else:
-        raise ValueError('The input is not MultiPolygon or Polygon type')   
-    
-    return np.array(labels_p)
-
-# %% ../src/01_Clustering.ipynb 70
-def levels_from_strings(
-            string_tag,
-            level_str='l_',
-            node_str = 'n_',
-            **kwargs
-            ):
-    """
-    Returns the levels and the node id using the expected strings 
-    that identify the level id and node id
-    
-    :param str level_str: string for the level
-    
-    :param str node_str: string for the nodes
-    
-    
-    :returns tuple (levels, nodeid): 
-    """
-    
-    positions = [i.start() for i in re.finditer( level_str, string_tag )]
-    nodeid_positions = [i.start() for i in re.finditer( node_str, string_tag )]    
-    
-    
-    #evels = [string_tag[i+len(level_str)] for i in positions ]
-    levels=[]
-    for i in positions:
-        if string_tag[i+len(level_str):].find(node_str) != -1:   
-            levels.append(string_tag[i+len(level_str):][:string_tag[i+len(level_str):].find(node_str)-1])
-        else:
-            levels.append(string_tag[i+len(level_str):])
-    nodeid=[]
-    for i in nodeid_positions:
-        if string_tag[i+len(node_str):].find(level_str) != -1:   
-            nodeid.append(string_tag[i+len(node_str):][:string_tag[i+len(node_str):].find(level_str)-1])
-        else:
-            nodeid.append(string_tag[i+len(node_str):])
-
-    return levels, nodeid
-
-# %% ../src/01_Clustering.ipynb 72
-def get_tag_level_df_labels(df, levels_int ):
-    """
-    Get the tag for the cluster
-    
-    :param Pandas.DataFrame df:
-    
-    :param int levels_int: 
-    
-    :returns None:
-    """
-    for i in range(levels_int):
-        df['level_'+ str(i) +'_cluster']= df['cluster_id'].apply(lambda l:  level_tag(l,i))
-
-# %% ../src/01_Clustering.ipynb 73
-def level_tag(list_tags, level_int  ):
-    """
-    Tags if the are noise or signal
-    """
-    if len(list_tags)==0:
-        return 'noise'
-    try:
-        return list_tags[level_int]
-    except:
-        return 'noise'   
-
-# %% ../src/01_Clustering.ipynb 74
-def get_mini_jaccars(cluster, tree_2, level_int):
-    """
-    Find the most similar cluster in the tree_2 at level level_int
-    returns int the index of the most similar polygon in the level
-    """
-    tree_2_level= tree_2.get_level(level_int)
-    Jaccard_i= [jaccard_distance(cluster.polygon_cluster, j.polygon_cluster) for j in tree_2_level]  
-    
-    valu_min = Jaccard_i.index( min(Jaccard_i))
-    return valu_min
-    
-
-# %% ../src/01_Clustering.ipynb 75
-def get_dics_labels(tree_or, tree_res, **kwargs):
-    """
-    Obtains a list of dictionaries to retag the original tree_tag with their 
-    correspondance in the tree_res on level level_get +1
-    
-    :param tree_or: Original tree
-    
-    :param tree_res: resulting tree
-    
-    :param level_get: int level to get
-    
-    :param return list of dictionaries:  
-    """
-    dic_list_levels= []
-    ##### If the number of levels is different there is no reason that his should work 
-    min_level_to_ask = min(tree_or.get_deepth(), tree_res.get_deepth())
-    
-    verbose= kwargs.get
-    for i in range(min_level_to_ask):
-        dic_level_df = get_label_clusters_df(tree_or, tree_res, i)
-        ## Eliminate the clusters with nan  
-        dic_level_df.dropna(axis=0, subset=['Sim_cluster'], inplace=True)
-        
-        dic_lev  = dic_level_df['Sim_cluster'].to_dict()
-        dic_list_levels.append({'level_ori':'level_'+str(i)+'_cluster', 'dict': dic_lev})
-    return dic_list_levels
-
-# %% ../src/01_Clustering.ipynb 76
-def get_label_clusters_df(tree_1, tree_2, level_int):
-    """
-    Obtains the dataframe with the label 
-    
-    :param TreeClusters tree_1: 
-    
-    :param TreeClusters tree_2:
-    
-    :param int level_int:
-    
-    :reutrns Pandas.DataFrame df_level_clus: 
-    """
-    level_all = tree_1.get_level(level_int)
-    df_level_clus = pd.DataFrame(level_all, columns=['Clusters'])
-    df_level_clus['Area'] = df_level_clus['Clusters'].apply(lambda l: l.polygon_cluster.area)
-    df_level_clus['Name'] = df_level_clus['Clusters'].apply(lambda l: l.name)
-    
-    df_level_clus['Sim_cluster'] = df_level_clus['Clusters'].apply(lambda l: get_mini_jaccars(l, tree_2,level_int)) ###### Como se hacen las clusterizaciones se debe usar el siguiente nivel
-    
-    #print('', df_level_clus['Sim_cluster'].dtype)
-    df_level_clus= df_level_clus.sort_values(by ='Area', ascending=False)
-    df_level_clus['Sim_cluster'] = (df_level_clus['Sim_cluster']
-                                    .where(~df_level_clus.duplicated(subset=['Sim_cluster']), None))
-    #print(df_level_clus['Sim_cluster'].dtype)
-    level_2= tree_2.get_level(level_int) 
-    df_level_clus['Sim_cluster_name'] =(df_level_clus['Sim_cluster']
-                                         .astype('int32', errors='ignore')
-                                         .replace({np.nan: ''})
-                                         .apply(lambda l:  level_2[int(l)].name if l !=''  else None) )
-    
-    return df_level_clus
-
-# %% ../src/01_Clustering.ipynb 77
-def mod_cid_label(dic_label):
-    """
-    
-    """
-    dic_label={str(k):str(v) for k,v in dic_label.items()} 
-    dic_label['noise'] = 'noise'
-    return dic_label
-
-# %% ../src/01_Clustering.ipynb 78
-def retag_originals(df_fram_or ,
-                    df_results,
-                    tag_original,
-                    tag_results,
-                    dic_tag_or_res):
-    """
-    Retags the labels in the df_fram_or using the dictionary dic_tag_or_res to match 
-    the tags with the corresponding tag in the df_result and all the labels that are
-    not in the dictionary generate a new tag fo them. 
-    
-    :param Pandas.DataFrame df_fram_or
-    
-    :param Pandas.DataFrame df_results
-    
-    :param tag_original
-    
-    :param tag_results
-    
-    :param Pandas.DataFrame dic_tag_or_res
-    
-    """
-    tag_plus=  len(df_results[tag_results].unique()) +100  - len(df_results[tag_results].unique())%100
-    df_fram_or['re_tag_'+str(df_results.name)+'_'+tag_original] = df_fram_or[tag_original].apply(lambda l: dic_tag_or_res[l] if l in dic_tag_or_res.keys() else   str(int(l) +tag_plus) )
