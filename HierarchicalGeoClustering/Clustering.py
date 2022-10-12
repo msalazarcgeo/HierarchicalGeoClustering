@@ -2,11 +2,11 @@
 
 # %% auto 0
 __all__ = ['module_path', 'get_alpha_shape', 'set_colinear', 'collinear', 'get_segments', 'get_polygons_buf', 'jaccard_distance',
-           'labels_filtra', 'compute_dbscan', 'adaptative_DBSCAN', 'compute_hdbscan', 'compute_OPTICS',
-           'compute_Natural_cities', 'compute_AMOEBA', 'clustering', 'recursive_clustering', 'SSM',
-           'get_tree_from_clustering', 'generate_tree_clusterize_form', 'recursive_clustering_tree',
-           'levels_from_strings', 'get_mini_jaccars', 'level_tag', 'get_tag_level_df_labels', 'get_dics_labels',
-           'get_label_clusters_df', 'mod_cid_label', 'retag_originals']
+           'compute_dbscan', 'adaptative_DBSCAN', 'compute_hdbscan', 'compute_OPTICS', 'compute_Natural_cities',
+           'compute_AMOEBA', 'clustering', 'recursive_clustering', 'get_tree_from_clustering',
+           'generate_tree_clusterize_form', 'recursive_clustering_tree', 'SSM', 'labels_filtra', 'levels_from_strings',
+           'get_tag_level_df_labels', 'level_tag', 'get_mini_jaccars', 'get_dics_labels', 'get_label_clusters_df',
+           'mod_cid_label', 'retag_originals']
 
 # %% ../src/01_Clustering.ipynb 2
 import os
@@ -156,42 +156,7 @@ def jaccard_distance(p1, p2):
     jacc= 1 - (intersection_area)/(p1.area + p2.area - intersection_area)
     return jacc
 
-# %% ../src/01_Clustering.ipynb 14
-def labels_filtra(point_points, multy_pol):
-    """
-    Labels the points in the multy_pol if no polygon contains 
-    a point is label as -1
-    
-    :param shapely MultyPoint point_points: Points to check 
-    
-    :param multy_pol
-    
-    :returns np.array: Label array with -1 if is not contained 
-    in a polygon
-    """
-    point_Po = [Point(i) for i in  point_points]
-    labels_p=[]
-    if type(multy_pol)==shapely.geometry.MultiPolygon :
-        for po in point_Po:
-            if multy_pol.contains(po):
-                for num_pol, poly in enumerate( multy_pol):
-                    if poly.contains(po):
-                        labels_p.append(num_pol)
-                        break
-            else:
-                labels_p.append(-1)
-    elif type(multy_pol)==shapely.geometry.Polygon :
-        for po in point_Po:
-            if multy_pol.contains(po):
-                labels_p.append(0)
-            else:
-                labels_p.append(-1)
-    else:
-        raise ValueError('The input is not MultiPolygon or Polygon type')   
-    
-    return np.array(labels_p)
-
-# %% ../src/01_Clustering.ipynb 18
+# %% ../src/01_Clustering.ipynb 17
 def compute_dbscan(cluster,  **kwargs):
     
     """ 
@@ -253,7 +218,7 @@ def compute_dbscan(cluster,  **kwargs):
     
     return clusters
 
-# %% ../src/01_Clustering.ipynb 21
+# %% ../src/01_Clustering.ipynb 20
 def adaptative_DBSCAN(points2_clusters ,
                 **kwargs):
     """
@@ -394,7 +359,7 @@ def adaptative_DBSCAN(points2_clusters ,
 
     return clusters
 
-# %% ../src/01_Clustering.ipynb 24
+# %% ../src/01_Clustering.ipynb 23
 def compute_hdbscan(points2_clusters,  **kwargs):
     
     """
@@ -456,7 +421,7 @@ def compute_hdbscan(points2_clusters,  **kwargs):
 
     return clusters
 
-# %% ../src/01_Clustering.ipynb 27
+# %% ../src/01_Clustering.ipynb 26
 def compute_OPTICS(points2_clusters,  **kwargs):
     
     """ OPTICS wrapper.
@@ -520,7 +485,7 @@ def compute_OPTICS(points2_clusters,  **kwargs):
 
     return clusters
 
-# %% ../src/01_Clustering.ipynb 30
+# %% ../src/01_Clustering.ipynb 29
 def compute_Natural_cities(points2_clusters,  **kwargs):
     
     """
@@ -614,7 +579,7 @@ def compute_Natural_cities(points2_clusters,  **kwargs):
 
     return clusters
 
-# %% ../src/01_Clustering.ipynb 33
+# %% ../src/01_Clustering.ipynb 32
 def compute_AMOEBA(points_array, **kwargs):
     """The function obtains the AMOEBA algorithm on level basis
     
@@ -751,7 +716,7 @@ def compute_AMOEBA(points_array, **kwargs):
         
     
 
-# %% ../src/01_Clustering.ipynb 37
+# %% ../src/01_Clustering.ipynb 36
 def clustering(
             t_next_level_2,
             level=None,
@@ -881,7 +846,7 @@ def clustering(
     
     return t_next_level_n
 
-# %% ../src/01_Clustering.ipynb 40
+# %% ../src/01_Clustering.ipynb 39
 def recursive_clustering(
                 this_level,  # Dictionary with Points
                 to_process,  # levels to process
@@ -963,75 +928,7 @@ def recursive_clustering(
             print('done clustering')
         return
 
-# %% ../src/01_Clustering.ipynb 44
-def SSM(list_poly_c_1,list_poly_c_2 ,**kwargs):
-    """
-    The function calculates the Similarity Shape Measurement (SSM)
-    between two clusterizations 
-    
-    :param: list of nodes with points and polygons 
-    
-    :param: list of nodes with points and polygons 
-    
-    :param bool verbose: To print to debugg
-    
-    :returns double: The similarity mesuarment
-    """
-    verbose= kwargs.get('verbose', False)
-    ##### Get intersection 
-    list_de=[]
-    for i in list_poly_c_1:
-        list_de.append([ i.polygon_cluster.intersection(  j.polygon_cluster ) for  j in list_poly_c_2])
-    
-    list_de_bool = []
-    for i in list_de:
-        list_de_bool.append([not j.is_empty for j in i])
-    
-    list_de_index = []
-    #print(list_de_bool)
-    for i in list_de_bool:
-        if any(i):
-            list_de_index.append(i.index(True))
-        else:
-            list_de_index.append(None)
-    jacc_sim_po = []
-    for num, node in enumerate(list_poly_c_1):
-        ### ver eque pasa cuando se tienen 2 
-        if list_de_index[num] is not None:
-            node_get = list_poly_c_2[list_de_index[num]]
-            poli_int = list_de[num][list_de_index[num]]
-            
-            ####Puntos en la interseccion
-            #print(node)
-            points_all = node.get_point_decendent()
-            res_bool =[ poli_int.contains(p) for p in points_all] ### Como no necesito los puntos basta con esto
-            card = sum(res_bool)
-            ###Obtenemos jaccard 
-            sim_jacc = (poli_int.area)/(node.polygon_cluster.area + node_get.polygon_cluster.area - poli_int.area)
-            if verbose:
-                print("jaccard: " ,sim_jacc)
-                print("cardinal: " ,card )
-            jacc_sim_po.append(sim_jacc* card)#####Cuando hay interseccion 
-        else:
-            jacc_sim_po.append(0) #### Cuando no hay
-    
-    arr_bool = np.array(list_de_bool)
-
-    Q_not= []
-    for col in range(arr_bool.shape[1]):
-        cols_sel= arr_bool[:,col].any()
-        if cols_sel ==False:
-            Q_not.append(col)
-    #print(Q_not)
-    len_Q_not=[]
-    if Q_not:
-         len_Q_not =[len(list_poly_c_2[i].get_point_decendent())  for i in Q_not] 
-
-    P_sum = sum([len(node.get_point_decendent())  for node in list_poly_c_1])
-    deno =P_sum + sum(len_Q_not)
-    return sum(jacc_sim_po)/deno
-
-# %% ../src/01_Clustering.ipynb 46
+# %% ../src/01_Clustering.ipynb 43
 def get_tree_from_clustering(cluster_tree_clusters):
     """ Returns the tree from the iterative clustering, the cluster_tree_cluster
      
@@ -1094,7 +991,7 @@ def get_tree_from_clustering(cluster_tree_clusters):
     
     return  all_level_clusters
 
-# %% ../src/01_Clustering.ipynb 47
+# %% ../src/01_Clustering.ipynb 45
 def generate_tree_clusterize_form(**kwargs ):
     """
     Generates all the experiment all the experiment creates the data and clusterize using the algorithm available
@@ -1346,10 +1243,12 @@ def generate_tree_clusterize_form(**kwargs ):
            }
 
 
-# %% ../src/01_Clustering.ipynb 48
+# %% ../src/01_Clustering.ipynb 49
 def recursive_clustering_tree(dic_points_ori, **kwargs):
     """
     Obtaing the recursive tree using a specific algorithm
+    
+    
     :param dict dic_points_ori: A dictionary with two keys 'points':['Array points'],
                                 'parent':'name_parent' 
     :param int levels_clustering: levels to cluster  
@@ -1369,7 +1268,110 @@ def recursive_clustering_tree(dic_points_ori, **kwargs):
     tree_from_clus.root= tree_from_clus.levels_nodes[0][0]   
     return tree_from_clus
 
-# %% ../src/01_Clustering.ipynb 63
+# %% ../src/01_Clustering.ipynb 53
+def SSM(list_poly_c_1,list_poly_c_2 ,**kwargs):
+    """
+    The function calculates the Similarity Shape Measurement (SSM)
+    between two clusterizations 
+    
+    :param: list of nodes with points and polygons 
+    
+    :param: list of nodes with points and polygons 
+    
+    :param bool verbose: To print to debugg
+    
+    :returns double: The similarity mesuarment
+    """
+    verbose= kwargs.get('verbose', False)
+    ##### Get intersection 
+    list_de=[]
+    for i in list_poly_c_1:
+        list_de.append([ i.polygon_cluster.intersection(  j.polygon_cluster ) for  j in list_poly_c_2])
+    
+    list_de_bool = []
+    for i in list_de:
+        list_de_bool.append([not j.is_empty for j in i])
+    
+    list_de_index = []
+    #print(list_de_bool)
+    for i in list_de_bool:
+        if any(i):
+            list_de_index.append(i.index(True))
+        else:
+            list_de_index.append(None)
+    jacc_sim_po = []
+    for num, node in enumerate(list_poly_c_1):
+        ### ver eque pasa cuando se tienen 2 
+        if list_de_index[num] is not None:
+            node_get = list_poly_c_2[list_de_index[num]]
+            poli_int = list_de[num][list_de_index[num]]
+            
+            ####Puntos en la interseccion
+            #print(node)
+            points_all = node.get_point_decendent()
+            res_bool =[ poli_int.contains(p) for p in points_all] ### Como no necesito los puntos basta con esto
+            card = sum(res_bool)
+            ###Obtenemos jaccard 
+            sim_jacc = (poli_int.area)/(node.polygon_cluster.area + node_get.polygon_cluster.area - poli_int.area)
+            if verbose:
+                print("jaccard: " ,sim_jacc)
+                print("cardinal: " ,card )
+            jacc_sim_po.append(sim_jacc* card)#####Cuando hay interseccion 
+        else:
+            jacc_sim_po.append(0) #### Cuando no hay
+    
+    arr_bool = np.array(list_de_bool)
+
+    Q_not= []
+    for col in range(arr_bool.shape[1]):
+        cols_sel= arr_bool[:,col].any()
+        if cols_sel ==False:
+            Q_not.append(col)
+    #print(Q_not)
+    len_Q_not=[]
+    if Q_not:
+         len_Q_not =[len(list_poly_c_2[i].get_point_decendent())  for i in Q_not] 
+
+    P_sum = sum([len(node.get_point_decendent())  for node in list_poly_c_1])
+    deno =P_sum + sum(len_Q_not)
+    return sum(jacc_sim_po)/deno
+
+# %% ../src/01_Clustering.ipynb 67
+def labels_filtra(point_points, multy_pol):
+    """
+    Labels the points in the multy_pol if no polygon contains 
+    a point is label as -1
+    
+    :param shapely MultyPoint point_points: Points to check 
+    
+    :param multy_pol
+    
+    :returns np.array: Label array with -1 if is not contained 
+    in a polygon
+    """
+    point_Po = [Point(i) for i in  point_points]
+    labels_p=[]
+    if type(multy_pol)==shapely.geometry.MultiPolygon :
+        for po in point_Po:
+            if multy_pol.contains(po):
+                for num_pol, poly in enumerate( multy_pol):
+                    if poly.contains(po):
+                        labels_p.append(num_pol)
+                        break
+            else:
+                labels_p.append(-1)
+    elif type(multy_pol)==shapely.geometry.Polygon :
+        for po in point_Po:
+            if multy_pol.contains(po):
+                labels_p.append(0)
+            else:
+                labels_p.append(-1)
+    else:
+        raise ValueError('The input is not MultiPolygon or Polygon type')   
+    
+    return np.array(labels_p)
+
+# %% ../src/01_Clustering.ipynb 70
 def levels_from_strings(
             string_tag,
             level_str='l_',
@@ -1408,32 +1410,7 @@ def levels_from_strings(
 
     return levels, nodeid
 
-# %% ../src/01_Clustering.ipynb 65
-def get_mini_jaccars(cluster, tree_2, level_int):
-    """
-    Find the most similar cluster in the tree_2 at level level_int
-    returns int the index of the most similar polygon in the level
-    """
-    tree_2_level= tree_2.get_level(level_int)
-    Jaccard_i= [jaccard_distance(cluster.polygon_cluster, j.polygon_cluster) for j in tree_2_level]  
-    
-    valu_min = Jaccard_i.index( min(Jaccard_i))
-    return valu_min
-    
-
-# %% ../src/01_Clustering.ipynb 66
-def level_tag(list_tags, level_int  ):
-    """
-    Tags if the are noise or signal
-    """
-    if len(list_tags)==0:
-        return 'noise'
-    try:
-        return list_tags[level_int]
-    except:
-        return 'noise'   
-
-# %% ../src/01_Clustering.ipynb 67
+# %% ../src/01_Clustering.ipynb 72
 def get_tag_level_df_labels(df, levels_int ):
     """
     Get the tag for the cluster
@@ -1447,7 +1424,32 @@ def get_tag_level_df_labels(df, levels_int ):
     for i in range(levels_int):
         df['level_'+ str(i) +'_cluster']= df['cluster_id'].apply(lambda l:  level_tag(l,i))
 
-# %% ../src/01_Clustering.ipynb 68
+# %% ../src/01_Clustering.ipynb 73
+def level_tag(list_tags, level_int  ):
+    """
+    Tags if the are noise or signal
+    """
+    if len(list_tags)==0:
+        return 'noise'
+    try:
+        return list_tags[level_int]
+    except:
+        return 'noise'   
+
+# %% ../src/01_Clustering.ipynb 74
+def get_mini_jaccars(cluster, tree_2, level_int):
+    """
+    Find the most similar cluster in the tree_2 at level level_int
+    returns int the index of the most similar polygon in the level
+    """
+    tree_2_level= tree_2.get_level(level_int)
+    Jaccard_i= [jaccard_distance(cluster.polygon_cluster, j.polygon_cluster) for j in tree_2_level]  
+    
+    valu_min = Jaccard_i.index( min(Jaccard_i))
+    return valu_min
+    
+
+# %% ../src/01_Clustering.ipynb 75
 def get_dics_labels(tree_or, tree_res, **kwargs):
     """
     Obtains a list of dictionaries to retag the original tree_tag with their 
@@ -1475,7 +1477,7 @@ def get_dics_labels(tree_or, tree_res, **kwargs):
         dic_list_levels.append({'level_ori':'level_'+str(i)+'_cluster', 'dict': dic_lev})
     return dic_list_levels
 
-# %% ../src/01_Clustering.ipynb 69
+# %% ../src/01_Clustering.ipynb 76
 def get_label_clusters_df(tree_1, tree_2, level_int):
     """
     Obtains the dataframe with the label 
@@ -1508,7 +1510,7 @@ def get_label_clusters_df(tree_1, tree_2, level_int):
     
     return df_level_clus
 
-# %% ../src/01_Clustering.ipynb 70
+# %% ../src/01_Clustering.ipynb 77
 def mod_cid_label(dic_label):
     """
     
@@ -1517,7 +1519,7 @@ def mod_cid_label(dic_label):
     dic_label['noise'] = 'noise'
     return dic_label
 
-# %% ../src/01_Clustering.ipynb 71
+# %% ../src/01_Clustering.ipynb 78
 def retag_originals(df_fram_or ,
                     df_results,
                     tag_original,
