@@ -163,11 +163,17 @@ def compute_dbscan(cluster,  **kwargs):
     Sklearn DBSCAN wrapper.
     
     :param cluster: a (N,2) numpy array containing the obsevations
+    
     :param eps_DBSCAN: Minimal epsilon distance (Default = .04)
+    
     :param debugg: To print Debugg information (Default = False)
+    
     :param min_samples: Minimal salmples DBSCAN (Default= 50)
-    :param return_noise: If True the nois is also return  (Default= True)
+    
+    :param return_noise: If True the noise is also return  (Default= True)
+    
     :param scale_points: If True scale the data to [1,0]  (Default= True)
+    
     :returns list with numpy arrays for all the clusters obtained
     """
     eps = kwargs.get( 'eps_DBSCAN',.04)
