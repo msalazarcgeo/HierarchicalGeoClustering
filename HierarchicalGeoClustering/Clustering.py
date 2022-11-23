@@ -163,16 +163,24 @@ def compute_dbscan(cluster,  **kwargs):
     Sklearn DBSCAN wrapper.
     
     :param cluster: a (N,2) numpy array containing the obsevations
-
+    :param eps_DBSCAN: Minimal epsilon distance (Default = .04)
+    :param debugg: To print Debugg information (Default = False)
+    :param min_samples: Minimal salmples DBSCAN (Default= 50)
+    :param return_noise: If True the nois is also return  (Default= True)
+    :param scale_points: If True scale the data to [1,0]  (Default= True)
     :returns list with numpy arrays for all the clusters obtained
     """
     eps = kwargs.get( 'eps_DBSCAN',.04)
     debugg= kwargs.get( 'debugg',False)
     min_samples= kwargs.get( 'min_samples',50)
     ret_noise = kwargs.get('return_noise', True)
+    scale_points= kwargs.get('scale_points', True)
     # Standarize sample
-    scaler = StandardScaler()
-    cluster = scaler.fit_transform(cluster)
+    if scale_points ==True:
+        scaler = StandardScaler()
+        cluster = scaler.fit_transform(cluster)
+        
+    
     if debugg:
         print('epsilon distance to DBSCAN: ', eps)
         print("min_samples to DBScan: ", min_samples )
@@ -184,8 +192,11 @@ def compute_dbscan(cluster,  **kwargs):
     core_samples_mask[db.core_sample_indices_] = True
     labels = db.labels_
     l_unique_labels = len(set(labels)) - (1 if -1 in labels else 0)
-    unique_labels = set(labels) 
-    cluster = scaler.inverse_transform(cluster)
+    unique_labels = set(labels)
+    ##### returning the point to the original
+    if scale_points ==True:
+        cluster = scaler.inverse_transform(cluster)
+    
     clusters = []
     #######check that not returning the same cluster 
 #     if len(unique_labels) == 1 and len(cluster) == sum(labels == 0):
