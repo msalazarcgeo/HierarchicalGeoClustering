@@ -177,7 +177,7 @@ def compute_dbscan(cluster,  **kwargs):
     :returns list with numpy arrays for all the clusters obtained
     """
     eps = kwargs.get( 'eps_DBSCAN',.04)
-    debugg= kwargs.get( 'debugg',False)
+    debugg= kwargs.get( 'verbose',False)
     min_samples= kwargs.get( 'min_samples',50)
     ret_noise = kwargs.get('return_noise', True)
     scale_points= kwargs.get('scale_points', True)
