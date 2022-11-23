@@ -183,6 +183,8 @@ def compute_dbscan(cluster,  **kwargs):
     scale_points= kwargs.get('scale_points', True)
     # Standarize sample
     if scale_points ==True:
+        if debugg:
+            print('Scaling the points')
         scaler = StandardScaler()
         cluster = scaler.fit_transform(cluster)
         
@@ -201,6 +203,8 @@ def compute_dbscan(cluster,  **kwargs):
     unique_labels = set(labels)
     ##### returning the point to the original
     if scale_points ==True:
+        if debugg:
+            print('Return the points to original coordinates')
         cluster = scaler.inverse_transform(cluster)
     
     clusters = []
