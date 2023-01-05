@@ -2,8 +2,8 @@
 
 # %% auto 0
 __all__ = ['module_path', 'get_alpha_shape', 'set_colinear', 'collinear', 'get_segments', 'get_polygons_buf', 'jaccard_distance',
-           'compute_dbscan', 'adaptative_DBSCAN', 'compute_hdbscan', 'compute_OPTICS', 'compute_Natural_cities',
-           'compute_AMOEBA', 'clustering', 'recursive_clustering', 'get_tree_from_clustering',
+           'compute_dbscan', 'adaptative_DBSCAN', 'compute_hdbscan', 'compute_OPTICS', 'natural_cities_polygons',
+           'compute_Natural_cities', 'compute_AMOEBA', 'clustering', 'recursive_clustering', 'get_tree_from_clustering',
            'recursive_clustering_tree', 'SSM', 'labels_filtra', 'levels_from_strings', 'level_tag',
            'get_tag_level_df_labels', 'get_mini_jaccars', 'get_dics_labels', 'get_label_clusters_df', 'mod_cid_label',
            'retag_originals', 'generate_tree_clusterize_form']
@@ -13,6 +13,7 @@ import os
 import sys
 import numpy as np
 import pandas as pd
+import geopandas as gpd
 import kneed
 import itertools
 import shapely
@@ -182,10 +183,10 @@ def compute_dbscan(cluster,  **kwargs):
     ret_noise = kwargs.get('return_noise', True)
     scale_points= kwargs.get('scale_points', True)
     # Standarize sample
+    scaler = StandardScaler()
     if scale_points ==True:
         if debugg:
             print('Scaling the points')
-        scaler = StandardScaler()
         cluster = scaler.fit_transform(cluster)
         
     
@@ -506,9 +507,57 @@ def compute_OPTICS(points2_clusters,  **kwargs):
 
     return clusters
 
-# %% ../src/01_Clustering.ipynb 29
-def compute_Natural_cities(points2_clusters,  **kwargs):
+# %% ../src/01_Clustering.ipynb 30
+def natural_cities_polygons(a_points, **kwargs ):
+    """ Take a array of points and returns the natural Cities polygons.
+        Parameters:
+        a_points (Array points): points to process into natural cities .
+        result_df (Polygon GeoDataframe): Single Geodataframe with the polygons that encloses the points
+    """
+    tail_particion = kwargs.get('tail_particion', 0.55)
+    polygon= kwargs.get('polygon', None)
+    debugg = kwargs.get('verbose',False)
+    edges = get_segments(a_points)
+    edges = {'geometry': edges}
+    edges_df = gpd.GeoDataFrame(edges)
+    edges_df['length'] = edges_df.geometry.length
+    mean_lenght=edges_df['length'].mean()
+    tail = edges_df[edges_df['length'] < mean_lenght]
+    ##check if is heavi tail
+    tail_percent = tail.shape[0]/edges_df.shape[0]
+    if tail_percent < tail_particion:
+        if debugg:
+            print('The percentage of edges that are in the tail are not meet, return empy dataframes ')
+        #### Returning empty dataframe
+        tail = gpd.GeoDataFrame()
+        result_df = gpd.GeoDataFrame()
+        return (tail, result_df)
+        
     
+    if polygon is not None:
+        # use only lines within polygon
+        tail = gpd.sjoin(tail, polygon, how='inner', op='within')
+    linework = linemerge(tail.geometry.values)
+    linework = unary_union(linework)
+    result, _, _, _ = polygonize_full(linework)
+    result = unary_union(result)
+    result = {'geometry': result}
+    try:
+        result_df = gpd.GeoDataFrame(result)
+        
+    except:
+        print(result)
+        print(len(result))
+        print('Unable to do the dataframe return empty dataframes ')
+        tail = gpd.GeoDataFrame()
+        result_df = gpd.GeoDataFrame()
+        return (tail, result_df)
+        
+        # result_df = gpd.GeoDataFrame({'geometry':[]})
+    return (tail, result_df)
+
+# %% ../src/01_Clustering.ipynb 31
+def compute_Natural_cities(points2_clusters, **kwargs):
     """
     Compute Natural cities clustering
     
@@ -517,90 +566,75 @@ def compute_Natural_cities(points2_clusters,  **kwargs):
     :returns: list with numpy arrays for all the clusters obtained
     """
     ### The function is in acordance with the all the previus functions
-    scale_points= kwargs.get('scale_points',True)
+    scale_points= kwargs.get('scale_points',False)
     debugg = kwargs.get('verbose',False)
     ret_noise = kwargs.get('return_noise', True)
-    tail_particion = kwargs.get('return_noise', 0.55)
-
+    
+    
     if scale_points ==True:
         scaler = StandardScaler()
         points_arr = scaler.fit_transform(points2_clusters)
     else:
         points_arr = points2_clusters
 
-    edges= get_segments(points_arr)
-    lenght_av  =  np.average(np.array([i.length for i in edges ]))
-    ##### HT threshold
-    size_edges_len= len(edges)
-    edges = [i for i in edges  if i.length < lenght_av]
-    size_tail_edges = len(edges)
+
+    polygons_df = natural_cities_polygons(points_arr, **kwargs)
+    ####Handle when dataframes are empty, it could be for tail partition large enogh
+    ### empty  
     if debugg:
-        print('Percentage in the tail: ', size_tail_edges/size_edges_len)
-    if (size_tail_edges/size_edges_len < tail_particion):
+        print('Los poligonos de Natural cities')
+        print(polygons_df[1].head())
+    if polygons_df[0].empty and polygons_df[1].empty:
         if debugg:
             print('Not meeting the minimun tail size')
-        
         if ret_noise == True:
-            if debugg:
-                print('Entro')
-            return [], points_arr
+            return [], points2_clusters
         else:
             return [] # return empty cluster
-    
-    
-    polygons_natural_cities=  get_polygons_buf(edges)
-    if debugg:
-        if type(polygons_natural_cities)==shapely.geometry.MultiPolygon:
-            print('Resulting number of polygons: ', len(polygons_natural_cities))
 
-        elif type(polygons_natural_cities)==shapely.geometry.Polygon:
-            print('Only 1 polygon: ')
-        else:
-            print('The result is not a Polygon or Multipolygon')
-    labels_points = labels_filtra(points_arr, polygons_natural_cities)
-    core_samples_mask = np.full_like(labels_points, True, dtype=bool)
-    l_unique_labels = len(set(labels_points)) - (1 if -1 in labels_points else 0)
-    unique_labels = set(labels_points)
-    
     if debugg:
-        print('total number of clusters: ', len(unique_labels)) 
+        print('Size of the polygons dataframe: ', polygons_df[1].shape[0])
+    #### put the point in a data frame to do a spatial joint
+    all_points_Point= [shapely.geometry.Point(arre[0], arre[1]) for arre in  points2_clusters]
+
+    points_geom_df = gpd.GeoDataFrame({'geometry':all_points_Point })
+    result_joint  = gpd.sjoin(points_geom_df, polygons_df[1], how='left', predicate='within')
+    
+    result_joint= result_joint.fillna(-1)
+    result_joint['x']= result_joint['geometry'].x
+    result_joint['y']= result_joint['geometry'].y
+    
     #### recover
     if scale_points ==True:
-        points_ret = scaler.inverse_transform(points_arr)
-    else:
-        points_ret = points_arr
+        array_trans = scaler.inverse_transform(result_joint[['x', 'y']].values)
+        result_joint['x_trans']=  array_trans[:,0]
+        result_joint['y_trans']=  array_trans[:,1]
 
+    else:
+        result_joint['x_trans']=  result_joint['x']
+        result_joint['y_trans']=  result_joint['y']
+    
+    if debugg:
+        print('The shape of the Dataframe of points: ', result_joint.shape)
+        
+    
+    if debugg:
+        print('Number of classes of  polygons: ',len(result_joint['index_right'].unique()))
+    
     
     clusters = []
-    #######check that not returning the same cluster 
-    if len(unique_labels) == 1 and len(points2_clusters) == sum(labels_points == 0):
-        if debugg:
-            print('Its the same set of points after clustering')
-            print('Only one cluster with the same number of points \n')
-            print('Returns the points as noise')
-        
-        if ret_noise == True:
-            class_member_mask = (labels_points == 0)
-            return clusters, points_ret[class_member_mask]
+    for i in result_joint['index_right'].unique():
+        if i != -1:
+            clusters.append(result_joint[result_joint['index_right'] == i][['x_trans','y_trans']].values)
         else:
-            return clusters # return empty cluster
+            noise_ = result_joint[result_joint['index_right'] == i][['x_trans','y_trans']].values
     
-    ########    
-    for l in unique_labels:
-        if l != -1:
-            class_member_mask = (labels_points == l)
-            clusters.append(points_ret[class_member_mask])
-        elif l == -1 and debugg == True:
-            class_member_mask = (labels_points == l)
-            print("Point consider noise: ",  sum(class_member_mask))
-
     if ret_noise == True:
-        class_member_mask = (labels_points == -1)
-        return clusters, points_ret[class_member_mask]
-
+        return clusters, noise_
+    
     return clusters
 
-# %% ../src/01_Clustering.ipynb 32
+# %% ../src/01_Clustering.ipynb 35
 def compute_AMOEBA(points_array, **kwargs):
     """The function obtains the AMOEBA algorithm on level basis
     
@@ -737,7 +771,7 @@ def compute_AMOEBA(points_array, **kwargs):
         
     
 
-# %% ../src/01_Clustering.ipynb 36
+# %% ../src/01_Clustering.ipynb 39
 def clustering(
             t_next_level_2,
             level=None,
@@ -760,6 +794,11 @@ def clustering(
     
     :param bool verbose: Printing (Default= False)  
     
+    :param algorithm_pass function: the algorithm to use if algorith = 'other',
+            the algorithm has to be in acordance to return the same as 
+            all other algorithms implemented. 
+    
+    
     :returns list t_next_level_n: A list with dictionaries with the points, 
                         the parent, and noise
     """
@@ -767,6 +806,8 @@ def clustering(
     min_points = kwargs.get( 'min_points_cluster', 50) #### creo que se deberia quitar o poner bien
     ret_noise= kwargs.get('return_noise', True)
     eps = kwargs.get('eps',0.8)  # Epsilon value to dbscan
+    algorithm_pass= kwargs.get('algorithm_pass', None)
+
     min_leng_clus= kwargs.get('min_lenght_cluster', 5)
     t_next_level_n = []
     if level == None:
@@ -833,6 +874,14 @@ def clustering(
                         noise_points = tmp[1]
                         tmp =  tmp[0]
                 #########
+                
+                elif algorithm == 'other' and algorithm_pass != None:
+                    tmp = algorithm_pass(cluster,
+                                **kwargs)
+                    if ret_noise:
+                        noise_points = tmp[1]
+                        tmp =  tmp[0]
+                #########        
                 else:
                     raise ValueError('Algorithm must be: \n', 
                                      'dbscan, hdbscan, adaptative_DBSCAN, optics, natural_cities or amoeba')
@@ -867,7 +916,7 @@ def clustering(
     
     return t_next_level_n
 
-# %% ../src/01_Clustering.ipynb 39
+# %% ../src/01_Clustering.ipynb 42
 def recursive_clustering(
                 this_level,  # Dictionary with Points
                 to_process,  # levels to process
@@ -949,7 +998,7 @@ def recursive_clustering(
             print('done clustering')
         return
 
-# %% ../src/01_Clustering.ipynb 43
+# %% ../src/01_Clustering.ipynb 46
 def get_tree_from_clustering(cluster_tree_clusters):
     """ Returns the tree from the iterative clustering, the cluster_tree_cluster
      
@@ -1012,7 +1061,7 @@ def get_tree_from_clustering(cluster_tree_clusters):
     
     return  all_level_clusters
 
-# %% ../src/01_Clustering.ipynb 46
+# %% ../src/01_Clustering.ipynb 49
 def recursive_clustering_tree(dic_points_ori, **kwargs):
     """
     Obtaing the recursive tree using a specific algorithm
@@ -1037,7 +1086,7 @@ def recursive_clustering_tree(dic_points_ori, **kwargs):
     tree_from_clus.root= tree_from_clus.levels_nodes[0][0]   
     return tree_from_clus
 
-# %% ../src/01_Clustering.ipynb 50
+# %% ../src/01_Clustering.ipynb 53
 def SSM(list_poly_c_1,list_poly_c_2 ,**kwargs):
     """
     The function calculates the Similarity Shape Measurement (SSM)
@@ -1105,7 +1154,7 @@ def SSM(list_poly_c_1,list_poly_c_2 ,**kwargs):
     deno =P_sum + sum(len_Q_not)
     return sum(jacc_sim_po)/deno
 
-# %% ../src/01_Clustering.ipynb 61
+# %% ../src/01_Clustering.ipynb 64
 def labels_filtra(point_points, multy_pol):
     """
     Labels the points in the multy_pol if no polygon contains 
@@ -1140,7 +1189,7 @@ def labels_filtra(point_points, multy_pol):
     
     return np.array(labels_p)
 
-# %% ../src/01_Clustering.ipynb 64
+# %% ../src/01_Clustering.ipynb 67
 def levels_from_strings(
             string_tag,
             level_str='l_',
@@ -1179,7 +1228,7 @@ def levels_from_strings(
 
     return levels, nodeid
 
-# %% ../src/01_Clustering.ipynb 66
+# %% ../src/01_Clustering.ipynb 69
 def level_tag(list_tags, level_int  ):
     """
     Tags if the are noise or signal
@@ -1191,7 +1240,7 @@ def level_tag(list_tags, level_int  ):
     except:
         return 'noise'   
 
-# %% ../src/01_Clustering.ipynb 68
+# %% ../src/01_Clustering.ipynb 71
 def get_tag_level_df_labels(df, levels_int ):
     """
     Get the tag for the cluster
@@ -1205,7 +1254,7 @@ def get_tag_level_df_labels(df, levels_int ):
     for i in range(levels_int):
         df['level_'+ str(i) +'_cluster']= df['cluster_id'].apply(lambda l:  level_tag(l,i))
 
-# %% ../src/01_Clustering.ipynb 71
+# %% ../src/01_Clustering.ipynb 74
 def get_mini_jaccars(cluster: NodeCluster, # A NodeCluster with a polygon to compare
                      tree_2: TreeClusters, # A TreeClusters structure to compare  with the poligons to compare to
                      level_int:int, #  The index of level of the polygons to compare
@@ -1221,7 +1270,7 @@ def get_mini_jaccars(cluster: NodeCluster, # A NodeCluster with a polygon to com
     return valu_min
     
 
-# %% ../src/01_Clustering.ipynb 74
+# %% ../src/01_Clustering.ipynb 77
 def get_dics_labels(tree_or, tree_res, **kwargs):
     """
     Obtains a list of dictionaries to retag the original tree_tag with their 
@@ -1249,7 +1298,7 @@ def get_dics_labels(tree_or, tree_res, **kwargs):
         dic_list_levels.append({'level_ori':'level_'+str(i)+'_cluster', 'dict': dic_lev})
     return dic_list_levels
 
-# %% ../src/01_Clustering.ipynb 75
+# %% ../src/01_Clustering.ipynb 78
 def get_label_clusters_df(tree_1, tree_2, level_int):
     """
     Obtains the dataframe with the label 
@@ -1282,7 +1331,7 @@ def get_label_clusters_df(tree_1, tree_2, level_int):
     
     return df_level_clus
 
-# %% ../src/01_Clustering.ipynb 78
+# %% ../src/01_Clustering.ipynb 81
 def mod_cid_label(dic_label:dict # Dictionary from 'get_dic_labels' function
                  )-> dict: # Dictionary with the 'level_ori', 'dict' and 'noise' keys
     """
@@ -1294,7 +1343,7 @@ def mod_cid_label(dic_label:dict # Dictionary from 'get_dic_labels' function
     dic_label['noise'] = 'noise'
     return dic_label
 
-# %% ../src/01_Clustering.ipynb 81
+# %% ../src/01_Clustering.ipynb 84
 def retag_originals(df_fram_or: pd.DataFrame ,
                     df_results: pd.DataFrame,
                     tag_original: str,
@@ -1321,7 +1370,7 @@ def retag_originals(df_fram_or: pd.DataFrame ,
     tag_plus=  len(df_results[tag_results].unique()) +100  - len(df_results[tag_results].unique())%100
     df_fram_or['re_tag_'+str(df_results.name)+'_'+tag_original] = df_fram_or[tag_original].apply(lambda l: dic_tag_or_res[l] if l in dic_tag_or_res.keys() else   str(int(l) +tag_plus) )
 
-# %% ../src/01_Clustering.ipynb 84
+# %% ../src/01_Clustering.ipynb 87
 def generate_tree_clusterize_form(**kwargs ):
     """
     Generates all the experiment all the experiment creates the data and clusterize using the algorithm available
