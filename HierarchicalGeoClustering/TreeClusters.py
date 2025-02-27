@@ -559,7 +559,8 @@ class NodeCluster(cluster, NodeMixin):
             ----------
             Parameters
             ----------
-            
+                all_tag : bool 
+                    To return the point of its decendents
             --------
             Returns
             --------
@@ -595,7 +596,7 @@ class NodeCluster(cluster, NodeMixin):
                     A list with all the MultyPoint of the children
         """
         all_p  = []
-        all_p= all_p+ [i for i in self.get_points()]
+        all_p= all_p+ [i for i in self.get_points().geoms]
         for child in self.children:
             all_p= all_p +child.get_point_decendent()
         return all_p
@@ -1250,14 +1251,14 @@ class TreeClusters(object):
             lis_level = self.get_level(level)
             all_points = []
             for node in lis_level:
-                all_points = all_points + [i for i in node.append(node.get_points(all_tag = iterative ) )]
+                all_points = all_points + [i for i in node.get_points(all_tag = iterative ).geoms ]
             return all_points
         else:
             all_points = []
             for level_t in  self.levels_nodes:
                 for node in level_t:
 
-                    all_points =all_points+[i for i in node.get_points(all_tag = iterative )] 
+                    all_points =all_points+[i for i in node.get_points(all_tag = iterative ).geoms] 
             return all_points
             #return self.root.get_points( all_tag = iterative )
     ####### visualize the structure 
@@ -1455,7 +1456,7 @@ class TreeClusters(object):
             if num_lev < level_get:
                 all_level = []
                 for node in level:
-                    all_level.append([(i,node.name + '_noise')  for i in node.point_cluster_noise])
+                    all_level.append([(i,node.name + '_noise')  for i in node.point_cluster_noise.geoms])
                 all_points.append(all_level)
             elif num_lev == level_get:
                 all_level = []
