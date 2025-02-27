@@ -19,9 +19,9 @@ import math
 import matplotlib
 import matplotlib.pyplot as plt
 from shapely.geometry import LineString
-from shapely.ops import polygonize, cascaded_union
+from shapely.ops import polygonize 
 from shapely.geometry import box
-from shapely.geometry import Point, Polygon, MultiPolygon
+from shapely.geometry import Point, Polygon, MultiPolygon, MultiPoint
 from shapely.ops import polygonize_full, linemerge, unary_union
 from matplotlib import cm
 from anytree import NodeMixin, RenderTree
@@ -229,7 +229,7 @@ class NodeCluster(cluster, NodeMixin):
                     max_scale_x:float=.5,
                     min_scale_y:float= .1,
                     max_scale_y:float=.5,
-                    random_state:float= 170, 
+                    random_state:int= 170, 
                     **kwargs
                     ):
         """
@@ -261,7 +261,8 @@ class NodeCluster(cluster, NodeMixin):
                 Nothing
         """
         self.density = density
-        random.seed(random_state) ## initialize random state 
+        #print(type (random_state))
+        random.seed(int(random_state)) ## initialize random state 
         avoid_intersec= kwargs.get('avoid_intersec', False)
         if self.parent is None:
             self.polygon_cluster = self.create_polygon(from_points_num)
@@ -278,7 +279,7 @@ class NodeCluster(cluster, NodeMixin):
             # print('parent name:',self.parent.name)
             ########
             #### Vamos a pedirle que no este en el polygono de los hijos 
-            random_point_center = self.parent.get_random_points(1, random_state)[0]
+            random_point_center = self.parent.get_random_points(1, int(random_state))[0]
 
             #### create polygon and scale 
             
@@ -329,7 +330,7 @@ class NodeCluster(cluster, NodeMixin):
                 self.center = random_point_center
             else:
                 
-                self.polygon_cluster, self.center = self.parent.polygon_not_intersec_children(random_state= random_state)
+                self.polygon_cluster, self.center = self.parent.polygon_not_intersec_children(random_state= int(random_state))
                 
 
         ############### The points
@@ -554,6 +555,7 @@ class NodeCluster(cluster, NodeMixin):
         """ 
         Returns the noise point of the cluster, if all_tag is set true returns  
         all the points of the its decendents
+        
             ----------
             Parameters
             ----------
@@ -576,11 +578,12 @@ class NodeCluster(cluster, NodeMixin):
             for child in self.children:
                 all_points= all_points + child.get_points(all_tag = all_tag)
 
-        return  all_points
+        return  MultiPoint(all_points)
     
     def get_point_decendent(self):
         """
         Returns all the point of the node and its decendents
+
             ----------
             Parameters
             ----------
@@ -624,8 +627,9 @@ class NodeCluster(cluster, NodeMixin):
             #all_points_cluster = self.get_points()
             all_points_cluster = point_check
         # print('Leng to check:', len(all_points_cluster))
+        all_points_cluster = MultiPoint(all_points_cluster)
         all_point_tag = []
-        for point in all_points_cluster:
+        for point in all_points_cluster.geoms:
             point_tag= ''
             for id_child, child in enumerate(self.children):
                 if child.polygon_cluster.contains(point):
@@ -670,7 +674,7 @@ class NodeCluster(cluster, NodeMixin):
             all_points_cluster = point_check
         # print('Leng to check:', len(all_points_cluster))
         all_point_tag = []
-        for point in all_points_cluster:
+        for point in all_points_cluster.geoms:
             point_tag= ''
             for id_child, child in enumerate(self.children):
                 if child.polygon_cluster.contains(point):
@@ -828,8 +832,8 @@ class NodeCluster(cluster, NodeMixin):
         poligon_children = kwargs.get('polygon_children', False)
         if level_view == 0:
             cluster_points = self.get_points()
-            x_points_cluster =[j.x for j in cluster_points  ]
-            y_points_cluster =[j.y for j in cluster_points  ]
+            x_points_cluster =[j.x for j in cluster_points.geoms  ]
+            y_points_cluster =[j.y for j in cluster_points.geoms  ]
             ax.scatter(x_points_cluster,y_points_cluster,
                     s = kwargs.get('size_cluster', 2),
                     color = kwargs.get('color_cluster', 'orange'), 
@@ -837,8 +841,8 @@ class NodeCluster(cluster, NodeMixin):
                     )
         elif  level_view ==1:
             cluster_points = self.get_points()
-            x_points_cluster =[j.x for j in cluster_points  ]
-            y_points_cluster =[j.y for j in cluster_points  ]
+            x_points_cluster = [i.x for i in cluster_points.geoms]
+            y_points_cluster =[i.y for i in cluster_points.geoms ]
             ax.scatter(x_points_cluster,y_points_cluster,
                     s = kwargs.get('size_cluster', 2),
                     color = kwargs.get('color_cluster', 'green'), 
@@ -847,8 +851,8 @@ class NodeCluster(cluster, NodeMixin):
 
             for child in self.children:
                 child_points = child.get_points()
-                x_points_children = [j.x  for j in child_points   ]
-                y_points_children = [j.y  for j in child_points   ]
+                x_points_children = [j.x  for j in child_points.geoms   ]
+                y_points_children = [j.y  for j in child_points.geoms   ]
                 ax.scatter(
                     x_points_children,
                     y_points_children,
@@ -1102,7 +1106,7 @@ class NodeCluster(cluster, NodeMixin):
         return polygon, random_point_center
 
 
-# %% ../src/00_TreeClusters.ipynb 60
+# %% ../src/00_TreeClusters.ipynb 61
 class TreeClusters(object):
     levels = 0
     levels_nodes=[]
@@ -1388,7 +1392,7 @@ class TreeClusters(object):
         sum_s=0
         for level in self.levels_nodes:
             for node in level:
-                sum_s += len(node.point_cluster_noise)
+                sum_s += len(node.point_cluster_noise.geoms)
         return sum_s
     
     def get_dataframe(self, **kwargs):
