@@ -142,6 +142,7 @@ checklink/cookies.txt
 .gitconfig
 
 _docs/
+_proc/
 sidebar.yml
 src/_arreglar_natural.ipynb
 src/_AMEBA.ipynb
