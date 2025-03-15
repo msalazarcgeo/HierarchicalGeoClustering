@@ -1,5 +1,5 @@
 project:
-  output-dir: _proc
+  output-dir: products
 
 website:
   title: "HierarchicalGeoClustering"
