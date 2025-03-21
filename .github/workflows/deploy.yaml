@@ -29,6 +29,8 @@ jobs:
           pip install -Uq matplotlib
           pip install -Uq setuptools
           pip install -Uq scikit-learn
+          pip install -Uq pandas
+          pip install -Uq anytree
           pip install -Uq shapely
           nbdev_docs
           pwd
