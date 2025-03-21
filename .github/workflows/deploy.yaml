@@ -35,9 +35,6 @@ jobs:
           pip install -Uq geopandas
           pip install -Uq kneed
           apt-get install python3-graph-tool
-          nbdev_docs
-          pwd
-          ls
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
