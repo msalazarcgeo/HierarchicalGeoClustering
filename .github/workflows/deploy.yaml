@@ -34,7 +34,7 @@ jobs:
           pip install -Uq shapely
           pip install -Uq geopandas
           pip install -Uq kneed
-          pip install -Uq graph_tool
+          apt-get install python3-graph-tool
           nbdev_docs
           pwd
           ls
