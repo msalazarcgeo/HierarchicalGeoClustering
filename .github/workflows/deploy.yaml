@@ -16,7 +16,9 @@ jobs:
       - uses: actions/setup-python@v4
         with: 
           python-version: '3.11'
-      - name: Install Dependencies and create documentation 
+      - name: Install Dependencies
+        env:
+          USE_PRE: ${{ inputs.pre }}
         shell: bash
         run: |
           python -m pip install --upgrade pip
