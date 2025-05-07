@@ -31,6 +31,7 @@ jobs:
           pip install -Uq shapely
           pip install -Uq geopandas
           pip install -Uq kneed
+          pip install --user graphtools
           nbdev_docs
 
 
