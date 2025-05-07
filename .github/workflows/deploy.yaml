@@ -32,7 +32,7 @@ jobs:
           pip install -Uq geopandas
           pip install -Uq kneed
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v5
+        uses: peaceiris/actions-gh-pages@v6
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           force_orphan: true
