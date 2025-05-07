@@ -36,7 +36,8 @@ jobs:
           mamba install kneed
           mamba install graph-tool
           mamba install hdbscan
-          
+      - name: Build documentation
+        shell: bash 
           nbdev_docs
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
