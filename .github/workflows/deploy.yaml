@@ -37,7 +37,7 @@ jobs:
           mamba install graph-tool
           mamba install hdbscan
       - name: Build documentation
-        shell: bash 
+        shell: bash -el {0}
         run: |
           nbdev_docs
       - name: Deploy to GitHub Pages
