@@ -35,6 +35,7 @@ jobs:
           mamba install geopandas
           mamba install kneed
           mamba install graph-tool
+          mamba install hdbscan
           
           nbdev_docs
       - name: Deploy to GitHub Pages
