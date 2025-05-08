@@ -24,7 +24,7 @@ jobs:
         shell: bash -el {0}
         run: |
           
-          mamba install nbdev
+          mamba install fastai::nbdev 
           mamba install cgal
           mamba install matplotlib
           mamba install setuptools
@@ -37,7 +37,7 @@ jobs:
           mamba install graph-tool
           mamba install hdbscan
       - name: Build documentation
-        shell: bash -el {0}
+        shell: bash -l {0}
         run: |
           nbdev_docs
       - name: Deploy to GitHub Pages
