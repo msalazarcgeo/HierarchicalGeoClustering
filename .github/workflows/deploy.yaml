@@ -5,8 +5,7 @@ permissions:
   pages: write
 
 on:
-  push:
-    branches: [ "main", "master" ]
+  
   workflow_dispatch:
 jobs:
   deploy:
@@ -23,7 +22,6 @@ jobs:
       - name: Install Nbdev Dependencies and package dependencies
         shell: bash -el {0}
         run: |
-          
           mamba install fastai::nbdev 
           mamba install cgal
           mamba install matplotlib
