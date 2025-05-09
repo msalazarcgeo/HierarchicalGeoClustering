@@ -12,10 +12,16 @@ jobs:
           channels: conda-forge,defaults
           channel-priority: true
           activate-environment: anaconda-client-env
-      - name: Install Nbdev Dependencies
+      - name: Install Nbdev Dependencies 
         shell: bash -el {0}
         run: |
-          mamba install fastai::nbdev 
+          mamba install pip
+          pip install 
+          pip install -Uq git+https://github.com/fastai/ghapi.git # you need this for enablin>
+          pip install -Uq git+https://github.com/fastai/fastcore.git
+          pip install -Uq git+https://github.com/fastai/execnb.git
+          pip install -U git+https://github.com/fastai/nbdev.git
+
           mamba install cgal
           mamba install matplotlib
           mamba install setuptools
@@ -27,7 +33,6 @@ jobs:
           mamba install kneed
           mamba install graph-tool
           mamba install hdbscan
-
 
       - name: Test the package
         shell: bash -l {0}
