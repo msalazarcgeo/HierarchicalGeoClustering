@@ -43,3 +43,20 @@ jobs:
           if [ ! $SKIP_TEST ]; then
             nbdev_test --flags "$FLAGS"
           fi
+
+      - name: Build the doumentation
+          shell: bash -l {0}
+          run: | 
+    
+            nbdev_docs 
+
+      - name: Render and Publish 
+        uses: quarto-dev/quarto-actions/publish@v2
+
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          force_orphan: true
+          publish_dir: ./docs
+          user_name: github-actions[bot]
+          user_email: 41898282+github-actions[bot]@users.noreply.github.comgithub_token: ${{ secrets.GITHUB_TOKEN }}
+            
