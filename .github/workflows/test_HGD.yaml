@@ -47,7 +47,6 @@ jobs:
       - name: Build the doumentation
           shell: bash -l {0}
           run: | 
-    
             nbdev_docs 
 
       - name: Render and Publish 
