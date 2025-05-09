@@ -39,6 +39,7 @@ jobs:
       - name: Test the package
         shell: bash -l {0}
         run: | 
+          echo $(ls)
           if [ ! $SKIP_TEST ]; then
             nbdev_test --flags "$FLAGS"
           fi
