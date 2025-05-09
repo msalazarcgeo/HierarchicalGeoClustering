@@ -33,6 +33,7 @@ jobs:
           mamba install graph-tool
           mamba install hdbscan
           echo $(nbdev_bump_version)
+          pip install -U nbdev
           
       - name: Test the package
         shell: bash -l {0}
