@@ -32,7 +32,7 @@ jobs:
           mamba install kneed
           mamba install graph-tool
           mamba install hdbscan
-
+          echo $(nbdev_bump_version)
       - name: Test the package
         shell: bash -l {0}
         run: | 
