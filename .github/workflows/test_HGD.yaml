@@ -53,5 +53,5 @@ jobs:
           publish_dir: ./docs
           user_name: github-actions[bot]
           user_email: 41898282+github-actions[bot]@users.noreply.github.com 
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          
             
