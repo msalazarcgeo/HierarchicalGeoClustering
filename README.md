@@ -159,6 +159,8 @@ df_metric_form
 ```
 
 <div>
+
+<div>
 <style scoped>
     .dataframe tbody tr th:only-of-type {
         vertical-align: middle;
@@ -177,6 +179,8 @@ df_metric_form
 | 1   | 1     | 0.507299        |
 | 2   | 2     | 0.525755        |
 | 3   | 3     | 0.339800        |
+
+</div>
 
 </div>
 
