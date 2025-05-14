@@ -46,7 +46,8 @@ jobs:
       - name: Build the doumentation
         shell: bash -l {0}
         run: | 
-          nbdev_docs 
+          nbdev_docs
+          echo "Ya se hizo la documentacion"
       - name: Render and Publish 
         uses: quarto-dev/quarto-actions/publish@v2
         with:
