@@ -49,8 +49,8 @@ jobs:
           nbdev_docs --n_workers=1
           echo "Ya se hizo la documentacion"
           ls
-      - name: Render and Publish 
-        uses: quarto-dev/quarto-actions/publish@v2
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           force_orphan: true
