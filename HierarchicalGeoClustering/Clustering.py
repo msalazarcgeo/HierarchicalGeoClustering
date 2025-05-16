@@ -37,19 +37,16 @@ from scipy.spatial import cKDTree, Delaunay
 from graph_tool.all import triangulation, label_components
 from scipy.linalg import norm
 import hdbscan
-
-
-# %% ../src/01_Clustering.ipynb 5
 import graph_tool
 
-# %% ../src/01_Clustering.ipynb 6
+# %% ../src/01_Clustering.ipynb 5
 module_path = os.path.abspath(os.path.join('..'))
 if module_path not in sys.path:
     sys.path.append(module_path)
 
 from .TreeClusters import TreeClusters, NodeCluster
 
-# %% ../src/01_Clustering.ipynb 7
+# %% ../src/01_Clustering.ipynb 6
 def get_alpha_shape(point_list):
     """
     Returns a polygon representing the hull of the points sample.
@@ -85,7 +82,7 @@ def get_alpha_shape(point_list):
 
     return unary_union(list(polygonize(lines)))
 
-# %% ../src/01_Clustering.ipynb 8
+# %% ../src/01_Clustering.ipynb 7
 def set_colinear(list_points):
     """
     Check if in the list of points any of triplet of points
@@ -99,7 +96,7 @@ def set_colinear(list_points):
             return False
     return True
 
-# %% ../src/01_Clustering.ipynb 9
+# %% ../src/01_Clustering.ipynb 8
 def collinear(p1, p2, p3):
     """
     Check if the points are colinear 
@@ -114,7 +111,7 @@ def collinear(p1, p2, p3):
     """
     return (p1[1]-p2[1]) * (p1[0]-p3[0]) == (p1[1]-p3[1])*(p1[0]-p2[0])
 
-# %% ../src/01_Clustering.ipynb 12
+# %% ../src/01_Clustering.ipynb 11
 def get_segments(points):
     """ 
     Get the segments from a delaunay triangulation
@@ -135,7 +132,7 @@ def get_segments(points):
 
     return edges
 
-# %% ../src/01_Clustering.ipynb 14
+# %% ../src/01_Clustering.ipynb 13
 def get_polygons_buf(lines):
     """
     Obtain the poligons from the lines
@@ -152,7 +149,7 @@ def get_polygons_buf(lines):
     result = result.buffer(0.0000001)
     return result
 
-# %% ../src/01_Clustering.ipynb 16
+# %% ../src/01_Clustering.ipynb 15
 def jaccard_distance(p1, p2):
     """
     Computes the Jaccard similarity between two polygons.
@@ -166,7 +163,7 @@ def jaccard_distance(p1, p2):
     jacc= 1 - (intersection_area)/(p1.area + p2.area - intersection_area)
     return jacc
 
-# %% ../src/01_Clustering.ipynb 20
+# %% ../src/01_Clustering.ipynb 19
 def compute_dbscan(cluster,  **kwargs):
     
     """ 
@@ -249,7 +246,7 @@ def compute_dbscan(cluster,  **kwargs):
     
     return clusters
 
-# %% ../src/01_Clustering.ipynb 23
+# %% ../src/01_Clustering.ipynb 22
 def adaptative_DBSCAN(points2_clusters ,
                 **kwargs):
     """
@@ -390,7 +387,7 @@ def adaptative_DBSCAN(points2_clusters ,
 
     return clusters
 
-# %% ../src/01_Clustering.ipynb 26
+# %% ../src/01_Clustering.ipynb 25
 def compute_hdbscan(points2_clusters,  **kwargs):
     
     """
@@ -452,7 +449,7 @@ def compute_hdbscan(points2_clusters,  **kwargs):
 
     return clusters
 
-# %% ../src/01_Clustering.ipynb 29
+# %% ../src/01_Clustering.ipynb 28
 def compute_OPTICS(points2_clusters,  **kwargs):
     
     """ OPTICS wrapper.
@@ -516,7 +513,7 @@ def compute_OPTICS(points2_clusters,  **kwargs):
 
     return clusters
 
-# %% ../src/01_Clustering.ipynb 33
+# %% ../src/01_Clustering.ipynb 32
 def natural_cities_polygons(a_points, **kwargs ):
     """ Take a array of points and returns the natural Cities polygons.
         Parameters:
@@ -568,7 +565,7 @@ def natural_cities_polygons(a_points, **kwargs ):
         # result_df = gpd.GeoDataFrame({'geometry':[]})
     return (tail, result_df)
 
-# %% ../src/01_Clustering.ipynb 34
+# %% ../src/01_Clustering.ipynb 33
 def compute_Natural_cities(points2_clusters, **kwargs):
     """
     Compute Natural cities clustering
@@ -646,7 +643,7 @@ def compute_Natural_cities(points2_clusters, **kwargs):
     
     return clusters
 
-# %% ../src/01_Clustering.ipynb 37
+# %% ../src/01_Clustering.ipynb 36
 def compute_AMOEBA(points_array, **kwargs):
     """The function obtains the AMOEBA algorithm on level basis
     
@@ -783,7 +780,7 @@ def compute_AMOEBA(points_array, **kwargs):
         
     
 
-# %% ../src/01_Clustering.ipynb 41
+# %% ../src/01_Clustering.ipynb 40
 def clustering(
             t_next_level_2,
             level=None,
@@ -928,7 +925,7 @@ def clustering(
     
     return t_next_level_n
 
-# %% ../src/01_Clustering.ipynb 44
+# %% ../src/01_Clustering.ipynb 43
 def recursive_clustering(
                 this_level,  # Dictionary with Points
                 to_process,  # levels to process
@@ -1010,7 +1007,7 @@ def recursive_clustering(
             print('done clustering')
         return
 
-# %% ../src/01_Clustering.ipynb 48
+# %% ../src/01_Clustering.ipynb 47
 def get_tree_from_clustering(cluster_tree_clusters):
     """ Returns the tree from the iterative clustering, the cluster_tree_cluster
      
@@ -1073,7 +1070,7 @@ def get_tree_from_clustering(cluster_tree_clusters):
     
     return  all_level_clusters
 
-# %% ../src/01_Clustering.ipynb 51
+# %% ../src/01_Clustering.ipynb 50
 def recursive_clustering_tree(dic_points_ori, **kwargs):
     """
     Obtaing the recursive tree using a specific algorithm
@@ -1098,7 +1095,7 @@ def recursive_clustering_tree(dic_points_ori, **kwargs):
     tree_from_clus.root= tree_from_clus.levels_nodes[0][0]   
     return tree_from_clus
 
-# %% ../src/01_Clustering.ipynb 55
+# %% ../src/01_Clustering.ipynb 54
 def SSM(list_poly_c_1,list_poly_c_2 ,**kwargs):
     """
     The function calculates the Similarity Shape Measurement (SSM)
@@ -1166,7 +1163,7 @@ def SSM(list_poly_c_1,list_poly_c_2 ,**kwargs):
     deno =P_sum + sum(len_Q_not)
     return sum(jacc_sim_po)/deno
 
-# %% ../src/01_Clustering.ipynb 66
+# %% ../src/01_Clustering.ipynb 65
 def labels_filtra(point_points, multy_pol):
     """
     Labels the points in the multy_pol if no polygon contains 
@@ -1201,7 +1198,7 @@ def labels_filtra(point_points, multy_pol):
     
     return np.array(labels_p)
 
-# %% ../src/01_Clustering.ipynb 69
+# %% ../src/01_Clustering.ipynb 68
 def levels_from_strings(
             string_tag,
             level_str='l_',
@@ -1240,7 +1237,7 @@ def levels_from_strings(
 
     return levels, nodeid
 
-# %% ../src/01_Clustering.ipynb 71
+# %% ../src/01_Clustering.ipynb 70
 def level_tag(list_tags, level_int  ):
     """
     Tags if the are noise or signal
@@ -1252,7 +1249,7 @@ def level_tag(list_tags, level_int  ):
     except:
         return 'noise'   
 
-# %% ../src/01_Clustering.ipynb 73
+# %% ../src/01_Clustering.ipynb 72
 def get_tag_level_df_labels(df, levels_int ):
     """
     Get the tag for the cluster
@@ -1266,7 +1263,7 @@ def get_tag_level_df_labels(df, levels_int ):
     for i in range(levels_int):
         df['level_'+ str(i) +'_cluster']= df['cluster_id'].apply(lambda l:  level_tag(l,i))
 
-# %% ../src/01_Clustering.ipynb 75
+# %% ../src/01_Clustering.ipynb 74
 def get_mini_jaccars(cluster: NodeCluster, # A NodeCluster with a polygon to compare
                      tree_2: TreeClusters, # A TreeClusters structure to compare  with the poligons to compare to
                      level_int:int, #  The index of level of the polygons to compare
@@ -1289,7 +1286,7 @@ def get_mini_jaccars(cluster: NodeCluster, # A NodeCluster with a polygon to com
     return valu_min
     
 
-# %% ../src/01_Clustering.ipynb 78
+# %% ../src/01_Clustering.ipynb 77
 def get_dics_labels(tree_or, tree_res, **kwargs):
     """
     Obtains a list of dictionaries to retag the original tree_tag with their 
@@ -1317,7 +1314,7 @@ def get_dics_labels(tree_or, tree_res, **kwargs):
         dic_list_levels.append({'level_ori':'level_'+str(i)+'_cluster', 'dict': dic_lev})
     return dic_list_levels
 
-# %% ../src/01_Clustering.ipynb 79
+# %% ../src/01_Clustering.ipynb 78
 def get_label_clusters_df(tree_1, tree_2, level_int):
     """
     Obtains the dataframe with the label 
@@ -1350,7 +1347,7 @@ def get_label_clusters_df(tree_1, tree_2, level_int):
     
     return df_level_clus
 
-# %% ../src/01_Clustering.ipynb 82
+# %% ../src/01_Clustering.ipynb 81
 def mod_cid_label(dic_label:dict # Dictionary from 'get_dic_labels' function
                  )-> dict: # Dictionary with the 'level_ori', 'dict' and 'noise' keys
     """
@@ -1362,7 +1359,7 @@ def mod_cid_label(dic_label:dict # Dictionary from 'get_dic_labels' function
     dic_label['noise'] = 'noise'
     return dic_label
 
-# %% ../src/01_Clustering.ipynb 85
+# %% ../src/01_Clustering.ipynb 84
 def retag_originals(df_fram_or: pd.DataFrame ,
                     df_results: pd.DataFrame,
                     tag_original: str,
@@ -1389,7 +1386,7 @@ def retag_originals(df_fram_or: pd.DataFrame ,
     tag_plus=  len(df_results[tag_results].unique()) +100  - len(df_results[tag_results].unique())%100
     df_fram_or['re_tag_'+str(df_results.name)+'_'+tag_original] = df_fram_or[tag_original].apply(lambda l: dic_tag_or_res[l] if l in dic_tag_or_res.keys() else   str(int(l) +tag_plus) )
 
-# %% ../src/01_Clustering.ipynb 88
+# %% ../src/01_Clustering.ipynb 87
 class experiment_all( ):
     def __init__(self, **kwargs):
         self.levels_tree_ori= kwargs.get('tree_level', 4)
